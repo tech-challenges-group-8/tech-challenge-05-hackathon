@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: mindease-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: mindease-backend
+    depends_on:
+      - mongo
+    environment:
+      NODE_ENV: production
+      BACKEND_PORT: 3001
+      BACKEND_HOST: 0.0.0.0
+      DATABASE_URL: mongodb://mongo:27017/mindease
+    ports:
+      - "3001:3001"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: mindease-web
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+    ports:
+      - "3000:3000"
+
+  mobile:
+    build:
+      context: .
+      dockerfile: apps/mobile/Dockerfile
+    container_name: mindease-mobile
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: development
+      EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
+      EXPO_PACKAGER_HOSTNAME: 0.0.0.0
+      EXPO_PUBLIC_API_URL: http://localhost:3001/api
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+      - "8081:8081"
+    stdin_open: true
+    tty: true
+
+volumes:
+  mongo-data:

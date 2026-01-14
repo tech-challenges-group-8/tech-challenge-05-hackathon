@@ -1,0 +1,7 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# Otimizações de performance
+shared-workspace-lockfile: true
+symlink-workspace-packages: true

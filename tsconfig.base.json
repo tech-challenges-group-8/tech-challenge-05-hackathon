@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@mindease/domain": ["packages/domain-core/src/index.ts"],
+      "@mindease/domain/*": ["packages/domain-core/src/*"],
+      "@mindease/dtos": ["packages/shared-dtos/src/index.ts"],
+      "@mindease/dtos/*": ["packages/shared-dtos/src/*"],
+      "@mindease/ui-kit": ["packages/ui-kit/src/index.ts"],
+      "@mindease/ui-kit/*": ["packages/ui-kit/src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
