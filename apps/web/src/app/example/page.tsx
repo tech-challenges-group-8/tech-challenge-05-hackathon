@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
 import { User } from '@mindease/domain';
-import { CreateUserDTO, UserResponseDTO } from '@mindease/dtos';
+import { CreateUserDTO } from '@mindease/dtos';
 import { Button, Input } from '@mindease/ui-kit';
 
 /**
- * Example Page - Testing domain integration
+ * Example Screen - Testing domain integration
  * This demonstrates how to use domain entities and DTOs
  */
-export default function ExamplePage() {
+export default function ExampleScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [user, setUser] = useState<User | null>(null);
@@ -37,53 +38,112 @@ export default function ExamplePage() {
       setUser(newUser);
       setName('');
       setEmail('');
+      Alert.alert('Success', 'User created successfully!');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      Alert.alert('Error', errorMessage);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 border border-gray-200 rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">Create User Example</h1>
+    <ScrollView style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>Create User Example</Text>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Name</label>
-          <Input
-            placeholder="Enter name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
+        <View style={styles.form}>
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Name</Text>
+            <Input
+              placeholder="Enter name"
+              value={name}
+              onChange={(text) => setName(text)}
+            />
+          </View>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Email</label>
-          <Input
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Email</Text>
+            <Input
+              placeholder="Enter email"
+              value={email}
+              onChange={(text) => setEmail(text)}
+            />
+          </View>
 
-        <Button label="Create User" onClick={handleCreateUser} />
+          <Button label="Create User" onClick={handleCreateUser} />
 
-        {error && (
-          <div className="p-4 bg-red-100 border border-red-400 rounded text-red-800">
-            {error}
-          </div>
-        )}
+          {error && (
+            <View style={styles.errorBox}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          )}
 
-        {user && (
-          <div className="p-4 bg-green-100 border border-green-400 rounded">
-            <p className="font-bold">User Created Successfully!</p>
-            <p>ID: {user.id}</p>
-            <p>Name: {user.name}</p>
-            <p>Email: {user.email}</p>
-            <p>Created: {user.createdAt.toLocaleString()}</p>
-          </div>
-        )}
-      </div>
-    </div>
+          {user && (
+            <View style={styles.successBox}>
+              <Text style={styles.successTitle}>User Created Successfully!</Text>
+              <Text style={styles.userDetail}>ID: {user.id}</Text>
+              <Text style={styles.userDetail}>Name: {user.name}</Text>
+              <Text style={styles.userDetail}>Email: {user.email}</Text>
+              <Text style={styles.userDetail}>
+                Created: {user.createdAt.toLocaleString()}
+              </Text>
+            </View>
+          )}
+        </View>
+      </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  content: {
+    padding: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  form: {
+    gap: 16,
+  },
+  formGroup: {
+    marginBottom: 12,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  errorBox: {
+    padding: 16,
+    backgroundColor: '#FEE2E2',
+    borderColor: '#EF4444',
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+  errorText: {
+    color: '#DC2626',
+    fontSize: 14,
+  },
+  successBox: {
+    padding: 16,
+    backgroundColor: '#DCFCE7',
+    borderColor: '#22C55E',
+    borderWidth: 1,
+    borderRadius: 4,
+  },
+  successTitle: {
+    fontWeight: 'bold',
+    marginBottom: 8,
+    fontSize: 14,
+  },
+  userDetail: {
+    fontSize: 13,
+    marginVertical: 4,
+  },
+});

@@ -1,4 +1,4 @@
-# MindEase Web (Next.js App Router) - Dockerfile
+# MindEase Web (Expo React Native) - Dockerfile
 
 FROM node:20-alpine
 
@@ -25,9 +25,10 @@ RUN pnpm --filter @mindease/domain build \
   && pnpm --filter @mindease/ui-kit build \
   && pnpm --filter mindease-web build
 
-# Prune to production deps for the web app
-RUN pnpm prune --prod --filter mindease-web
+# Install serve for production
+RUN pnpm add -g serve
 
 ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["pnpm", "--filter", "mindease-web", "start"]
+WORKDIR /app/apps/web
+CMD ["serve", "dist", "-l", "3000"]

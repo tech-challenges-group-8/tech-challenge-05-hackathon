@@ -9,8 +9,7 @@ O MindEase é estruturado em um monorepo com três aplicações e três bibliote
 ### 🎯 Apps (Aplicações Executáveis)
 
 - **Backend** - API REST com NestJS
-- **Web** - Frontend com Next.js (App Router + Tailwind CSS)
-- **Mobile** - App React Native com Expo
+- **Web** - App Expo com React Native (iOS, Android e Web)
 
 ### 📦 Packages (Bibliotecas Compartilhadas)
 
@@ -41,6 +40,38 @@ pnpm --version    # 9.0.0+
 ```bash
 npm install -g pnpm
 ```
+
+### Instalar Expo CLI e EAS CLI
+
+```bash
+# Instalar Expo CLI globalmente
+npm install -g expo-cli
+
+# Instalar EAS CLI globalmente
+npm install -g eas-cli
+
+# Verificar instalação
+expo --version
+eas --version
+```
+
+### Configurar EAS CLI (para build nativo)
+
+Se você deseja fazer build de aplicativos nativos (iOS/Android):
+
+```bash
+# Login com sua conta Expo
+eas login
+
+# Configure o projeto (execute dentro do diretório apps/web)
+cd apps/web
+eas init
+
+# Gerar certificados (se necessário)
+eas credentials
+```
+
+**Nota:** Se apenas quer desenvolver em modo web ou Expo Go (local), pode pular a configuração do EAS e usar apenas `expo start`.
 ---
 
 ### Instalação
@@ -59,9 +90,12 @@ pnpm dev
 
 ### Acessar Aplicações
 
-- Backend: http://localhost:3001
-- Web: http://localhost:3000
-- Mobile: http://localhost:8081
+- **Backend:** http://localhost:3001
+- **Web/Mobile (Expo):** 
+  - Expo Go: Scan QR code no terminal
+  - Web: http://localhost:19006 (após `expo start --web`)
+  - iOS: `pnpm ios` (requer macOS com Xcode)
+  - Android: `pnpm android` (requer Android Studio/Emulator)
 
 ## 📁 Estrutura do Projeto
 
@@ -69,8 +103,7 @@ pnpm dev
 mindease/
 ├── apps/
 │   ├── backend/     # NestJS API
-│   ├── web/         # Next.js Frontend
-│   └── mobile/      # Expo React Native
+│   ├── web/         # Expo React Native
 ├── packages/
 │   ├── domain-core/ # Clean Architecture Domain
 │   ├── shared-dtos/ # DTOs Compartilhadas
@@ -80,22 +113,91 @@ mindease/
 
 ## 🛠️ Comandos Principais
 
+### Desenvolvimento
+
+```bash
+# Inicia backend e web em paralelo (RECOMENDADO)
+pnpm dev
+
+# Inicia apenas backend
+pnpm dev:backend
+
+# Inicia apenas web/Expo
+pnpm dev:web
+
+# Alternativa: backend e web com pnpm direto
+pnpm dev:app
+```
+
+### Build
+
+```bash
+# Build de tudo (todas as apps e packages)
+pnpm build
+```
+
+### Testes & Qualidade
+
+```bash
+# Roda testes em tudo
+pnpm test
+
+# Verifica linting
+pnpm lint
+
+# Formata código automaticamente
+pnpm format
+```
+
+### Limpeza
+
+```bash
+# Remove dist, node_modules e .turbo
+pnpm clean
+```
+
+### Comandos por App
+
+#### Backend (NestJS)
+
 ```bash
 # Desenvolvimento
-pnpm dev           # Inicia todas as apps
+pnpm -F @mindease/mindease-backend dev
 
 # Build
-pnpm build         # Build de tudo
+pnpm -F @mindease/mindease-backend build
+
+# Executar em produção
+pnpm -F @mindease/mindease-backend start:prod
 
 # Testes
-pnpm test          # Roda testes
+pnpm -F @mindease/mindease-backend test
+```
 
-# Linting
-pnpm lint          # Verifica linting
-pnpm format        # Formata código
+#### Web (Expo React Native)
 
-# Limpeza
-pnpm clean         # Remove dist e node_modules
+```bash
+# Desenvolvimento (Expo Go)
+pnpm -F mindease-web dev
+
+# Web (http://localhost:19006)
+pnpm -F mindease-web web
+
+# iOS (requer macOS + Xcode)
+pnpm -F mindease-web ios
+
+# Android (requer Android Studio/Emulator)
+pnpm -F mindease-web android
+```
+
+### Packages
+
+```bash
+# Build individual de um package
+pnpm -F @mindease/domain build
+
+# Lint individual
+pnpm -F @mindease/domain lint
 ```
 
 ## 🎨 Clean Architecture
@@ -139,11 +241,12 @@ mindease-backend
   └─ Implementações de Repositories
 ```
 
-### Web (Frontend)
+### Web (React Native + Expo)
 ```
 mindease-web
   ├─ Dependências: @mindease/domain, @mindease/dtos, @mindease/ui-kit
-  └─ Páginas e componentes
+  ├─ Compatível com: iOS, Android, Web
+  └─ Telas e componentes mobile-first
 ```
 
 ### Mobile (React Native)

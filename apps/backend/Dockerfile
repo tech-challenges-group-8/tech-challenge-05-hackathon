@@ -1,7 +1,7 @@
 # MindEase Backend (NestJS) - Dockerfile
 # Single repo-aware build using pnpm workspaces
 
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
 # Enable pnpm via corepack
 RUN corepack enable
@@ -28,9 +28,19 @@ RUN pnpm --filter @mindease/domain build \
   && pnpm --filter @mindease/ui-kit build \
   && pnpm --filter mindease-backend build
 
-# Prune to production deps for backend
-RUN pnpm prune --prod --filter mindease-backend
+# Production stage
+FROM node:20-alpine
+
+RUN corepack enable
+
+WORKDIR /app
+
+# Copy built artifacts and dependencies
+COPY --from=builder /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=builder /app/apps/backend ./apps/backend
+COPY --from=builder /app/packages ./packages
+COPY --from=builder /app/node_modules ./node_modules
 
 ENV NODE_ENV=production
 EXPOSE 3001
-CMD ["pnpm", "--filter", "mindease-backend", "start:prod"]
+CMD ["node", "apps/backend/dist/main.js"]
