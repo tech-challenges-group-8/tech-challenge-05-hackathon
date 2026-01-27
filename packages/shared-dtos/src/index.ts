@@ -2,5 +2,5 @@
 import 'reflect-metadata';
 
 // Export all DTOs
-export * from './CreateUserDTO';
-export * from './UserResponseDTO';
+export * from './user/CreateUserDTO';
+export * from './user/UserResponseDTO';

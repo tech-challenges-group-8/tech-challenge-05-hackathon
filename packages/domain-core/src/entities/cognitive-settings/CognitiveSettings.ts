@@ -1,7 +1,7 @@
-import { ThemeMode } from "./enums/theme-mode.enum";
-import { FocusModeSettings } from "./value-objects/focus-mode-settings.vo";
-import { SensorySettings } from "./value-objects/sensory-settings.vo";
-import { TypographySettings } from "./value-objects/typography-settings.vo";
+import { ThemeMode } from "./enums/ThemeModeEnum";
+import { FocusModeSettings } from "./value-objects/FocusModeSettingsVO";
+import { SensorySettings } from "./value-objects/SensorySettingsVO";
+import { TypographySettings } from "./value-objects/TypographySettingsVO";
 
 
 export class CognitiveSettings {

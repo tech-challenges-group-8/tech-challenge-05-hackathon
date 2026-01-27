@@ -1,5 +1,5 @@
 
-export class Task {
+export class TaskCheckList {
     id: string;
     idUser: string;
     description: string;
@@ -35,6 +35,17 @@ export class Task {
 
     revertTask(): void {
         this.completed = false;
+        this.touch();
+    }
+
+    updateDescription(description: string): void {
+        this.validateDescription(description);
+        this.description = description;
+        this.touch();
+    }
+
+    setDone(isDone: boolean): void {
+        this.completed = isDone;
         this.touch();
     }
 
