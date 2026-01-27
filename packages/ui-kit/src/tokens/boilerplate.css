@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* MindEase Design System - Cognitive-First & Elastic Tokens */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* OpenDyslexic font for dyslexia-friendly mode */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@layer base {
+  :root {
+    /* Base Colors - Light Theme */
+    --background: hsl(45 33% 98%);
+    --foreground: hsl(213 22% 20%);
+    --border: hsl(40 10% 89%);
+    --input: hsl(40 10% 89%);
+    --ring: hsl(148 30% 43%);
+
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(213 22% 20%);
+
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(213 22% 20%);
+
+    /* Primary - Sage Green (calming) */
+    --primary-default: hsl(148 30% 43%);
+    --primary-foreground: hsl(0 0% 100%);
+    --primary-light: hsl(148 30% 53%);
+    --primary-dark: hsl(148 30% 33%);
+
+    /* Secondary - Soft Blue */
+    --secondary-default: hsl(220 68% 95%);
+    --secondary-foreground: hsl(218 25% 32%);
+
+    --muted-default: hsl(40 11% 92%);
+    --muted-foreground: hsl(214 10% 51%);
+
+    /* Accent - Warm Coral */
+    --accent-default: hsl(25 73% 94%);
+    --accent-foreground: hsl(24 33% 43%);
+
+    /* State Colors */
+    --destructive-default: hsl(0 45% 60%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success-default: hsl(145 35% 44%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning-default: hsl(38 78% 57%);
+    --warning-foreground: hsl(38 61% 25%);
+    --info-default: hsl(210 80% 60%);
+    --info-foreground: hsl(0 0% 100%);
+
+    /* Cognitive & Interaction Tokens */
+    --radius: 0.75rem;
+    --focus-outline-color: hsl(210 90% 75%); /* A clear but not jarring blue */
+    --highlight-soft: hsl(155 45% 84%); /* Gentle background highlight */
+    --task-active: hsl(100 38% 87%);
+    --gentle-shadow: 0 4px 20px -4px rgba(41, 51, 64, 0.08);
+    --card-shadow: 0 2px 12px -2px rgba(41, 51, 64, 0.06);
+
+    /* Elastic Typography Tokens */
+    --font-family-base: 'Inter', system-ui, sans-serif;
+    --font-family-dyslexic: 'OpenDyslexic', sans-serif;
+    --text-scale-factor: 1; /* Multiplier for dynamic text sizing */
+    --text-base-size: 1rem;
+    --text-size-sm: calc(0.875rem * var(--text-scale-factor));
+    --text-size-md: calc(var(--text-base-size) * var(--text-scale-factor));
+    --text-size-lg: calc(1.125rem * var(--text-scale-factor));
+    --text-size-xl: calc(1.25rem * var(--text-scale-factor));
+
+    --line-height-scale-factor: 1; /* Multiplier for dynamic line height */
+    --line-height-normal: calc(1.5 * var(--line-height-scale-factor));
+    --line-height-relaxed: calc(1.75 * var(--line-height-scale-factor));
+    --line-height-loose: calc(2 * var(--line-height-scale-factor));
+
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.025em;
+    --letter-spacing-wider: 0.05em;
+  }
+
+  /* Dark Theme */
+  .dark {
+    --background: hsl(222 18% 11%);
+    --foreground: hsl(40 8% 95%);
+    --border: hsl(213 22% 20%);
+    --input: hsl(213 22% 20%);
+    --ring: hsl(150 41% 55%);
+
+    --card: hsl(222 18% 14%);
+    --card-foreground: hsl(40 8% 95%);
+
+    --popover: hsl(222 18% 14%);
+    --popover-foreground: hsl(40 8% 95%);
+
+    --primary-default: hsl(150 41% 55%);
+    --primary-foreground: hsl(222 18% 11%);
+
+    --secondary-default: hsl(213 22% 20%);
+    --secondary-foreground: hsl(40 8% 93%);
+
+    --muted-default: hsl(215 20% 19%);
+    --muted-foreground: hsl(40 5% 63%);
+
+    --accent-default: hsl(26 27% 33%);
+    --accent-foreground: hsl(28 50% 83%);
+
+    --destructive-default: hsl(0 60% 51%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --success-default: hsl(148 40% 40%);
+    --success-foreground: hsl(0 0% 100%);
+    --warning-default: hsl(40 70% 53%);
+    --warning-foreground: hsl(40 8% 95%);
+
+    --focus-outline-color: hsl(200 85% 65%);
+    --highlight-soft: hsl(148 40% 22%);
+    --task-active: hsl(148 30% 33%);
+    --gentle-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.3);
+    --card-shadow: 0 2px 12px -2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-family-base);
+    font-size: var(--text-size-md);
+    line-height: var(--line-height-normal);
+  }
+
+  /* Cognitive Typography Variants */
+  .typography-dyslexic {
+    font-family: var(--font-family-dyslexic) !important;
+  }
+
+  /* These classes can be applied by a 'Cognitive Panel' to adjust layout globally */
+  .line-height-relaxed {
+    line-height: var(--line-height-relaxed);
+  }
+
+  .line-height-loose {
+    line-height: var(--line-height-loose);
+  }
+
+  .letter-spacing-wide {
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .letter-spacing-wider {
+    letter-spacing: var(--letter-spacing-wider);
+  }
+
+  .text-size-lg {
+    font-size: var(--text-size-lg);
+  }
+
+  .text-size-xl {
+    font-size: var(--text-size-xl);
+  }
+
+  /* Focus mode styles */
+  .focus-mode .decorative-element {
+    @apply hidden; /* Hide purely decorative animations or images */
+  }
+
+  .focus-mode .non-essential-info {
+    @apply opacity-30; /* De-emphasize less critical UI parts */
+  }
+
+  /* No animations mode */
+  .no-animations * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@layer utilities {
+  .card-gentle {
+    box-shadow: var(--card-shadow);
+  }
+
+  .shadow-gentle {
+    box-shadow: var(--gentle-shadow);
+  }
+
+  .highlight-soft {
+    background-color: var(--highlight-soft);
+  }
+
+  .task-highlight {
+    background-color: var(--task-active);
+  }
+
+  /* Refined focus ring for clarity and reduced visual noise */
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px;
+    box-shadow: none; /* Override other shadows on focus */
+  }
+}
+
+/* Smooth scrollbar that respects themes */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted-default);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--muted-foreground);
+  opacity: 0.5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  opacity: 0.7;
+}
