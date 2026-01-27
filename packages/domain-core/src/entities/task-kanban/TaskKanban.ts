@@ -1,5 +1,5 @@
-import { TaskKanbanPriority } from "./enums/task-kanban-priority.enum";
-import { TaskKanbanStatus } from "./enums/task-kanban-status.enum";
+import { TaskKanbanPriority } from "./enums/TaskKanbanPriorityEnum";
+import { TaskKanbanStatus } from "./enums/TaskKanbanStatusEnum";
 
 
 export class TaskKanban {
@@ -84,6 +84,11 @@ export class TaskKanban {
         if (!this.tags) return;
 
         this.tags = this.tags.filter(t => t !== tag);
+        this.touch();
+    }
+
+    setTags(tags: string[]): void {
+        this.tags = tags;
         this.touch();
     }
 

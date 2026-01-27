@@ -1,7 +1,7 @@
-import { FontFamily } from '../enums/font-family.enum';
-import { LineHeight } from '../enums/line-height.enum';
-import { LetterSpacing } from '../enums/letter-spacing.enum';
-import { TextSize } from '../enums/text-size.enum';
+import { FontFamily } from '../enums/FontFamilyEnum';
+import { LineHeight } from '../enums/LineHeightEnum';
+import { LetterSpacing } from '../enums/LetterSpacingEnum';
+import { TextSize } from '../enums/TextSizeEnum';
 
 export class TypographySettings {
     fontFamily: FontFamily;
