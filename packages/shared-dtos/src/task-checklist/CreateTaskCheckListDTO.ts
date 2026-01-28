@@ -1,4 +1,4 @@
-export class CreateTaskCheckListDto {
+export class CreateTaskCheckListDTO {
   idUser!: string;
   description!: string;
 }

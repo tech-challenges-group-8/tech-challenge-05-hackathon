@@ -1,4 +1,4 @@
-export class ResponseTaskCheckListDto {
+export class ResponseTaskCheckListDTO {
     id: string;
     description: string;
     completed: boolean;

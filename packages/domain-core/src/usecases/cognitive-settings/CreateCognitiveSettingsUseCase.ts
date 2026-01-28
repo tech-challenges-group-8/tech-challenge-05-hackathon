@@ -1,8 +1,16 @@
-import { CognitiveSettings } from '../../entities/cognitive-settings/CognitiveSettings';
+import { ICognitiveSettingsRepository } from "../../repositories/ICognitiveSettingsRepository";
+import { CognitiveSettings } from "../../entities/cognitive-settings/CognitiveSettings";
 
+export interface CreateCognitiveSettingsInput {
+  idUser: string;
+}
 
-export interface ICognitiveSettingsRepository {
-  save(settings: CognitiveSettings): Promise<void>;
-  findByUser(idUser: string): Promise<CognitiveSettings | null>;
-  update(settings: CognitiveSettings): Promise<void>;
+export class CreateCognitiveSettingsUseCase {
+  constructor(private readonly repository: ICognitiveSettingsRepository) {}
+
+  async execute(input: CreateCognitiveSettingsInput): Promise<CognitiveSettings> {
+    const settings = new CognitiveSettings(input.idUser);
+    await this.repository.save(settings);
+    return settings;
+  }
 }

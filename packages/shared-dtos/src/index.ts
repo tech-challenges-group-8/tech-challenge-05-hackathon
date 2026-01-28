@@ -1,6 +1,26 @@
 // Ensure decorator metadata is available for class-validator
 import 'reflect-metadata';
 
-// Export all DTOs
+// Export User DTOs
 export * from './user/CreateUserDTO';
 export * from './user/UserResponseDTO';
+
+
+// Export CognitiveSettings DTOs
+export * from './cognitive-settings/CreateCognitiveSettingsDTO';
+export * from './cognitive-settings/UpdateCognitiveSettingsDTO';
+export * from './cognitive-settings/ResponseCognitiveSettingsDTO';
+
+// Export FocusSettings DTOs
+export * from './focus-settings/CreateFocusSettingsDTO';
+export * from './focus-settings/UpdateFocusSettingsDTO';
+export * from './focus-settings/ResponseFocusSettingsDTO';
+
+// Export TaskKanban DTOs
+export * from './task-kanban/CreateTaskKanbanDTO';
+export * from './task-kanban/UpdateTaskKanbanDTO';
+export * from './task-kanban/ResponseTaskKanbanDTO';
+
+// Export TaskCheckList DTOs
+export * from './task-checklist/CreateTaskCheckListDTO';
+export * from './task-checklist/ResponseTaskCheckListDTO';
