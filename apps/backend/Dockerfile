@@ -17,7 +17,7 @@ COPY packages/shared-dtos/package.json packages/shared-dtos/package.json
 COPY packages/ui-kit/package.json packages/ui-kit/package.json
 
 # Install all dependencies required to build backend + shared packages
-RUN pnpm install --prod=false
+RUN pnpm install
 
 # Copy source
 COPY . .
@@ -36,11 +36,11 @@ RUN corepack enable
 WORKDIR /app
 
 # Copy built artifacts and dependencies
-COPY --from=builder /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=builder /app/package.json /app/pnpm-workspace.yaml /app/tsconfig.base.json ./
 COPY --from=builder /app/apps/backend ./apps/backend
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/node_modules ./node_modules
 
 ENV NODE_ENV=production
 EXPOSE 3001
-CMD ["node", "apps/backend/dist/main.js"]
+CMD ["sh", "-c", "node apps/backend/dist/migrations/run-all.js && node apps/backend/dist/main.js"]

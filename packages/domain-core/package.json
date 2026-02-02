@@ -6,12 +6,10 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./*": {
-      "import": "./dist/*",
       "require": "./dist/*",
       "types": "./dist/*.d.ts"
     }
@@ -19,7 +17,7 @@
   "files": ["dist", "src"],
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "dev": "tsc --project tsconfig.json --watch",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "echo 'No tests configured yet'",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write 'src/**/*.ts'",
