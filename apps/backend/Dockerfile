@@ -43,4 +43,4 @@ COPY --from=builder /app/node_modules ./node_modules
 
 ENV NODE_ENV=production
 EXPOSE 3001
-CMD ["node", "apps/backend/dist/main.js"]
+CMD ["sh", "-c", "pnpm --filter mindease-backend migrate && node apps/backend/dist/main.js"]
