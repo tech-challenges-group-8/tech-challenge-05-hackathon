@@ -12,4 +12,14 @@ export class ResponseFocusSettingsDTO {
 
   @IsNumber()
   pausaLonga!: number;
+
+  constructor(
+    foco: number,
+    pausaCurta: number,
+    pausaLonga: number,
+  ) {
+    this.foco = foco;
+    this.pausaCurta = pausaCurta;
+    this.pausaLonga = pausaLonga;
+  }
 }

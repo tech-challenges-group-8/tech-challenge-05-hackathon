@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsDateString, IsString } from 'class-validator';
+import { IsArray, IsDateString, IsString } from 'class-validator';
 
 export class ResponseTaskKanbanDTO {
   @IsString()
@@ -22,9 +22,6 @@ export class ResponseTaskKanbanDTO {
   @IsDateString()
   dueDate?: Date;
 
-  @IsBoolean()
-  completed!: boolean;
-
   @IsDateString()
   createdAt!: Date;
 
@@ -34,4 +31,28 @@ export class ResponseTaskKanbanDTO {
   @IsArray()
   @IsString({ each: true })
   tags?: string[];
+
+  constructor(
+    id: string,
+    idUser: string,
+    title: string,
+    description: string | undefined,
+    status: string,
+    priority: string,
+    dueDate: Date | undefined,
+    createdAt: Date,
+    updatedAt: Date,
+    tags: string[] | undefined
+  ) {
+    this.id = id;
+    this.idUser = idUser;
+    this.title = title;
+    this.description = description;
+    this.status = status;
+    this.priority = priority;
+    this.dueDate = dueDate;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.tags = tags;
+  }
 }
