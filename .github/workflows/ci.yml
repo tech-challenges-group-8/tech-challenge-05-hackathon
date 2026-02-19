@@ -104,9 +104,9 @@ jobs:
           </plist>
           EOF
         
-      - name: Run ESLint
-        run: pnpm lint
-        
       - name: Build
         run: pnpm build
+        
+      - name: Run ESLint
+        run: pnpm lint
         

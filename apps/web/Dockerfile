@@ -14,7 +14,7 @@ COPY packages/shared-dtos/package.json packages/shared-dtos/package.json
 COPY packages/ui-kit/package.json packages/ui-kit/package.json
 
 # Install all deps needed to build web + shared packages
-RUN pnpm install --prod=false
+RUN pnpm install
 
 # Copy source
 COPY . .
@@ -25,10 +25,7 @@ RUN pnpm --filter @mindease/domain build \
   && pnpm --filter @mindease/ui-kit build \
   && pnpm --filter mindease-web build
 
-# Install serve for production
-RUN pnpm add -g serve
-
 ENV NODE_ENV=production
 EXPOSE 3000
 WORKDIR /app/apps/web
-CMD ["serve", "dist", "-l", "3000"]
+CMD ["pnpm", "serve"]
