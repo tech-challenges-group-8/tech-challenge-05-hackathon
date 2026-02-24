@@ -19,4 +19,8 @@ config.resolver.nodeModulesPaths = [
 // 3. Force resolving to workspace root node_modules
 config.resolver.disableHierarchicalLookup = false;
 
+// 4. NativeWind v2 - using CSS import directly (no withNativeWind needed for web)
+// For React Native, uncomment: const { withNativeWind } = require('nativewind/metro');
+// module.exports = withNativeWind(config, { input: './src/index.css' });
+
 module.exports = config;

@@ -1,0 +1,98 @@
+/* ============================================
+   MindEase Web App - Global Styles
+   ============================================
+   
+   IMPORTANTE: Os Design Tokens principais estão definidos em:
+   packages/ui-kit/src/tokens/boilerplate.css
+   
+   Este arquivo importa o boilerplate e adiciona estilos
+   específicos da aplicação web.
+   ============================================ */
+
+/* Import the shared Design System tokens from ui-kit */
+@import '../../../packages/ui-kit/src/tokens/boilerplate.css';
+
+/* ============================================
+   WEB-SPECIFIC OVERRIDES & EXTENSIONS
+   ============================================ */
+
+/* Ensure full viewport height for web app */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+/* ============================================
+   LEGACY COMPATIBILITY LAYER
+   ============================================
+   Mapeia variáveis antigas para as novas do Design System
+   para manter compatibilidade com componentes existentes.
+   TODO: Migrar componentes para usar as novas variáveis diretamente
+   ============================================ */
+
+:root {
+  /* Mapeamento de cores (formato antigo -> novo) */
+  --primary: var(--primary-default);
+  --primary-foreground: var(--primary-foreground);
+  --secondary: var(--secondary-default);
+  --secondary-foreground: var(--secondary-foreground);
+  --accent: var(--accent-default);
+  --accent-foreground: var(--accent-foreground);
+  --muted: var(--muted-default);
+  --muted-foreground: var(--muted-foreground);
+  --destructive: var(--destructive-default);
+  --destructive-foreground: var(--destructive-foreground);
+  
+  /* Mapeamento de tipografia (formato antigo -> novo) */
+  --font-size-base: var(--text-base-size);
+  --line-height: var(--line-height-normal);
+  --font-sans: var(--font-family-base);
+  --font-mono: monospace;
+  
+  /* Mapeamento de espaçamento e raio */
+  --spacing-unit: 0.25rem;
+  --border-radius: var(--radius);
+  
+  /* Animações */
+  --animation-duration: 200ms;
+  --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   COGNITIVE MODE MAPPINGS
+   ============================================
+   Mapeia os modos cognitivos antigos para as novas classes
+   do Design System. Mantém compatibilidade retroativa.
+   ============================================ */
+
+/* Modo TDAH: Usa text-size-lg e line-height-relaxed do novo sistema */
+.cognitive-tdah-mode {
+  --text-scale-factor: 1.125;
+  --line-height-scale-factor: 1.2;
+}
+
+/* Modo Dislexia: Aplica fonte OpenDyslexic e maior espaçamento */
+.cognitive-dyslexia-mode {
+  font-family: var(--font-family-dyslexic) !important;
+  --text-scale-factor: 1.125;
+  --line-height-scale-factor: 1.33;
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+/* Modo Alto Contraste */
+.cognitive-high-contrast {
+  --primary-default: hsl(0 0% 0%);
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(0 0% 0%);
+  --muted-default: hsl(0 0% 50%);
+  --border: hsl(0 0% 0%);
+}
+
+/* ============================================
+   WEB-SPECIFIC UTILITIES
+   ============================================ */
+
+/* Transição cognitiva suave (mantido para compatibilidade) */
+.transition-cognitive {
+  transition: all var(--animation-duration) var(--animation-timing);
+}
