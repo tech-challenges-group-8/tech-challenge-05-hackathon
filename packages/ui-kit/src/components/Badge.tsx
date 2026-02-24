@@ -2,7 +2,7 @@ import React from 'react';
 
 interface BadgeProps {
   label: string;
-  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -14,22 +14,23 @@ export const Badge: React.FC<BadgeProps> = ({
   className = '',
 }) => {
   const variantStyles = {
-    primary: 'bg-primary text-primary-foreground',
-    secondary: 'bg-secondary text-secondary-foreground',
-    success: 'bg-green-500 text-white',
-    warning: 'bg-yellow-500 text-white',
-    error: 'bg-destructive text-destructive-foreground',
+    primary: 'bg-[var(--primary-default)] text-[var(--primary-foreground)]',
+    secondary: 'bg-[var(--secondary-default)] text-[var(--secondary-foreground)]',
+    success: 'bg-[var(--success-default)] text-[var(--success-foreground)]',
+    warning: 'bg-[var(--warning-default)] text-[var(--warning-foreground)]',
+    error: 'bg-[var(--destructive-default)] text-[var(--destructive-foreground)]',
+    outline: 'bg-transparent border border-[var(--border)] text-[var(--foreground)]',
   };
 
   const sizeStyles = {
-    sm: 'px-2 py-1 text-xs',
-    md: 'px-3 py-1.5 text-sm',
-    lg: 'px-4 py-2 text-base',
+    sm: 'px-2 py-0.5 text-xs',
+    md: 'px-2.5 py-1 text-sm',
+    lg: 'px-3 py-1.5 text-base',
   };
 
   return (
     <span
-      className={`inline-block rounded-full font-medium ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-flex items-center rounded-full font-medium ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
     >
       {label}
     </span>

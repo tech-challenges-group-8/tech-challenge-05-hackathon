@@ -16,28 +16,45 @@ export const Alert: React.FC<AlertProps> = ({
   className = '',
 }) => {
   const typeStyles = {
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
-    success: 'bg-green-50 border-green-200 text-green-800',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-    error: 'bg-red-50 border-red-200 text-red-800',
+    info: 'bg-[var(--info-default)]/10 border-[var(--info-default)] text-[var(--info-foreground)]',
+    success: 'bg-[var(--success-default)]/10 border-[var(--success-default)] text-[var(--success-foreground)]',
+    warning: 'bg-[var(--warning-default)]/10 border-[var(--warning-default)] text-[var(--warning-foreground)]',
+    error: 'bg-[var(--destructive-default)]/10 border-[var(--destructive-default)] text-[var(--destructive-foreground)]',
+  };
+
+  const iconColors = {
+    info: 'text-[var(--info-default)]',
+    success: 'text-[var(--success-default)]',
+    warning: 'text-[var(--warning-default)]',
+    error: 'text-[var(--destructive-default)]',
   };
 
   return (
     <div
-      className={`border rounded-lg p-4 ${typeStyles[type]} ${className}`}
+      className={`border rounded-[var(--radius)] p-4 ${typeStyles[type]} ${className}`}
       role="alert"
     >
-      {title && <h4 className="font-semibold mb-2">{title}</h4>}
-      <p>{message}</p>
-      {onClose && (
-        <button
-          onClick={onClose}
-          className="mt-2 text-sm font-medium hover:underline"
-          aria-label="Fechar alerta"
-        >
-          Fechar
-        </button>
-      )}
+      <div className="flex gap-3">
+        <span className={`text-lg ${iconColors[type]}`} aria-hidden="true">
+          {type === 'info' && 'ℹ️'}
+          {type === 'success' && '✓'}
+          {type === 'warning' && '⚠'}
+          {type === 'error' && '✕'}
+        </span>
+        <div className="flex-1">
+          {title && <h4 className="font-semibold mb-1">{title}</h4>}
+          <p className="text-sm">{message}</p>
+        </div>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="text-current opacity-70 hover:opacity-100 transition-opacity"
+            aria-label="Fechar alerta"
+          >
+            ✕
+          </button>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class', // Usa classe .dark para dark mode (alinhado com ui-kit)
   content: [
     './index.js',
     './src/**/*.{js,jsx,ts,tsx}',
@@ -8,49 +9,99 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Cores alinhadas com o Design System do ui-kit (boilerplate.css)
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        border: 'var(--border)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: 'var(--primary-default)',
+          foreground: 'var(--primary-foreground)',
+          light: 'var(--primary-light)',
+          dark: 'var(--primary-dark)',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: 'var(--secondary-default)',
+          foreground: 'var(--secondary-foreground)',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          DEFAULT: 'var(--accent-default)',
+          foreground: 'var(--accent-foreground)',
         },
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: 'var(--muted-default)',
+          foreground: 'var(--muted-foreground)',
         },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          DEFAULT: 'var(--destructive-default)',
+          foreground: 'var(--destructive-foreground)',
+          light: 'var(--destructive-light)',
+          dark: 'var(--destructive-dark)',
         },
+        
+        // State colors do Design System
+        success: {
+          DEFAULT: 'var(--success-default)',
+          foreground: 'var(--success-foreground)',
+        },
+        warning: {
+          DEFAULT: 'var(--warning-default)',
+          foreground: 'var(--warning-foreground)',
+        },
+        info: {
+          DEFAULT: 'var(--info-default)',
+          foreground: 'var(--info-foreground)',
+        },
+        
+        // Card e Popover
+        card: {
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
+        },
+        popover: {
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
+        },
+        
+        // Cognitive tokens
+        highlight: 'var(--highlight-soft)',
+        'task-active': 'var(--task-active)',
       },
-      spacing: {
-        'cognitive-xs': 'calc(var(--spacing-unit) * 2)',
-        'cognitive-sm': 'calc(var(--spacing-unit) * 3)',
-        'cognitive-md': 'calc(var(--spacing-unit) * 4)',
-        'cognitive-lg': 'calc(var(--spacing-unit) * 6)',
-        'cognitive-xl': 'calc(var(--spacing-unit) * 8)',
+      
+      fontFamily: {
+        sans: ['var(--font-family-base)'],
+        dyslexic: ['var(--font-family-dyslexic)'],
       },
+      
       fontSize: {
-        'cognitive-xs': 'calc(var(--font-size-base) * 0.75)',
-        'cognitive-sm': 'calc(var(--font-size-base) * 0.875)',
-        'cognitive-base': 'var(--font-size-base)',
-        'cognitive-lg': 'calc(var(--font-size-base) * 1.125)',
-        'cognitive-xl': 'calc(var(--font-size-base) * 1.25)',
-        'cognitive-2xl': 'calc(var(--font-size-base) * 1.5)',
+        // Tamanhos elásticos baseados no scale factor
+        sm: 'var(--text-size-sm)',
+        base: 'var(--text-size-md)',
+        lg: 'var(--text-size-lg)',
+        xl: 'var(--text-size-xl)',
       },
+      
+      lineHeight: {
+        normal: 'var(--line-height-normal)',
+        relaxed: 'var(--line-height-relaxed)',
+        loose: 'var(--line-height-loose)',
+      },
+      
+      letterSpacing: {
+        normal: 'var(--letter-spacing-normal)',
+        wide: 'var(--letter-spacing-wide)',
+        wider: 'var(--letter-spacing-wider)',
+      },
+      
       borderRadius: {
-        cognitive: 'var(--border-radius)',
+        DEFAULT: 'var(--radius)',
+      },
+      
+      boxShadow: {
+        gentle: 'var(--gentle-shadow)',
+        card: 'var(--card-shadow)',
       },
     },
   },
