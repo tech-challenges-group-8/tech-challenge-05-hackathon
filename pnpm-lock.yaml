@@ -10172,7 +10172,7 @@ snapshots:
   '@react-native/codegen@0.81.5(@babel/core@7.28.6)':
     dependencies:
       '@babel/core': 7.28.6
-      '@babel/parser': 7.28.6
+      '@babel/parser': 7.29.0
       glob: 7.2.3
       hermes-parser: 0.29.1
       invariant: 2.2.4

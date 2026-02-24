@@ -15,3 +15,4 @@ export * from './components/Breadcrumb';
 export * from './components/Tooltip';
 export * from './components/Radio';
 export * from './components/Divider';
+export * from './tokens';
