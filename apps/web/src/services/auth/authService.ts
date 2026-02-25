@@ -53,6 +53,21 @@ class AuthService {
     const token = await this.getStoredToken();
     return !!token;
   }
+
+  /**
+   * Register a new user
+   * @param name - User's full name
+   * @param email - User's email
+   * @param password - User's password
+   * @returns User info (does not auto-login)
+   */
+  async register(name: string, email: string, password: string): Promise<{ id: string; name: string; email: string }> {
+    const response = await api.post<AuthResponseDTO>('/users', { name, email, password });
+    
+    // Return user info without storing token
+    // User must login separately after registration
+    return response.data.user;
+  }
 }
 
 export default new AuthService();
