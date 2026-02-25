@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "MindEase",
+    "tagline": "Cognitive Support App"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "tasks": "Tasks",
+    "focus": "Focus Mode",
+    "cognitive": "Cognitive Settings",
+    "analytics": "Analytics",
+    "settings": "Settings"
+  },
+  "header": {
+    "newTask": "New Task",
+    "profile": "Profile"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Welcome to MindEase",
+      "subtitle": "Your cognitive support companion",
+      "body": "MindEase is designed to help you manage tasks, maintain focus, and optimize your cognitive performance. Use the sidebar to navigate between different features and customize your experience.",
+      "quickActionsTitle": "Quick Actions",
+      "quickActionsBody": "Start your day by reviewing your task list, setting up a focus session, or adjusting your cognitive settings to match your current needs.",
+      "stats": {
+        "activeTasks": "Active Tasks",
+        "completedToday": "Completed Today",
+        "focusTime": "Focus Time"
+      }
+    },
+    "tasks": {
+      "title": "Tasks",
+      "body": "Mock tasks list goes here. You will be able to create, prioritize, and track your tasks with cognitive-friendly layouts."
+    },
+    "focus": {
+      "title": "Focus Mode",
+      "body": "Mock focus session setup. You will configure timers, ambient sounds, and focus settings tailored to your needs."
+    },
+    "cognitive": {
+      "title": "Cognitive Settings",
+      "body": "Mock settings panel. You will adjust cognitive intensity, notifications, and accessibility preferences here."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "body": "Mock analytics dashboard. You will see progress trends, focus metrics, and completion stats here."
+    },
+    "settings": {
+      "title": "Settings",
+      "body": "Mock settings screen. You will manage account preferences, notifications, and integrations here."
+    }
+  },
+  "actions": {
+    "newTaskClicked": "New task clicked",
+    "profileClicked": "Profile clicked"
+  }
+}
