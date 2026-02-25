@@ -1,6 +1,5 @@
 import api from '../api';
 import type {
-  TaskCheckList,
   CreateTaskCheckListDTO,
   UpdateTaskCheckListDTO,
   ResponseTaskCheckListDto,

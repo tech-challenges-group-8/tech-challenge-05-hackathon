@@ -52,5 +52,14 @@
   "actions": {
     "newTaskClicked": "New task clicked",
     "profileClicked": "Profile clicked"
+  },
+  "settings": {
+    "theme": {
+      "title": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "softPastel": "Soft Pastel",
+      "highContrast": "High Contrast"
+    }
   }
 }

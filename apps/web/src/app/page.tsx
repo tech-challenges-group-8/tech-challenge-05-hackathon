@@ -1,8 +1,8 @@
 import { View, StyleSheet, ScrollView, Platform, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { colors, space } from '@mindease/ui-kit';
+import { space } from '@mindease/ui-kit';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import {
@@ -13,56 +13,60 @@ import {
   AnalyticsPage,
   SettingsPage,
 } from './pages';
+import { useTheme } from '../theme';
 
 // Helper to convert rem to pixels (assuming 16px base)
-const rem = (value: string) => parseFloat(value) * 16;
+const rem = (value: string) => Number.parseFloat(value) * 16;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: Platform.OS === 'web' ? 'row' : 'column',
-    backgroundColor: colors.background,
-  },
-  mainContent: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  content: {
-    flex: 1,
-    padding: rem(space[6]),
-  },
-  tabBar: {
-    height: 64,
-    backgroundColor: colors.white,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingHorizontal: rem(space[4]),
-  },
-  tabItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: rem(space[2]),
-    paddingHorizontal: rem(space[3]),
-    borderRadius: 8,
-  },
-  tabItemActive: {
-    backgroundColor: colors.cognitive.highlight,
-  },
-  tabIcon: {
-    fontSize: rem(space[4]),
-    color: colors.foreground,
-  },
-  tabIconActive: {
-    color: colors.primary.DEFAULT,
-  },
-});
+const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      flexDirection: Platform.OS === 'web' ? 'row' : 'column',
+      backgroundColor: themeColors.background,
+    },
+    mainContent: {
+      flex: 1,
+      flexDirection: 'column',
+    },
+    content: {
+      flex: 1,
+      padding: rem(space[6]),
+    },
+    tabBar: {
+      height: 64,
+      backgroundColor: themeColors.white,
+      borderTopWidth: 1,
+      borderTopColor: themeColors.border,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      paddingHorizontal: rem(space[4]),
+    },
+    tabItem: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: rem(space[2]),
+      paddingHorizontal: rem(space[3]),
+      borderRadius: 8,
+    },
+    tabItemActive: {
+      backgroundColor: themeColors.cognitive.highlight,
+    },
+    tabIcon: {
+      fontSize: rem(space[4]),
+      color: themeColors.foreground,
+    },
+    tabIconActive: {
+      color: themeColors.primary.DEFAULT,
+    },
+  });
 
 export default function Home() {
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const { t } = useTranslation();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
 
   const pathByMenu: Record<string, string> = {
     dashboard: '/',

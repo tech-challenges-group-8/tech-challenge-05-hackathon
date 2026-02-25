@@ -1,9 +1,7 @@
 import api from '../api';
 import type {
-  FocusSettings,
   UpdateFocusSettingsDTO,
   ResponseFocusSettingsDTO,
-  CreateFocusSettingsDTO,
 } from './types';
 
 class FocusSettingsService {

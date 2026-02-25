@@ -1,65 +1,71 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { colors, fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
+import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
+import { useTheme } from '../../theme';
 
-const rem = (value: string) => parseFloat(value) * 16;
+const rem = (value: string) => Number.parseFloat(value) * 16;
+const extractPixels = (value: string) => Number.parseInt(value, 10);
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.card.DEFAULT,
-    borderRadius: parseInt(radii.lg),
-    padding: rem(space[6]),
-    marginBottom: rem(space[4]),
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  title: {
-    fontSize: rem(fontSizes['2xl']),
-    fontWeight: fontWeights.bold,
-    color: colors.foreground,
-    marginBottom: rem(space[2]),
-  },
-  subtitle: {
-    fontSize: rem(fontSizes.md),
-    color: colors.muted.foreground,
-    marginBottom: rem(space[4]),
-  },
-  text: {
-    fontSize: rem(fontSizes.sm),
-    color: colors.foreground,
-    lineHeight: rem(fontSizes.sm) * 1.5,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    marginTop: rem(space[4]),
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: colors.accent.DEFAULT,
-    borderRadius: parseInt(radii.md),
-    padding: rem(space[4]),
-    marginRight: rem(space[3]),
-  },
-  statCardLast: {
-    marginRight: 0,
-  },
-  statLabel: {
-    fontSize: rem(fontSizes.xs),
-    color: colors.accent.foreground,
-    marginBottom: rem(space[1]),
-  },
-  statValue: {
-    fontSize: rem(fontSizes['3xl']),
-    fontWeight: fontWeights.bold,
-    color: colors.accent.foreground,
-  },
-});
+const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: themeColors.card.DEFAULT,
+      borderRadius: extractPixels(radii.lg),
+      padding: rem(space[6]),
+      marginBottom: rem(space[4]),
+      shadowColor: themeColors.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 3,
+    },
+    title: {
+      fontSize: rem(fontSizes['2xl']),
+      fontWeight: fontWeights.bold,
+      color: themeColors.foreground,
+      marginBottom: rem(space[2]),
+    },
+    subtitle: {
+      fontSize: rem(fontSizes.md),
+      color: themeColors.muted.foreground,
+      marginBottom: rem(space[4]),
+    },
+    text: {
+      fontSize: rem(fontSizes.sm),
+      color: themeColors.foreground,
+      lineHeight: rem(fontSizes.sm) * 1.5,
+    },
+    statsContainer: {
+      flexDirection: 'row',
+      marginTop: rem(space[4]),
+    },
+    statCard: {
+      flex: 1,
+      backgroundColor: themeColors.accent.DEFAULT,
+      borderRadius: parseInt(radii.md),
+      padding: rem(space[4]),
+      marginRight: rem(space[3]),
+    },
+    statCardLast: {
+      marginRight: 0,
+    },
+    statLabel: {
+      fontSize: rem(fontSizes.xs),
+      color: themeColors.accent.foreground,
+      marginBottom: rem(space[1]),
+    },
+    statValue: {
+      fontSize: rem(fontSizes['3xl']),
+      fontWeight: fontWeights.bold,
+      color: themeColors.accent.foreground,
+    },
+  });
 
 export function DashboardPage() {
   const { t } = useTranslation();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
 
   return (
     <View>

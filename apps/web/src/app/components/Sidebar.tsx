@@ -1,49 +1,53 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { colors, fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
+import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
+import { useTheme } from '../../theme';
 
 // Helper to convert rem to pixels (assuming 16px base)
-const rem = (value: string) => parseFloat(value) * 16;
+const rem = (value: string) => Number.parseFloat(value) * 16;
+const extractPixels = (value: string) => Number.parseInt(value, 10);
 
-const styles = StyleSheet.create({
-  sidebar: {
-    width: 250,
-    backgroundColor: colors.white,
-    borderRightWidth: 1,
-    borderRightColor: colors.border,
-    padding: rem(space[4]),
-  },
-  sidebarHeader: {
-    marginBottom: rem(space[6]),
-  },
-  logo: {
-    fontSize: rem(fontSizes['2xl']),
-    fontWeight: fontWeights.bold,
-    color: colors.primary.DEFAULT,
-    marginBottom: rem(space[2]),
-  },
-  logoSubtitle: {
-    fontSize: rem(fontSizes.xs),
-    color: colors.muted.foreground,
-  },
-  menuItem: {
-    paddingVertical: rem(space[3]),
-    paddingHorizontal: rem(space[4]),
-    marginBottom: rem(space[1]),
-    borderRadius: parseInt(radii.md),
-  },
-  menuItemActive: {
-    backgroundColor: colors.cognitive.highlight,
-  },
-  menuItemText: {
-    fontSize: rem(fontSizes.md),
-    color: colors.foreground,
-  },
-  menuItemTextActive: {
-    fontWeight: fontWeights.semiBold,
-    color: colors.primary.DEFAULT,
-  },
-});
+const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+  StyleSheet.create({
+    sidebar: {
+      width: 250,
+      backgroundColor: themeColors.card.DEFAULT,
+      borderRightWidth: 1,
+      borderRightColor: themeColors.border,
+      padding: rem(space[4]),
+    },
+    sidebarHeader: {
+      marginBottom: rem(space[6]),
+    },
+    logo: {
+      fontSize: rem(fontSizes['2xl']),
+      fontWeight: fontWeights.bold,
+      color: themeColors.primary.DEFAULT,
+      marginBottom: rem(space[2]),
+    },
+    logoSubtitle: {
+      fontSize: rem(fontSizes.xs),
+      color: themeColors.muted.foreground,
+    },
+    menuItem: {
+      paddingVertical: rem(space[3]),
+      paddingHorizontal: rem(space[4]),
+      marginBottom: rem(space[1]),
+      borderRadius: extractPixels(radii.md),
+    },
+    menuItemActive: {
+      backgroundColor: themeColors.cognitive.highlight,
+    },
+    menuItemText: {
+      fontSize: rem(fontSizes.md),
+      color: themeColors.foreground,
+    },
+    menuItemTextActive: {
+      fontWeight: fontWeights.semiBold,
+      color: themeColors.primary.DEFAULT,
+    },
+  });
 
 const menuItems = [
   { id: 'dashboard', labelKey: 'menu.dashboard', icon: '📊' },
@@ -59,6 +63,8 @@ interface SidebarProps {
 
 export function Sidebar({ activeMenu, onMenuChange }: SidebarProps) {
   const { t } = useTranslation();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
 
   return (
     <View style={styles.sidebar}>

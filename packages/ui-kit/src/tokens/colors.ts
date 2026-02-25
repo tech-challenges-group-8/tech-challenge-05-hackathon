@@ -67,3 +67,98 @@ export const colors = {
     taskActive: 'hsl(100 38% 87%)', // #D9EAD3 - To indicate an active/selected task
   },
 }
+
+// Theme definitions
+export type ThemeName = 'light' | 'dark' | 'soft-pastel' | 'high-contrast';
+
+export type ThemeTokens = {
+  name: ThemeName;
+  colors: {
+    background: string;
+    foreground: string;
+    border: string;
+    card: { DEFAULT: string; foreground: string };
+    primary: { DEFAULT: string; foreground: string };
+    secondary: { DEFAULT: string; foreground: string };
+    muted: { DEFAULT: string; foreground: string };
+    accent: { DEFAULT: string; foreground: string };
+    cognitive: { highlight: string };
+    white: string;
+    black: string;
+  };
+};
+
+const lightTheme: ThemeTokens = {
+  name: 'light',
+  colors: {
+    background: colors.background,
+    foreground: colors.foreground,
+    border: colors.border,
+    card: colors.card,
+    primary: colors.primary,
+    secondary: colors.secondary,
+    muted: colors.muted,
+    accent: colors.accent,
+    cognitive: colors.cognitive,
+    white: colors.white,
+    black: colors.black,
+  },
+};
+
+const darkTheme: ThemeTokens = {
+  name: 'dark',
+  colors: {
+    background: 'hsl(222 18% 11%)',
+    foreground: 'hsl(40 8% 95%)',
+    border: 'hsl(213 22% 20%)',
+    card: { DEFAULT: 'hsl(222 18% 14%)', foreground: 'hsl(40 8% 95%)' },
+    primary: { DEFAULT: 'hsl(150 41% 55%)', foreground: 'hsl(222 18% 11%)' },
+    secondary: { DEFAULT: 'hsl(213 22% 20%)', foreground: 'hsl(40 8% 93%)' },
+    muted: { DEFAULT: 'hsl(215 20% 19%)', foreground: 'hsl(40 5% 63%)' },
+    accent: { DEFAULT: 'hsl(26 27% 33%)', foreground: 'hsl(28 50% 83%)' },
+    cognitive: { highlight: 'hsl(148 40% 22%)' },
+    white: '#FFFFFF',
+    black: '#000000',
+  },
+};
+
+const softPastelTheme: ThemeTokens = {
+  name: 'soft-pastel',
+  colors: {
+    background: '#FFF8F6',
+    foreground: '#4A3C3A',
+    border: '#E8D8D4',
+    card: { DEFAULT: '#FFFFFF', foreground: '#4A3C3A' },
+    primary: { DEFAULT: '#B7D4C9', foreground: '#2F4A40' },
+    secondary: { DEFAULT: '#EADFF6', foreground: '#5A4D7A' },
+    muted: { DEFAULT: '#F2E9E7', foreground: '#7C6B67' },
+    accent: { DEFAULT: '#FFE2C9', foreground: '#8C5E46' },
+    cognitive: { highlight: '#E5F5EE' },
+    white: '#FFFFFF',
+    black: '#000000',
+  },
+};
+
+const highContrastTheme: ThemeTokens = {
+  name: 'high-contrast',
+  colors: {
+    background: '#000000',
+    foreground: '#FFFFFF',
+    border: '#FFFFFF',
+    card: { DEFAULT: '#000000', foreground: '#FFFFFF' },
+    primary: { DEFAULT: '#00FF6A', foreground: '#000000' },
+    secondary: { DEFAULT: '#FFD400', foreground: '#000000' },
+    muted: { DEFAULT: '#000000', foreground: '#FFFFFF' },
+    accent: { DEFAULT: '#00BFFF', foreground: '#000000' },
+    cognitive: { highlight: '#1A1A1A' },
+    white: '#FFFFFF',
+    black: '#000000',
+  },
+};
+
+export const themes: Record<ThemeName, ThemeTokens> = {
+  light: lightTheme,
+  dark: darkTheme,
+  'soft-pastel': softPastelTheme,
+  'high-contrast': highContrastTheme,
+};

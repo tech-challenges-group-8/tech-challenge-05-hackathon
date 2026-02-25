@@ -52,5 +52,14 @@
   "actions": {
     "newTaskClicked": "Nova tarefa clicada",
     "profileClicked": "Perfil clicado"
+  },
+  "settings": {
+    "theme": {
+      "title": "Tema",
+      "light": "Claro",
+      "dark": "Escuro",
+      "softPastel": "Pastel Suave",
+      "highContrast": "Alto Contraste"
+    }
   }
 }
