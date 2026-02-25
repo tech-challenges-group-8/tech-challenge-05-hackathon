@@ -1,4 +1,5 @@
 import api from '../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { User, CreateUserDTO, UpdateUserDTO } from './types';
 
 class UserService {
@@ -43,6 +44,45 @@ class UserService {
     const response = await api.put<{ success: boolean }>(`/users/${id}/password`, {
       newPassword,
     });
+    return response.data;
+  }
+
+  /**
+   * Update current user profile (name)
+   * @param data - Profile data to update
+   * @returns Updated user
+   */
+  async updateProfile(data: { name?: string; email?: string }): Promise<User> {
+    const storedUser = await AsyncStorage.getItem('user');
+    if (!storedUser) throw new Error('User not found');
+
+    const user = JSON.parse(storedUser) as User;
+    const response = await api.put<User>(`/users/${user.id}`, data);
+
+    // Update stored user info
+    if (response.data) {
+      await AsyncStorage.setItem('user', JSON.stringify(response.data));
+    }
+
+    return response.data;
+  }
+
+  /**
+   * Change current user password
+   * @param currentPassword - Current password for verification
+   * @param newPassword - New password
+   * @returns Success status
+   */
+  async changePassword(currentPassword: string, newPassword: string): Promise<{ success: boolean }> {
+    const storedUser = await AsyncStorage.getItem('user');
+    if (!storedUser) throw new Error('User not found');
+
+    const user = JSON.parse(storedUser) as User;
+    const response = await api.put<{ success: boolean }>(`/users/${user.id}/password`, {
+      currentPassword,
+      newPassword,
+    });
+
     return response.data;
   }
 }

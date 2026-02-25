@@ -10,10 +10,12 @@ import {
   TasksPage,
   FocusPage,
   CognitiveSettingsPage,
-  AnalyticsPage,
   SettingsPage,
+  LoginPage,
+  RegisterPage,
 } from './pages';
 import { useTheme } from '../theme';
+import { useAuth } from '../auth';
 
 // Helper to convert rem to pixels (assuming 16px base)
 const rem = (value: string) => Number.parseFloat(value) * 16;
@@ -64,16 +66,17 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
 
 export default function Home() {
   const [activeMenu, setActiveMenu] = useState('dashboard');
+  const [isRegistering, setIsRegistering] = useState(false);
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
+  const { currentUser, isLoading } = useAuth();
 
   const pathByMenu: Record<string, string> = {
     dashboard: '/',
     tasks: '/tasks',
     focus: '/focus',
     cognitive: '/cognitive',
-    analytics: '/analytics',
     settings: '/settings',
   };
 
@@ -82,7 +85,6 @@ export default function Home() {
     '/tasks': 'tasks',
     '/focus': 'focus',
     '/cognitive': 'cognitive',
-    '/analytics': 'analytics',
     '/settings': 'settings',
   };
 
@@ -105,11 +107,11 @@ export default function Home() {
     setActiveMenu(menuId);
 
     if (Platform.OS !== 'web') return;
-    if (typeof window === 'undefined') return;
+    if (globalThis.window === undefined) return;
 
     const nextPath = pathByMenu[menuId] ?? '/';
-    if (window.location.pathname !== nextPath) {
-      window.history.pushState({}, '', nextPath);
+    if (globalThis.window.location.pathname !== nextPath) {
+      globalThis.window.history.pushState({}, '', nextPath);
     }
   };
 
@@ -118,7 +120,6 @@ export default function Home() {
     tasks: t('menu.tasks'),
     focus: t('menu.focus'),
     cognitive: t('menu.cognitive'),
-    analytics: t('menu.analytics'),
     settings: t('menu.settings'),
   };
 
@@ -130,8 +131,6 @@ export default function Home() {
         return <FocusPage />;
       case 'cognitive':
         return <CognitiveSettingsPage />;
-      case 'analytics':
-        return <AnalyticsPage />;
       case 'settings':
         return <SettingsPage />;
       case 'dashboard':
@@ -142,21 +141,41 @@ export default function Home() {
 
   useEffect(() => {
     if (Platform.OS !== 'web') return;
-    if (typeof window === 'undefined') return;
+    if (globalThis.window === undefined) return;
 
     const syncFromLocation = () => {
-      const pathname = window.location.pathname;
+      const pathname = globalThis.window.location.pathname;
       const menu = menuByPath[pathname] ?? 'dashboard';
       setActiveMenu(menu);
     };
 
     syncFromLocation();
-    window.addEventListener('popstate', syncFromLocation);
+    globalThis.window.addEventListener('popstate', syncFromLocation);
 
     return () => {
-      window.removeEventListener('popstate', syncFromLocation);
+      globalThis.window.removeEventListener('popstate', syncFromLocation);
     };
   }, []);
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+        <View style={styles.mainContent}>
+          <ScrollView style={styles.content}>
+            <Text>{t('login.loading')}</Text>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!currentUser) {
+    return isRegistering ? (
+      <RegisterPage onSwitchToLogin={() => setIsRegistering(false)} />
+    ) : (
+      <LoginPage onSwitchToRegister={() => setIsRegistering(true)} />
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>

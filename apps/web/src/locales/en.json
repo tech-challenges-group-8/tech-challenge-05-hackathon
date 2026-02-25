@@ -8,12 +8,12 @@
     "tasks": "Tasks",
     "focus": "Focus Mode",
     "cognitive": "Cognitive Settings",
-    "analytics": "Analytics",
     "settings": "Settings"
   },
   "header": {
     "newTask": "New Task",
-    "profile": "Profile"
+    "profile": "Profile",
+    "logout": "Sign out"
   },
   "pages": {
     "dashboard": {
@@ -40,10 +40,6 @@
       "title": "Cognitive Settings",
       "body": "Mock settings panel. You will adjust cognitive intensity, notifications, and accessibility preferences here."
     },
-    "analytics": {
-      "title": "Analytics",
-      "body": "Mock analytics dashboard. You will see progress trends, focus metrics, and completion stats here."
-    },
     "settings": {
       "title": "Settings",
       "body": "Mock settings screen. You will manage account preferences, notifications, and integrations here."
@@ -52,6 +48,76 @@
   "actions": {
     "newTaskClicked": "New task clicked",
     "profileClicked": "Profile clicked"
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to continue to MindEase",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "submit": "Sign in",
+    "helper": "Your session will be saved on this device.",
+    "loading": "Checking your session...",
+    "switchToRegister": "Don't have an account? Sign up",
+    "errors": {
+      "missingFields": "Please enter your email and password.",
+      "invalidCredentials": "Invalid email or password."
+    }
+  },
+  "register": {
+    "title": "Create account",
+    "subtitle": "Join MindEase to get started",
+    "nameLabel": "Full name",
+    "namePlaceholder": "John Doe",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Create a password",
+    "confirmPasswordLabel": "Confirm password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "submit": "Create account",
+    "helper": "Your account will be created and you'll be logged in automatically.",
+    "switchToLogin": "Already have an account? Sign in",
+    "errors": {
+      "missingFields": "Please fill in all fields.",
+      "passwordMismatch": "Passwords do not match.",
+      "passwordTooShort": "Password must be at least 6 characters.",
+      "invalidEmail": "Please enter a valid email address.",
+      "emailExists": "Email is already in use.",
+      "failed": "Registration failed. Please try again."
+    }
+  },
+  "userProfile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "profileSection": "Profile Information",
+    "passwordSection": "Change Password",
+    "nameLabel": "Full name",
+    "namePlaceholder": "Enter your name",
+    "emailLabel": "Email",
+    "currentPasswordLabel": "Current password",
+    "currentPasswordPlaceholder": "Enter your current password",
+    "newPasswordLabel": "New password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPasswordLabel": "Confirm password",
+    "confirmPasswordPlaceholder": "Confirm your new password",
+    "updateName": "Save Name",
+    "changePassword": "Update Password",
+    "close": "Close",
+    "loading": "Loading...",
+    "updateSuccess": "Name updated successfully!",
+    "changeSuccess": "Password changed successfully!",
+    "errors": {
+      "nameRequired": "Please enter your name.",
+      "passwordFieldsRequired": "Please fill in all password fields.",
+      "passwordMismatch": "Passwords do not match.",
+      "passwordTooShort": "Password must be at least 6 characters.",
+      "invalidCurrentPassword": "Current password is incorrect.",
+      "updateFailed": "Failed to update profile. Please try again.",
+      "changeFailed": "Failed to change password. Please try again."
+    }
   },
   "settings": {
     "theme": {

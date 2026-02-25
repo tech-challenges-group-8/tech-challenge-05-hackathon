@@ -8,12 +8,12 @@
     "tasks": "Tarefas",
     "focus": "Modo Foco",
     "cognitive": "Configurações Cognitivas",
-    "analytics": "Análises",
     "settings": "Configurações"
   },
   "header": {
     "newTask": "Nova Tarefa",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "logout": "Sair"
   },
   "pages": {
     "dashboard": {
@@ -40,10 +40,6 @@
       "title": "Configurações Cognitivas",
       "body": "Painel de configurações simulado. Você poderá ajustar intensidade cognitiva, notificações e preferências de acessibilidade aqui."
     },
-    "analytics": {
-      "title": "Análises",
-      "body": "Painel de análises simulado. Você verá tendências de progresso, métricas de foco e estatísticas de conclusão aqui."
-    },
     "settings": {
       "title": "Configurações",
       "body": "Tela de configurações simulada. Você gerenciará preferências da conta, notificações e integrações aqui."
@@ -52,6 +48,76 @@
   "actions": {
     "newTaskClicked": "Nova tarefa clicada",
     "profileClicked": "Perfil clicado"
+  },
+  "login": {
+    "title": "Bem-vindo de volta",
+    "subtitle": "Entre para continuar no MindEase",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "voce@exemplo.com",
+    "passwordLabel": "Senha",
+    "passwordPlaceholder": "Digite sua senha",
+    "submit": "Entrar",
+    "helper": "Sua sessão ficará salva neste dispositivo.",
+    "loading": "Verificando sua sessão...",
+    "switchToRegister": "Não tem conta? Cadastre-se",
+    "errors": {
+      "missingFields": "Informe seu e-mail e senha.",
+      "invalidCredentials": "E-mail ou senha inválidos."
+    }
+  },
+  "register": {
+    "title": "Criar conta",
+    "subtitle": "Junte-se ao MindEase para começar",
+    "nameLabel": "Nome completo",
+    "namePlaceholder": "João Silva",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "voce@exemplo.com",
+    "passwordLabel": "Senha",
+    "passwordPlaceholder": "Crie uma senha",
+    "confirmPasswordLabel": "Confirmar senha",
+    "confirmPasswordPlaceholder": "Confirme sua senha",
+    "submit": "Criar conta",
+    "helper": "Sua conta será criada e você será conectado automaticamente.",
+    "switchToLogin": "Já tem conta? Entre aqui",
+    "errors": {
+      "missingFields": "Preencha todos os campos.",
+      "passwordMismatch": "As senhas não correspondem.",
+      "passwordTooShort": "Sua senha deve ter pelo menos 6 caracteres.",
+      "invalidEmail": "Digite um endereço de e-mail válido.",
+      "emailExists": "Este e-mail já está em uso.",
+      "failed": "Falha no cadastro. Tente novamente."
+    }
+  },
+  "userProfile": {
+    "title": "Perfil",
+    "editProfile": "Editar Perfil",
+    "changePassword": "Alterar Senha",
+    "profileSection": "Informações do Perfil",
+    "passwordSection": "Alterar Senha",
+    "nameLabel": "Nome completo",
+    "namePlaceholder": "Digite seu nome",
+    "emailLabel": "E-mail",
+    "currentPasswordLabel": "Senha atual",
+    "currentPasswordPlaceholder": "Digite sua senha atual",
+    "newPasswordLabel": "Nova senha",
+    "newPasswordPlaceholder": "Digite sua nova senha",
+    "confirmPasswordLabel": "Confirmar senha",
+    "confirmPasswordPlaceholder": "Confirme sua nova senha",
+    "updateName": "Salvar Nome",
+    "changePassword": "Atualizar Senha",
+    "close": "Fechar",
+    "loading": "Carregando...",
+    "updateSuccess": "Nome atualizado com sucesso!",
+    "changeSuccess": "Senha alterada com sucesso!",
+    "errors": {
+      "nameRequired": "Digite seu nome.",
+      "passwordFieldsRequired": "Preencha todos os campos de senha.",
+      "passwordMismatch": "As senhas não correspondem.",
+      "passwordTooShort": "A senha deve ter no mínimo 6 caracteres.",
+      "invalidCurrentPassword": "A senha atual está incorreta.",
+      "updateFailed": "Falha ao atualizar perfil. Tente novamente.",
+      "changeFailed": "Falha ao alterar senha. Tente novamente."
+    }
   },
   "settings": {
     "theme": {
