@@ -1,0 +1,65 @@
+{
+  "app": {
+    "name": "MindEase",
+    "tagline": "Aplicativo de apoio cognitivo"
+  },
+  "menu": {
+    "dashboard": "Painel",
+    "tasks": "Tarefas",
+    "focus": "Modo Foco",
+    "cognitive": "Configurações Cognitivas",
+    "analytics": "Análises",
+    "settings": "Configurações"
+  },
+  "header": {
+    "newTask": "Nova Tarefa",
+    "profile": "Perfil"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Bem-vindo ao MindEase",
+      "subtitle": "Seu companheiro de apoio cognitivo",
+      "body": "O MindEase foi criado para ajudar você a gerenciar tarefas, manter o foco e otimizar seu desempenho cognitivo. Use a barra lateral para navegar entre os recursos e personalizar sua experiência.",
+      "quickActionsTitle": "Ações Rápidas",
+      "quickActionsBody": "Comece o dia revisando sua lista de tarefas, configurando uma sessão de foco ou ajustando suas configurações cognitivas conforme suas necessidades.",
+      "stats": {
+        "activeTasks": "Tarefas Ativas",
+        "completedToday": "Concluídas Hoje",
+        "focusTime": "Tempo de Foco"
+      }
+    },
+    "tasks": {
+      "title": "Tarefas",
+      "body": "A lista de tarefas simulada ficará aqui. Você poderá criar, priorizar e acompanhar suas tarefas com layouts amigáveis para o foco."
+    },
+    "focus": {
+      "title": "Modo Foco",
+      "body": "Configuração simulada de sessão de foco. Você poderá definir temporizadores, sons ambientes e ajustes de foco personalizados."
+    },
+    "cognitive": {
+      "title": "Configurações Cognitivas",
+      "body": "Painel de configurações simulado. Você poderá ajustar intensidade cognitiva, notificações e preferências de acessibilidade aqui."
+    },
+    "analytics": {
+      "title": "Análises",
+      "body": "Painel de análises simulado. Você verá tendências de progresso, métricas de foco e estatísticas de conclusão aqui."
+    },
+    "settings": {
+      "title": "Configurações",
+      "body": "Tela de configurações simulada. Você gerenciará preferências da conta, notificações e integrações aqui."
+    }
+  },
+  "actions": {
+    "newTaskClicked": "Nova tarefa clicada",
+    "profileClicked": "Perfil clicado"
+  },
+  "settings": {
+    "theme": {
+      "title": "Tema",
+      "light": "Claro",
+      "dark": "Escuro",
+      "softPastel": "Pastel Suave",
+      "highContrast": "Alto Contraste"
+    }
+  }
+}
