@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,10 +12,15 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 // Helper functions from other files
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
+
+// API Configuration
+const API_URL = 'http://localhost:3001/task-checklist';
 
 // Interface for a task
 interface TaskItem {
@@ -23,14 +29,6 @@ interface TaskItem {
   completed: boolean;
   createdAt: Date;
 }
-
-// Initial data
-const initialTasks: TaskItem[] = [
-  { id: '1', title: 'Fazer uma pausa para respirar', completed: false, createdAt: new Date() },
-  { id: '2', title: 'Beber água', completed: true, createdAt: new Date() },
-  { id: '3', title: 'Organizar a mesa de trabalho', completed: false, createdAt: new Date() },
-  { id: '4', title: 'Revisar e-mails importantes', completed: false, createdAt: new Date() },
-];
 
 // Messages for when a task is completed
 const completionMessages = [
@@ -258,7 +256,7 @@ export function TaskList() {
   const { theme } = useTheme();
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
 
-  const [tasks, setTasks] = useState<TaskItem[]>(initialTasks);
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
@@ -267,26 +265,72 @@ export function TaskList() {
   const completedCount = tasks.filter((t) => t.completed).length;
   const totalCount = tasks.length;
 
-  const addTask = () => {
-    if (!newTaskTitle.trim()) return;
-
-    const newTask: TaskItem = {
-      id: Date.now().toString(),
-      title: newTaskTitle,
-      completed: false,
-      createdAt: new Date(),
+  const getAuthHeaders = async () => {
+    const token = await AsyncStorage.getItem('authToken');
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     };
-
-    setTasks([newTask, ...tasks]);
-    setNewTaskTitle('');
-    setIsAdding(false);
   };
 
-  const toggleTask = (id: string) => {
-    const task = tasks.find((t) => t.id === id);
-    const wasCompleted = task?.completed;
+  const fetchTasks = async () => {
+    try {
+      const config = await getAuthHeaders();
+      const response = await axios.get(API_URL, config);
+      const mappedTasks = response.data.map((t: any) => ({
+        id: t.id,
+        title: t.description, // Mapping description from backend to title
+        completed: t.completed,
+        createdAt: new Date(t.createdAt),
+      }));
+      setTasks(mappedTasks);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  };
 
-    setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const addTask = async () => {
+    if (!newTaskTitle.trim()) return;
+
+    try {
+      const config = await getAuthHeaders();
+      const response = await axios.post(
+        API_URL,
+        {
+          description: newTaskTitle,
+        },
+        config
+      );
+
+      const newTask: TaskItem = {
+        id: response.data.id,
+        title: response.data.description,
+        completed: response.data.completed,
+        createdAt: new Date(response.data.createdAt),
+      };
+
+      setTasks([newTask, ...tasks]);
+      setNewTaskTitle('');
+      setIsAdding(false);
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
+
+  const toggleTask = async (id: string) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+
+    const wasCompleted = task?.completed;
+    const newStatus = !task.completed;
+
+    // Optimistic update
+    setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: newStatus } : t)));
 
     if (!wasCompleted) {
       const randomMessage =
@@ -294,14 +338,55 @@ export function TaskList() {
       setCompletionMessage(randomMessage);
       setTimeout(() => setCompletionMessage(null), 3000);
     }
+
+    try {
+      const config = await getAuthHeaders();
+      await axios.patch(
+        `${API_URL}/${id}`,
+        {
+          isDone: newStatus,
+        },
+        config
+      );
+    } catch (error) {
+      console.error('Error toggling task:', error);
+      // Revert on error
+      setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: !newStatus } : t)));
+    }
   };
 
-  const deleteTask = (id: string) => {
+  const deleteTask = async (id: string) => {
+    // Optimistic update
+    const previousTasks = [...tasks];
     setTasks(tasks.filter((t) => t.id !== id));
+
+    try {
+      const config = await getAuthHeaders();
+      await axios.delete(`${API_URL}/${id}`, config);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      setTasks(previousTasks);
+    }
   };
 
-  const clearCompleted = () => {
+  const clearCompleted = async () => {
+    const completedTasks = tasks.filter((t) => t.completed);
+    if (completedTasks.length === 0) return;
+
+    // Optimistic update
+    const previousTasks = [...tasks];
     setTasks(tasks.filter((t) => !t.completed));
+
+    try {
+      const config = await getAuthHeaders();
+      // Delete sequentially or in parallel
+      await Promise.all(
+        completedTasks.map((t) => axios.delete(`${API_URL}/${t.id}`, config))
+      );
+    } catch (error) {
+      console.error('Error clearing completed tasks:', error);
+      setTasks(previousTasks);
+    }
   };
 
   return (
