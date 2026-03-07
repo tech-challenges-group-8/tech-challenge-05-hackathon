@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
+import { TaskList } from '../components/modules/TaskList';
 
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
@@ -21,7 +22,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     title: {
       fontSize: rem(fontSizes['2xl']),
-      fontWeight: fontWeights.bold,
+      fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
     },
@@ -39,8 +40,7 @@ export function TasksPage() {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{t('pages.tasks.title')}</Text>
-      <Text style={styles.text}>{t('pages.tasks.body')}</Text>
+      <TaskList />
     </View>
   );
 }
