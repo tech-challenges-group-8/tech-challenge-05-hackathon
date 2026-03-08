@@ -19,6 +19,8 @@ export * from './cognitive-settings/ResponseCognitiveSettingsDTO';
 export * from './focus-settings/CreateFocusSettingsDTO';
 export * from './focus-settings/UpdateFocusSettingsDTO';
 export * from './focus-settings/ResponseFocusSettingsDTO';
+export * from './focus-settings/FocusTaskDTO';
+export * from './focus-settings/AudioThemeDTO';
 
 // Export TaskKanban DTOs
 export * from './task-kanban/CreateTaskKanbanDTO';

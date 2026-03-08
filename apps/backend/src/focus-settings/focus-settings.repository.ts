@@ -22,6 +22,9 @@ export class FocusSettingsRepositoryMongoose implements IFocusSettingsRepository
         foco: settings.foco,
         pausaCurta: settings.pausaCurta,
         pausaLonga: settings.pausaLonga,
+        pomodorosCompleted: settings.pomodorosCompleted,
+        tasks: settings.tasks,
+        audioThemes: settings.audioThemes,
       },
       { upsert: true, new: true },
     ).exec();
@@ -39,6 +42,9 @@ export class FocusSettingsRepositoryMongoose implements IFocusSettingsRepository
         doc.foco,
         doc.pausaCurta,
         doc.pausaLonga,
+        doc.pomodorosCompleted,
+        doc.tasks,
+        doc.audioThemes
     );
     return settings;
   }

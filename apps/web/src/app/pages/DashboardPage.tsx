@@ -22,7 +22,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     title: {
       fontSize: rem(fontSizes['2xl']),
-      fontWeight: fontWeights.bold,
+      fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
     },
@@ -57,7 +57,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     statValue: {
       fontSize: rem(fontSizes['3xl']),
-      fontWeight: fontWeights.bold,
+      fontWeight: fontWeights.bold as any,
       color: themeColors.accent.foreground,
     },
   });
