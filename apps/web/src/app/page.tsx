@@ -16,6 +16,7 @@ import {
 } from './pages';
 import { useTheme } from '../theme';
 import { useAuth } from '../auth';
+import { KanbanPage } from './pages/KanbanPage';
 
 // Helper to convert rem to pixels (assuming 16px base)
 const rem = (value: string) => Number.parseFloat(value) * 16;
@@ -78,6 +79,7 @@ export default function Home() {
     focus: '/focus',
     cognitive: '/cognitive',
     settings: '/settings',
+    kanban: '/kanban',
   };
 
   const menuByPath: Record<string, string> = {
@@ -86,13 +88,15 @@ export default function Home() {
     '/focus': 'focus',
     '/cognitive': 'cognitive',
     '/settings': 'settings',
+    '/kanban': 'kanban'
   };
 
   const bottomTabs = [
     { id: 'dashboard', icon: '📊' },
     { id: 'tasks', icon: '✓' },
+    { id: 'kanban', icon: '✓' },
     { id: 'focus', icon: '🎯' },
-    { id: 'settings', icon: '⚙️' },
+    { id: 'settings', icon: '⚙️' }
   ];
 
   const handleNewTask = () => {
@@ -118,6 +122,7 @@ export default function Home() {
   const pageTitleByMenu: Record<string, string> = {
     dashboard: t('menu.dashboard'),
     tasks: t('menu.tasks'),
+    kanban: t('menu.kanban'),
     focus: t('menu.focus'),
     cognitive: t('menu.cognitive'),
     settings: t('menu.settings'),
@@ -127,6 +132,8 @@ export default function Home() {
     switch (activeMenu) {
       case 'tasks':
         return <TasksPage />;
+      case 'kanban':
+        return <KanbanPage />;
       case 'focus':
         return <FocusPage />;
       case 'cognitive':
