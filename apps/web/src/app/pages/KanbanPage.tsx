@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { TaskList } from '../components/modules/TaskList';
+import { KanbanBoard } from '../components/modules/KanbanBoard';
 
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
@@ -33,14 +34,14 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
   });
 
-export function TasksPage() {
+export function KanbanPage() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
 
   return (
     <View style={styles.card}>
-      <TaskList />
+      <KanbanBoard />
     </View>
   );
 }

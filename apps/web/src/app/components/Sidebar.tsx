@@ -52,6 +52,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
 const menuItems = [
   { id: 'dashboard', labelKey: 'menu.dashboard', icon: '📊' },
   { id: 'tasks', labelKey: 'menu.tasks', icon: '✓' },
+  { id: 'kanban', labelKey: 'menu.kanban', icon: '✓' },
   { id: 'focus', labelKey: 'menu.focus', icon: '🎯' },
   { id: 'settings', labelKey: 'menu.settings', icon: '⚙️' },
 ];
