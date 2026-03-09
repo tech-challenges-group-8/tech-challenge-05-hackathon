@@ -9,12 +9,14 @@ export class CreateFocusSettingsUseCase {
     foco?: number;
     pausaCurta?: number;
     pausaLonga?: number;
+    pomodorosCompleted?: number;
   }): Promise<FocusSettings> {
     const settings = new FocusSettings(
       input.idUser,
       input.foco,
       input.pausaCurta,
-      input.pausaLonga
+      input.pausaLonga,
+      input.pomodorosCompleted
     );
 
     await this.repository.save(settings);

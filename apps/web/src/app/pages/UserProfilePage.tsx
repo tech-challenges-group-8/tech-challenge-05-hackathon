@@ -343,7 +343,7 @@ export function UserProfilePage({ onClose }: UserProfilePageProps) {
             {isSubmittingPassword ? (
               <ActivityIndicator color={theme.colors.primary.foreground} />
             ) : (
-              <Text style={styles.buttonText}>{t('userProfile.changePassword')}</Text>
+              <Text style={styles.buttonText}>{t('userProfile.submitChangePassword')}</Text>
             )}
           </TouchableOpacity>
         </View>

@@ -14,12 +14,13 @@ import {
   LoginPage,
   RegisterPage,
 } from './pages';
+import { FloatingPomodoroPlayer } from './components/FloatingPomodoroPlayer';
+import { useFocusTimer } from './context/FocusTimerContext';
 import { useTheme } from '../theme';
 import { useAuth } from '../auth';
 import { KanbanPage } from './pages/KanbanPage';
 import { useCognitivePreferences, useCognitiveSettings } from '../cognitive';
 
-// Helper to convert rem to pixels (assuming 16px base)
 const rem = (value: string) => Number.parseFloat(value) * 16;
 
 const createStyles = (
@@ -69,6 +70,32 @@ const createStyles = (
     },
   });
 
+const PATH_BY_MENU: Record<string, string> = {
+  dashboard: '/',
+  tasks: '/tasks',
+  focus: '/focus',
+  cognitive: '/cognitive',
+  settings: '/settings',
+  kanban: '/kanban',
+};
+
+const MENU_BY_PATH: Record<string, string> = {
+  '/': 'dashboard',
+  '/tasks': 'tasks',
+  '/focus': 'focus',
+  '/cognitive': 'cognitive',
+  '/settings': 'settings',
+  '/kanban': 'kanban',
+};
+
+const BOTTOM_TABS = [
+  { id: 'dashboard', icon: '📊' },
+  { id: 'tasks', icon: '✓' },
+  { id: 'kanban', icon: '✓' },
+  { id: 'focus', icon: '🎯' },
+  { id: 'cognitive', icon: '🧠' },
+];
+
 export default function Home() {
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [isRegistering, setIsRegistering] = useState(false);
@@ -77,36 +104,11 @@ export default function Home() {
   const { currentUser, isLoading } = useAuth();
   const { isLoading: isLoadingCognitive } = useCognitiveSettings();
   const cognitivePreferences = useCognitivePreferences();
+  const { isActive, mode, isFloatingPlayerDismissed } = useFocusTimer();
   const styles = useMemo(
     () => createStyles(theme.colors, cognitivePreferences.simpleInterface),
     [cognitivePreferences.simpleInterface, theme.colors],
   );
-
-  const pathByMenu: Record<string, string> = {
-    dashboard: '/',
-    tasks: '/tasks',
-    focus: '/focus',
-    cognitive: '/cognitive',
-    settings: '/settings',
-    kanban: '/kanban',
-  };
-
-  const menuByPath: Record<string, string> = {
-    '/': 'dashboard',
-    '/tasks': 'tasks',
-    '/focus': 'focus',
-    '/cognitive': 'cognitive',
-    '/settings': 'settings',
-    '/kanban': 'kanban'
-  };
-
-  const bottomTabs = [
-    { id: 'dashboard', icon: '📊' },
-    { id: 'tasks', icon: '✓' },
-    { id: 'kanban', icon: '✓' },
-    { id: 'focus', icon: '🎯' },
-    { id: 'cognitive', icon: '🧠' }
-  ];
 
   const handleNewTask = () => {
     console.log(t('actions.newTaskClicked'));
@@ -122,7 +124,7 @@ export default function Home() {
     if (Platform.OS !== 'web') return;
     if (globalThis.window === undefined) return;
 
-    const nextPath = pathByMenu[menuId] ?? '/';
+    const nextPath = PATH_BY_MENU[menuId] ?? '/';
     if (globalThis.window.location.pathname !== nextPath) {
       globalThis.window.history.pushState({}, '', nextPath);
     }
@@ -161,7 +163,7 @@ export default function Home() {
 
     const syncFromLocation = () => {
       const pathname = globalThis.window.location.pathname;
-      const menu = menuByPath[pathname] ?? 'dashboard';
+      const menu = MENU_BY_PATH[pathname] ?? 'dashboard';
       setActiveMenu(menu);
     };
 
@@ -214,7 +216,7 @@ export default function Home() {
       {Platform.OS !== 'web' && (
         <SafeAreaView edges={['bottom']}>
           <View style={styles.tabBar}>
-            {bottomTabs.map((tab) => (
+            {BOTTOM_TABS.map((tab) => (
               <TouchableOpacity
                 key={tab.id}
                 style={[
@@ -236,6 +238,14 @@ export default function Home() {
           </View>
         </SafeAreaView>
       )}
+
+      {!isFloatingPlayerDismissed &&
+        (isActive || mode === 'SHORT_BREAK' || mode === 'LONG_BREAK') &&
+        activeMenu !== 'focus' && (
+          <FloatingPomodoroPlayer
+            onNavigateToFocus={() => handleMenuChange('focus')}
+          />
+        )}
     </SafeAreaView>
   );
 }

@@ -6,6 +6,7 @@ import '../i18n';
 import { ThemeProvider } from '../theme';
 import { AuthProvider } from '../auth';
 import { CognitiveSettingsProvider } from '../cognitive';
+import { FocusTimerProvider } from './context/FocusTimerContext';
 
 export default function App() {
   return (
@@ -13,7 +14,9 @@ export default function App() {
       <ThemeProvider initialTheme="light">
         <AuthProvider>
           <CognitiveSettingsProvider>
-            <Home />
+            <FocusTimerProvider>
+              <Home />
+            </FocusTimerProvider>
           </CognitiveSettingsProvider>
         </AuthProvider>
       </ThemeProvider>

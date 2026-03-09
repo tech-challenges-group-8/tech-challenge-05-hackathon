@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
+import { PomodoroTimer } from '../components/PomodoroTimer';
+import { TaskList } from '../components/TaskList';
 
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
@@ -13,6 +15,10 @@ const createStyles = (
   preferences: ReturnType<typeof useCognitivePreferences>,
 ) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: preferences.simpleInterface ? rem(space[3]) : rem(space[4]),
+    },
     card: {
       backgroundColor: themeColors.card.DEFAULT,
       borderRadius: extractPixels(radii.lg),
@@ -22,6 +28,7 @@ const createStyles = (
       shadowOpacity: preferences.simpleInterface ? 0 : 0.1,
       shadowRadius: preferences.simpleInterface ? 0 : 8,
       elevation: preferences.simpleInterface ? 0 : 3,
+      marginBottom: rem(space[6]),
     },
     title: {
       fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
@@ -38,6 +45,20 @@ const createStyles = (
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },
+    contentRow: {
+      flex: 1,
+      flexDirection: 'row',
+      gap: rem(space[6]),
+      flexWrap: 'wrap',
+    },
+    timerColumn: {
+      flex: 2,
+      minWidth: 300,
+    },
+    taskColumn: {
+      flex: 1,
+      minWidth: 250,
+    },
   });
 
 export function FocusPage() {
@@ -47,9 +68,20 @@ export function FocusPage() {
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>{t('pages.focus.title')}</Text>
-      <Text style={styles.text}>{t('pages.focus.body')}</Text>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.title}>{t('pages.focus.title')}</Text>
+        <Text style={styles.text}>{t('pages.focus.body')}</Text>
+      </View>
+
+      <View style={styles.contentRow}>
+        <View style={styles.timerColumn}>
+          <PomodoroTimer />
+        </View>
+        <View style={styles.taskColumn}>
+          <TaskList />
+        </View>
+      </View>
     </View>
   );
 }

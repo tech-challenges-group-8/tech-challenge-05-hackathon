@@ -1,4 +1,7 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { FocusTaskDTO } from './FocusTaskDTO';
+import { AudioThemeDTO } from './AudioThemeDTO';
 
 export class UpdateFocusSettingsDTO {
   @IsString()
@@ -15,4 +18,20 @@ export class UpdateFocusSettingsDTO {
   @IsNumber()
   @IsOptional()
   pausaLonga?: number;
+
+  @IsNumber()
+  @IsOptional()
+  pomodorosCompleted?: number;
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => FocusTaskDTO)
+  tasks?: FocusTaskDTO[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => AudioThemeDTO)
+  audioThemes?: AudioThemeDTO[];
 }
