@@ -5,13 +5,16 @@ import Home from './page';
 import '../i18n';
 import { ThemeProvider } from '../theme';
 import { AuthProvider } from '../auth';
+import { FocusTimerProvider } from './context/FocusTimerContext';
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider initialTheme="light">
         <AuthProvider>
-          <Home />
+          <FocusTimerProvider>
+            <Home />
+          </FocusTimerProvider>
         </AuthProvider>
       </ThemeProvider>
       <StatusBar style="auto" />

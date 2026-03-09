@@ -34,6 +34,7 @@ export class FocusSettingsController {
                  foco: 25,
                  pausaCurta: 5,
                  pausaLonga: 15,
+                 pomodorosCompleted: 0,
              });
         }
         
@@ -48,6 +49,9 @@ export class FocusSettingsController {
                 foco: { type: 'number' },
                 pausaCurta: { type: 'number' },
                 pausaLonga: { type: 'number' },
+                pomodorosCompleted: { type: 'number' },
+                tasks: { type: 'array' },
+                audioThemes: { type: 'array' },
             }
         }
     })
@@ -59,6 +63,9 @@ export class FocusSettingsController {
             foco: body.foco,
             pausaCurta: body.pausaCurta,
             pausaLonga: body.pausaLonga,
+            pomodorosCompleted: body.pomodorosCompleted,
+            tasks: body.tasks,
+            audioThemes: body.audioThemes,
         });
         return this.toResponse(settings);
     }
@@ -68,6 +75,9 @@ export class FocusSettingsController {
             settings.foco,
             settings.pausaCurta,
             settings.pausaLonga,
+            settings.pomodorosCompleted,
+            settings.tasks,
+            settings.audioThemes
         );
     }
 }

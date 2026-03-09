@@ -20,7 +20,7 @@ class FocusSettingsService {
    * @returns Updated settings
    */
   async updateSettings(
-    settings: UpdateFocusSettingsDTO
+    settings: Partial<UpdateFocusSettingsDTO>
   ): Promise<ResponseFocusSettingsDTO> {
     const response = await api.put<ResponseFocusSettingsDTO>(
       '/focus-settings',
@@ -49,6 +49,33 @@ class FocusSettingsService {
   }
 
   /**
+   * Increment the completed pomodoro count
+   * @param currentCount - current amount of completed pomodoros
+   * @returns Updated settings
+   */
+  async incrementPomodoroCount(
+    currentCount: number
+  ): Promise<ResponseFocusSettingsDTO> {
+    return this.updateSettings({
+      pomodorosCompleted: currentCount + 1,
+    });
+  }
+
+  /**
+   * Update the tasks list
+   */
+  async updateTasks(tasks: ResponseFocusSettingsDTO['tasks']): Promise<ResponseFocusSettingsDTO> {
+    return this.updateSettings({ tasks });
+  }
+
+  /**
+   * Update the custom audio themes list
+   */
+  async updateAudioThemes(audioThemes: ResponseFocusSettingsDTO['audioThemes']): Promise<ResponseFocusSettingsDTO> {
+    return this.updateSettings({ audioThemes });
+  }
+
+  /**
    * Get default pomodoro settings
    * @returns Default settings
    */
@@ -57,6 +84,9 @@ class FocusSettingsService {
       foco: 25,
       pausaCurta: 5,
       pausaLonga: 15,
+      pomodorosCompleted: 0,
+      tasks: [],
+      audioThemes: [],
     };
   }
 }

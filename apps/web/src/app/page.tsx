@@ -14,6 +14,8 @@ import {
   LoginPage,
   RegisterPage,
 } from './pages';
+import { FloatingPomodoroPlayer } from './components/FloatingPomodoroPlayer';
+import { useFocusTimer } from './context/FocusTimerContext';
 import { useTheme } from '../theme';
 import { useAuth } from '../auth';
 import { KanbanPage } from './pages/KanbanPage';
@@ -72,6 +74,8 @@ export default function Home() {
   const { theme } = useTheme();
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
   const { currentUser, isLoading } = useAuth();
+  
+  const { isActive, mode, isFloatingPlayerDismissed } = useFocusTimer();
 
   const pathByMenu: Record<string, string> = {
     dashboard: '/',
@@ -226,6 +230,11 @@ export default function Home() {
             ))}
           </View>
         </SafeAreaView>
+      )}
+
+      {/* Floating Pomodoro Player */}
+      {(!isFloatingPlayerDismissed && (isActive || mode === 'SHORT_BREAK' || mode === 'LONG_BREAK')) && activeMenu !== 'focus' && (
+        <FloatingPomodoroPlayer onNavigateToFocus={() => handleMenuChange('focus')} />
       )}
     </SafeAreaView>
   );
