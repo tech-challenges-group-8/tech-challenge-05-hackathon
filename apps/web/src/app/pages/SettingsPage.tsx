@@ -3,11 +3,15 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme, ThemeName, themes } from '../../theme';
+import { useCognitivePreferences, useCognitiveSettings } from '../../cognitive';
 
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
 
-const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+const createStyles = (
+  themeColors: ReturnType<typeof useTheme>['theme']['colors'],
+  preferences: ReturnType<typeof useCognitivePreferences>,
+) =>
   StyleSheet.create({
     card: {
       backgroundColor: themeColors.card.DEFAULT,
@@ -20,25 +24,31 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       elevation: 3,
     },
     title: {
-      fontSize: rem(fontSizes['2xl']),
+      fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
       fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     text: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
-      lineHeight: rem(fontSizes.sm) * 1.5,
+      lineHeight: rem(fontSizes.sm) * preferences.lineHeightMultiplier,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     section: {
       marginBottom: rem(space[6]),
       marginTop: rem(space[6]),
     },
     sectionTitle: {
-      fontSize: rem(fontSizes.md),
+      fontSize: rem(fontSizes.md) * preferences.fontScale,
       fontWeight: fontWeights.semiBold as any,
       color: themeColors.foreground,
       marginBottom: rem(space[3]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     themeGrid: {
       flexDirection: 'row',
@@ -61,10 +71,12 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       backgroundColor: themeColors.cognitive.highlight,
     },
     themeOptionLabel: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       fontWeight: fontWeights.semiBold as unknown as 'bold',
       color: themeColors.foreground,
       textAlign: 'center',
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     themeOptionLabelActive: {
       color: themeColors.primary.DEFAULT,
@@ -80,8 +92,10 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
 
 export function SettingsPage() {
   const { t } = useTranslation();
-  const { theme, themeName, setThemeName } = useTheme();
-  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
+  const { theme } = useTheme();
+  const { currentPreset, isSaving, setTheme, settings } = useCognitiveSettings();
+  const preferences = useCognitivePreferences();
+  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
   const themeList: { id: ThemeName; label: string }[] = [
     { id: 'light', label: t('settings.theme.light') },
@@ -94,7 +108,7 @@ export function SettingsPage() {
     <ScrollView>
       <View style={styles.card}>
         <Text style={styles.title}>{t('pages.settings.title')}</Text>
-        <Text style={styles.text}>{t('pages.settings.body')}</Text>
+        <Text style={styles.text}>{t('settings.quickTheme.description')}</Text>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('settings.theme.title')}</Text>
@@ -106,14 +120,14 @@ export function SettingsPage() {
                   key={item.id}
                   style={[
                     styles.themeOption,
-                    themeName === item.id && styles.themeOptionActive,
+                    settings.themeMode === item.id && styles.themeOptionActive,
                   ]}
-                  onPress={() => setThemeName(item.id)}
+                  onPress={() => setTheme(item.id)}
                 >
                   <Text
                     style={[
                       styles.themeOptionLabel,
-                      themeName === item.id && styles.themeOptionLabelActive,
+                      settings.themeMode === item.id && styles.themeOptionLabelActive,
                     ]}
                   >
                     {item.label}
@@ -129,6 +143,14 @@ export function SettingsPage() {
             })}
           </View>
         </View>
+
+        <Text style={styles.text}>
+          {currentPreset
+            ? t(`cognitiveSettings.presets.items.${currentPreset}.label`)
+            : t('cognitiveSettings.presets.custom')}
+          {' • '}
+          {isSaving ? t('cognitiveSettings.status.saving') : t('cognitiveSettings.status.saved')}
+        </Text>
       </View>
     </ScrollView>
   );

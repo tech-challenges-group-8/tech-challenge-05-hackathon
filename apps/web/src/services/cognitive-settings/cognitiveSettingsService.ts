@@ -4,6 +4,21 @@ import type {
   CreateCognitiveSettingsDTO,
   UpdateCognitiveSettingsDTO,
 } from './types';
+import { normalizeCognitiveSettings } from '../../cognitive/model';
+
+type CognitiveSettingsApiResponse = Partial<CognitiveSettings> & {
+  idUser?: string;
+};
+
+function mapSettings(response: CognitiveSettingsApiResponse): CognitiveSettings {
+  return normalizeCognitiveSettings(
+    {
+      ...response,
+      userId: response.userId ?? response.idUser,
+    },
+    response.userId ?? response.idUser,
+  );
+}
 
 class CognitiveSettingsService {
   /**
@@ -14,11 +29,11 @@ class CognitiveSettingsService {
   async createSettings(
     settings: CreateCognitiveSettingsDTO
   ): Promise<CognitiveSettings> {
-    const response = await api.post<CognitiveSettings>(
+    const response = await api.post<CognitiveSettingsApiResponse>(
       '/cognitive-settings',
       settings
     );
-    return response.data;
+    return mapSettings(response.data);
   }
 
   /**
@@ -26,8 +41,8 @@ class CognitiveSettingsService {
    * @returns User's cognitive settings
    */
   async getSettings(): Promise<CognitiveSettings> {
-    const response = await api.get<CognitiveSettings>('/cognitive-settings');
-    return response.data;
+    const response = await api.get<CognitiveSettingsApiResponse>('/cognitive-settings');
+    return mapSettings(response.data);
   }
 
   /**
@@ -38,11 +53,11 @@ class CognitiveSettingsService {
   async updateSettings(
     settings: UpdateCognitiveSettingsDTO
   ): Promise<CognitiveSettings> {
-    const response = await api.put<CognitiveSettings>(
+    const response = await api.put<CognitiveSettingsApiResponse>(
       '/cognitive-settings',
       settings
     );
-    return response.data;
+    return mapSettings(response.data);
   }
 
   /**

@@ -127,6 +127,124 @@
       "dark": "Dark",
       "softPastel": "Soft Pastel",
       "highContrast": "High Contrast"
+    },
+    "quickTheme": {
+      "description": "Quickly adjust the visual theme. This selection is shared with the cognitive panel and stays available across the app."
+    }
+  },
+  "cognitiveSettings": {
+    "description": "Personalize reading, focus, sensory load, and preset cognitive profiles. Changes are saved automatically and shared with other screens.",
+    "actions": {
+      "retry": "Sync now",
+      "reset": "Reset to default"
+    },
+    "status": {
+      "loading": "Loading preferences...",
+      "saving": "Saving changes...",
+      "saved": "Changes saved automatically",
+      "error": "We couldn't sync everything right now: {{message}}"
+    },
+    "sections": {
+      "reading": {
+        "title": "Reading",
+        "description": "Font, size, and spacing adjustments to reduce reading effort."
+      },
+      "focus": {
+        "title": "Focus",
+        "description": "Reduce distractions and prioritize the active task."
+      },
+      "sensory": {
+        "title": "Sensory",
+        "description": "Control theme, sounds, and stronger interface indicators."
+      },
+      "emotion": {
+        "title": "Emotion",
+        "description": "Apply presets and review the current cognitive interface state."
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "title": "Font",
+        "system": "System",
+        "dyslexiaFriendly": "Dyslexia"
+      },
+      "textSize": {
+        "title": "Text size",
+        "normal": "Normal",
+        "large": "Large",
+        "extraLarge": "Extra large"
+      },
+      "lineHeight": {
+        "title": "Line spacing",
+        "normal": "Default",
+        "relaxed": "Comfortable",
+        "loose": "Wide"
+      },
+      "letterSpacing": {
+        "title": "Increase letter spacing",
+        "description": "Adds more visual breathing room between characters."
+      }
+    },
+    "focus": {
+      "hideSidebar": {
+        "title": "Hide sidebar",
+        "description": "Removes desktop side navigation to keep attention on the current task."
+      },
+      "highlightActiveTask": {
+        "title": "Highlight active task",
+        "description": "Allows visually marking the current checklist item."
+      },
+      "animationsEnabled": {
+        "title": "Keep animations",
+        "description": "Disable to reduce transitions and motion."
+      },
+      "simpleInterface": {
+        "title": "Simple interface",
+        "description": "Reduces shadow, metadata, and secondary visual elements."
+      }
+    },
+    "sensory": {
+      "theme": {
+        "title": "Visual theme"
+      },
+      "muteSounds": {
+        "title": "Mute sounds",
+        "description": "Turns off auditory alerts and sound-based reinforcement."
+      },
+      "hideUrgencyIndicators": {
+        "title": "Hide urgency indicators",
+        "description": "Hides priority badges and stronger visual cues."
+      }
+    },
+    "presets": {
+      "custom": "Custom profile",
+      "items": {
+        "default": {
+          "label": "Default",
+          "description": "Balanced configuration for general use."
+        },
+        "reading": {
+          "label": "Reading",
+          "description": "More spacing, friendlier font, and larger text."
+        },
+        "focus": {
+          "label": "Focus",
+          "description": "Lean interface, no animations, and active task emphasis."
+        },
+        "sensory": {
+          "label": "Sensory",
+          "description": "Soft colors, less urgency, and fewer intense stimuli."
+        },
+        "emotion": {
+          "label": "Emotion",
+          "description": "A calmer visual tone to reduce digital anxiety."
+        }
+      }
+    },
+    "summary": {
+      "title": "Current summary",
+      "currentPreset": "Profile",
+      "currentTheme": "Theme"
     }
   }
 }

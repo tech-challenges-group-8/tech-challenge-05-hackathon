@@ -16,11 +16,15 @@
     "esModuleInterop": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "rootDir": "src"
+    "rootDir": "../.."
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "../../packages/domain-core/src/**/*.ts",
+    "../../packages/shared-dtos/src/**/*.ts",
+    "../../packages/ui-kit/src/**/*.ts",
+    "../../packages/ui-kit/src/**/*.tsx"
   ],
   "exclude": [
     "node_modules"

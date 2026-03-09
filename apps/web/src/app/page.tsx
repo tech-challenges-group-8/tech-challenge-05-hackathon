@@ -17,11 +17,15 @@ import {
 import { useTheme } from '../theme';
 import { useAuth } from '../auth';
 import { KanbanPage } from './pages/KanbanPage';
+import { useCognitivePreferences, useCognitiveSettings } from '../cognitive';
 
 // Helper to convert rem to pixels (assuming 16px base)
 const rem = (value: string) => Number.parseFloat(value) * 16;
 
-const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+const createStyles = (
+  themeColors: ReturnType<typeof useTheme>['theme']['colors'],
+  simpleInterface: boolean,
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -34,7 +38,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     content: {
       flex: 1,
-      padding: rem(space[6]),
+      padding: simpleInterface ? rem(space[4]) : rem(space[6]),
     },
     tabBar: {
       height: 64,
@@ -70,8 +74,13 @@ export default function Home() {
   const [isRegistering, setIsRegistering] = useState(false);
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
   const { currentUser, isLoading } = useAuth();
+  const { isLoading: isLoadingCognitive } = useCognitiveSettings();
+  const cognitivePreferences = useCognitivePreferences();
+  const styles = useMemo(
+    () => createStyles(theme.colors, cognitivePreferences.simpleInterface),
+    [cognitivePreferences.simpleInterface, theme.colors],
+  );
 
   const pathByMenu: Record<string, string> = {
     dashboard: '/',
@@ -96,7 +105,7 @@ export default function Home() {
     { id: 'tasks', icon: '✓' },
     { id: 'kanban', icon: '✓' },
     { id: 'focus', icon: '🎯' },
-    { id: 'settings', icon: '⚙️' }
+    { id: 'cognitive', icon: '🧠' }
   ];
 
   const handleNewTask = () => {
@@ -164,7 +173,7 @@ export default function Home() {
     };
   }, []);
 
-  if (isLoading) {
+  if (isLoading || (currentUser && isLoadingCognitive)) {
     return (
       <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
         <View style={styles.mainContent}>
@@ -186,7 +195,7 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-      {Platform.OS === 'web' && (
+      {Platform.OS === 'web' && !cognitivePreferences.hideSidebar && (
         <Sidebar activeMenu={activeMenu} onMenuChange={handleMenuChange} />
       )}
 

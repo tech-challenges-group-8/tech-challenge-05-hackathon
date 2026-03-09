@@ -27,7 +27,8 @@ export default function ExampleScreen() {
       const newUser = new User(
         `user_${Date.now()}`,
         userDTO.name,
-        userDTO.email
+        userDTO.email,
+        'temporary-password'
       );
 
       // Validate email
