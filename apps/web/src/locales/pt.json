@@ -8,7 +8,8 @@
     "tasks": "Tarefas",
     "focus": "Modo Foco",
     "cognitive": "Configurações Cognitivas",
-    "settings": "Configurações"
+    "settings": "Configurações",
+    "kanban": "kanban"
   },
   "header": {
     "newTask": "Nova Tarefa",

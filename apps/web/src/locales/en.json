@@ -8,7 +8,8 @@
     "tasks": "Tasks",
     "focus": "Focus Mode",
     "cognitive": "Cognitive Settings",
-    "settings": "Settings"
+    "settings": "Settings",
+    "kanban": "kanban"
   },
   "header": {
     "newTask": "New Task",
