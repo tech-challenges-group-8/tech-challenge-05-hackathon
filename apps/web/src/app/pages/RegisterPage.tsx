@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { authService } from '../../services';
+import { Toast } from '../components/Toast';
 
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
@@ -127,6 +128,7 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const validateForm = (): boolean => {
     if (!name || !email || !password || !confirmPassword) {
@@ -160,9 +162,12 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
     try {
       setIsSubmitting(true);
       setError(null);
+      setSuccess(false);
       await authService.register(name, email, password);
-      // Registration successful - redirect to login page
-      onSwitchToLogin?.();
+      setSuccess(true);
+      setTimeout(() => {
+        onSwitchToLogin?.();
+      }, 2000);
     } catch (authError) {
       console.error('Registration failed:', authError);
       const message = authError instanceof Error ? authError.message : '';
@@ -171,6 +176,7 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
       } else {
         setError(t('register.errors.failed'));
       }
+      setSuccess(false);
     } finally {
       setIsSubmitting(false);
     }
@@ -178,6 +184,7 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
 
   return (
     <View style={styles.container}>
+      <Toast visible={success} message={t('register.success')} variant="success" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.card}>
           <Text style={styles.title}>{t('register.title')}</Text>

@@ -10,7 +10,6 @@ import {
   TasksPage,
   FocusPage,
   CognitiveSettingsPage,
-  SettingsPage,
   LoginPage,
   RegisterPage,
 } from './pages';
@@ -75,7 +74,6 @@ const PATH_BY_MENU: Record<string, string> = {
   tasks: '/tasks',
   focus: '/focus',
   cognitive: '/cognitive',
-  settings: '/settings',
   kanban: '/kanban',
 };
 
@@ -84,7 +82,6 @@ const MENU_BY_PATH: Record<string, string> = {
   '/tasks': 'tasks',
   '/focus': 'focus',
   '/cognitive': 'cognitive',
-  '/settings': 'settings',
   '/kanban': 'kanban',
 };
 
@@ -136,7 +133,6 @@ export default function Home() {
     kanban: t('menu.kanban'),
     focus: t('menu.focus'),
     cognitive: t('menu.cognitive'),
-    settings: t('menu.settings'),
   };
 
   const renderPageContent = () => {
@@ -149,8 +145,6 @@ export default function Home() {
         return <FocusPage />;
       case 'cognitive':
         return <CognitiveSettingsPage />;
-      case 'settings':
-        return <SettingsPage />;
       case 'dashboard':
       default:
         return <DashboardPage />;

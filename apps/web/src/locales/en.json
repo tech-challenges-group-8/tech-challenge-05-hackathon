@@ -8,8 +8,7 @@
     "tasks": "Tasks",
     "focus": "Focus Mode",
     "cognitive": "Cognitive Settings",
-    "settings": "Settings",
-    "kanban": "kanban"
+    "kanban": "Kanban"
   },
   "header": {
     "newTask": "New Task",
@@ -58,14 +57,6 @@
       "focusCompleteModalTitle": "Focus Session Completed!",
       "focusCompleteModalDesc": "Great job! If you were working on a specific task, you can assign this time to it below.",
       "noTasksAvailable": "No active tasks to assign time to."
-    },
-    "cognitive": {
-      "title": "Cognitive Settings",
-      "body": "Mock settings panel. You will adjust cognitive intensity, notifications, and accessibility preferences here."
-    },
-    "settings": {
-      "title": "Settings",
-      "body": "Mock settings screen. You will manage account preferences, notifications, and integrations here."
     }
   },
   "actions": {
@@ -102,6 +93,7 @@
     "submit": "Create account",
     "helper": "Your account will be created and you'll be logged in automatically.",
     "switchToLogin": "Already have an account? Sign in",
+    "success": "Account created successfully! Redirecting to login...",
     "errors": {
       "missingFields": "Please fill in all fields.",
       "passwordMismatch": "Passwords do not match.",

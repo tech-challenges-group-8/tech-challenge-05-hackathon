@@ -39,7 +39,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       elevation: 5,
     },
     timerCircleBreak: {
-      borderColor: themeColors.secondary?.DEFAULT || '#10b981', // green for break
+      borderColor: themeColors.secondary.DEFAULT,
     },
     timeText: {
       fontSize: rem(fontSizes['4xl']),
@@ -65,7 +65,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       borderRadius: extractPixels(radii.full),
     },
     buttonBreak: {
-      backgroundColor: themeColors.secondary?.DEFAULT || '#10b981',
+      backgroundColor: themeColors.secondary.DEFAULT,
     },
     buttonSecondary: {
       backgroundColor: themeColors.muted.DEFAULT,
@@ -110,7 +110,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       backgroundColor: themeColors.primary.DEFAULT,
     },
     modeTabActiveBreak: {
-      backgroundColor: themeColors.secondary?.DEFAULT || '#10b981',
+      backgroundColor: themeColors.secondary.DEFAULT,
     },
     modeTabText: {
       fontSize: rem(fontSizes.sm),

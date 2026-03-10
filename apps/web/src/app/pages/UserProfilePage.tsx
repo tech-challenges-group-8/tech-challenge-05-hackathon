@@ -122,7 +122,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     successText: {
-      color: '#4D9973',
+      color: themeColors.primary.DEFAULT,
       fontSize: rem(fontSizes.xs) * preferences.fontScale,
       marginBottom: rem(space[3]),
       textAlign: 'center',

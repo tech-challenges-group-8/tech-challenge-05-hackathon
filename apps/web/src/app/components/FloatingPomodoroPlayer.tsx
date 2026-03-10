@@ -18,7 +18,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       backgroundColor: themeColors.card.DEFAULT,
       borderRadius: extractPixels(radii.lg),
       padding: rem(space[3]),
-      shadowColor: '#000',
+      shadowColor: themeColors.black,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.15,
       shadowRadius: 12,

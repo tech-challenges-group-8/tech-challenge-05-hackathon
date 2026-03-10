@@ -62,10 +62,9 @@ const createStyles = (
 const menuItems = [
   { id: 'dashboard', labelKey: 'menu.dashboard', icon: '📊' },
   { id: 'tasks', labelKey: 'menu.tasks', icon: '✓' },
-  { id: 'kanban', labelKey: 'menu.kanban', icon: '✓' },
+  { id: 'kanban', labelKey: 'menu.kanban', icon: '📋' },
   { id: 'focus', labelKey: 'menu.focus', icon: '🎯' },
   { id: 'cognitive', labelKey: 'menu.cognitive', icon: '🧠' },
-  { id: 'settings', labelKey: 'menu.settings', icon: '⚙️' },
 ];
 
 interface SidebarProps {

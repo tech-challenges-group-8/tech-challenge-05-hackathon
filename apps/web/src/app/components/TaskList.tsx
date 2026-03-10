@@ -98,7 +98,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       padding: rem(space[1]),
     },
     deleteButtonText: {
-      color: '#ef4444',
+      color: themeColors.accent.foreground,
       fontWeight: fontWeights.bold as any,
     },
   });

@@ -87,8 +87,8 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     completionMessage: {
-      backgroundColor: 'rgba(77, 153, 115, 0.1)', // success/10
-      color: '#4D9973', // success
+      backgroundColor: themeColors.secondary.DEFAULT,
+      color: themeColors.primary.DEFAULT,
       padding: rem(space[3]),
       borderRadius: extractPixels(radii.lg),
       textAlign: 'center',
@@ -225,8 +225,8 @@ const createStyles = (
       justifyContent: 'center',
     },
     checkboxChecked: {
-      backgroundColor: '#4D9973', // success
-      borderColor: '#4D9973',
+      backgroundColor: themeColors.primary.DEFAULT,
+      borderColor: themeColors.primary.DEFAULT,
     },
     taskText: {
       flex: 1,
@@ -254,7 +254,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     successText: {
-      color: '#4D9973',
+      color: themeColors.primary.DEFAULT,
       fontWeight: fontWeights.medium as any,
     },
   });
