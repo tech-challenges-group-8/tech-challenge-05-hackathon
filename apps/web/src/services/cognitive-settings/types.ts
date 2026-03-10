@@ -1,10 +1,15 @@
 export type ThemeMode = 'light' | 'dark' | 'soft-pastel' | 'high-contrast';
 
+export type FontFamily = 'system' | 'dyslexia-friendly';
+export type LineHeight = 'normal' | 'relaxed' | 'loose';
+export type LetterSpacing = 'normal' | 'wide';
+export type TextSize = 'normal' | 'large' | 'extra-large';
+
 export interface Typography {
-  fontFamily: string;
-  lineHeight: string;
-  letterSpacing: string;
-  textSize: string;
+  fontFamily: FontFamily;
+  lineHeight: LineHeight;
+  letterSpacing: LetterSpacing;
+  textSize: TextSize;
 }
 
 export interface FocusMode {
@@ -20,8 +25,8 @@ export interface Sensory {
 }
 
 export interface CognitiveSettings {
-  id: string;
-  userId: string;
+  id?: string;
+  userId?: string;
   themeMode: ThemeMode;
   typography: Typography;
   focusMode: FocusMode;
@@ -32,14 +37,14 @@ export interface CognitiveSettings {
 
 export interface CreateCognitiveSettingsDTO {
   themeMode?: ThemeMode;
-  typography?: Typography;
-  focusMode?: FocusMode;
-  sensory?: Sensory;
+  typography?: Partial<Typography>;
+  focusMode?: Partial<FocusMode>;
+  sensory?: Partial<Sensory>;
 }
 
 export interface UpdateCognitiveSettingsDTO {
   themeMode?: ThemeMode;
-  typography?: Typography;
-  focusMode?: FocusMode;
-  sensory?: Sensory;
+  typography?: Partial<Typography>;
+  focusMode?: Partial<FocusMode>;
+  sensory?: Partial<Sensory>;
 }

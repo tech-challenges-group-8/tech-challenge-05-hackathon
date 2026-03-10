@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
+import { useCognitivePreferences } from '../../../cognitive';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -61,7 +62,11 @@ const initialColumnsState: KanbanColumn[] = [
   },
 ];
 
-const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'], columnWidth: number) =>
+const createStyles = (
+  themeColors: ReturnType<typeof useTheme>['theme']['colors'],
+  columnWidth: number,
+  preferences: ReturnType<typeof useCognitivePreferences>,
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -71,14 +76,18 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       paddingHorizontal: rem(space[1]),
     },
     title: {
-      fontSize: rem(fontSizes.xl),
+      fontSize: rem(fontSizes.xl) * preferences.fontScale,
       fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     subtitle: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.muted.foreground,
       marginTop: rem(space[1]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     columnsContainer: {
       paddingBottom: rem(space[4]),
@@ -103,9 +112,11 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       gap: rem(space[2]),
     },
     columnTitle: {
-      fontSize: rem(fontSizes.md),
+      fontSize: rem(fontSizes.md) * preferences.fontScale,
       fontWeight: fontWeights.semiBold as any,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     badge: {
       backgroundColor: themeColors.background,
@@ -114,8 +125,10 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       borderRadius: extractPixels(radii.full),
     },
     badgeText: {
-      fontSize: rem(fontSizes.xs),
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     addButton: {
       padding: rem(space[2]),
@@ -127,9 +140,9 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       marginBottom: rem(space[3]),
       shadowColor: themeColors.black,
       shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.05,
-      shadowRadius: 2,
-      elevation: 2,
+      shadowOpacity: preferences.simpleInterface ? 0 : 0.05,
+      shadowRadius: preferences.simpleInterface ? 0 : 2,
+      elevation: preferences.simpleInterface ? 0 : 2,
     },
     taskHeader: {
       flexDirection: 'row',
@@ -137,20 +150,24 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       alignItems: 'flex-start',
     },
     taskTitle: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       fontWeight: fontWeights.medium as any,
       color: themeColors.foreground,
       flex: 1,
       marginRight: rem(space[2]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     taskTitleCompleted: {
       textDecorationLine: 'line-through',
       color: themeColors.muted.foreground,
     },
     taskDescription: {
-      fontSize: rem(fontSizes.xs),
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
       color: themeColors.muted.foreground,
       marginTop: rem(space[1]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     priorityBadge: {
       alignSelf: 'flex-start',
@@ -163,6 +180,8 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     priorityText: {
       fontSize: 10,
       fontWeight: fontWeights.medium as any,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     inputCard: {
       backgroundColor: themeColors.card.DEFAULT,
@@ -176,9 +195,11 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       borderRadius: extractPixels(radii.md),
       paddingHorizontal: rem(space[3]),
       paddingVertical: rem(space[2]),
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     inputActions: {
       flexDirection: 'row',
@@ -192,8 +213,10 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     actionButtonText: {
       color: themeColors.primary.foreground,
-      fontSize: rem(fontSizes.xs),
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
       fontWeight: fontWeights.medium as any,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     cancelButton: {
       paddingHorizontal: rem(space[3]),
@@ -201,7 +224,9 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     cancelButtonText: {
       color: themeColors.muted.foreground,
-      fontSize: rem(fontSizes.xs),
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     // Modal Styles
     modalOverlay: {
@@ -216,10 +241,12 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       padding: rem(space[6]),
     },
     modalTitle: {
-      fontSize: rem(fontSizes.lg),
+      fontSize: rem(fontSizes.lg) * preferences.fontScale,
       fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
       marginBottom: rem(space[4]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     modalOption: {
       paddingVertical: rem(space[4]),
@@ -230,8 +257,10 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       gap: rem(space[3]),
     },
     modalOptionText: {
-      fontSize: rem(fontSizes.md),
+      fontSize: rem(fontSizes.md) * preferences.fontScale,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     modalDeleteText: {
       color: '#FF5252',
@@ -241,11 +270,15 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
 export function KanbanBoard() {
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const preferences = useCognitivePreferences();
   const { width } = useWindowDimensions();
 
   const isDesktop = width >= 768;
   const columnWidth = isDesktop ? (width - 400) / 3 : width * 0.85;
-  const styles = useMemo(() => createStyles(theme.colors, columnWidth), [theme.colors, columnWidth]);
+  const styles = useMemo(
+    () => createStyles(theme.colors, columnWidth, preferences),
+    [columnWidth, preferences, theme.colors],
+  );
 
   const [columns, setColumns] = useState<KanbanColumn[]>(initialColumnsState);
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -512,19 +545,21 @@ export function KanbanBoard() {
                         {task.description}
                       </Text>
                     )}
-                    <View
-                      style={[
-                        styles.priorityBadge,
-                        {
-                          borderColor: priorityStyle.borderColor,
-                          backgroundColor: priorityStyle.backgroundColor,
-                        },
-                      ]}
-                    >
-                      <Text style={[styles.priorityText, { color: priorityStyle.textColor }]}>
-                        {t(`priority.${task.priority}`, task.priority ?? 'low')}
-                      </Text>
-                    </View>
+                    {!preferences.hideUrgencyIndicators && (
+                      <View
+                        style={[
+                          styles.priorityBadge,
+                          {
+                            borderColor: priorityStyle.borderColor,
+                            backgroundColor: priorityStyle.backgroundColor,
+                          },
+                        ]}
+                      >
+                        <Text style={[styles.priorityText, { color: priorityStyle.textColor }]}>
+                          {t(`priority.${task.priority}`, task.priority ?? 'low')}
+                        </Text>
+                      </View>
+                    )}
                   </TouchableOpacity>
                 );
               })}
@@ -537,7 +572,7 @@ export function KanbanBoard() {
       <Modal
         visible={!!activeTask}
         transparent
-        animationType="fade"
+        animationType={preferences.animationsEnabled ? 'fade' : 'none'}
         onRequestClose={() => setActiveTask(null)}
       >
         <TouchableOpacity

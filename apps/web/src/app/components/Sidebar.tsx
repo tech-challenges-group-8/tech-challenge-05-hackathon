@@ -3,12 +3,16 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
+import { useCognitivePreferences } from '../../cognitive';
 
 // Helper to convert rem to pixels (assuming 16px base)
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
 
-const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+const createStyles = (
+  themeColors: ReturnType<typeof useTheme>['theme']['colors'],
+  preferences: ReturnType<typeof useCognitivePreferences>,
+) =>
   StyleSheet.create({
     sidebar: {
       width: 250,
@@ -21,14 +25,18 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       marginBottom: rem(space[6]),
     },
     logo: {
-      fontSize: rem(fontSizes['2xl']),
-      fontWeight: fontWeights.bold,
+      fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
+      fontWeight: fontWeights.bold as any,
       color: themeColors.primary.DEFAULT,
       marginBottom: rem(space[2]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     logoSubtitle: {
-      fontSize: rem(fontSizes.xs),
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
       color: themeColors.muted.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     menuItem: {
       paddingVertical: rem(space[3]),
@@ -40,11 +48,13 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       backgroundColor: themeColors.cognitive.highlight,
     },
     menuItemText: {
-      fontSize: rem(fontSizes.md),
+      fontSize: rem(fontSizes.md) * preferences.fontScale,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     menuItemTextActive: {
-      fontWeight: fontWeights.semiBold,
+      fontWeight: fontWeights.semiBold as any,
       color: themeColors.primary.DEFAULT,
     },
   });
@@ -54,6 +64,7 @@ const menuItems = [
   { id: 'tasks', labelKey: 'menu.tasks', icon: '✓' },
   { id: 'kanban', labelKey: 'menu.kanban', icon: '✓' },
   { id: 'focus', labelKey: 'menu.focus', icon: '🎯' },
+  { id: 'cognitive', labelKey: 'menu.cognitive', icon: '🧠' },
   { id: 'settings', labelKey: 'menu.settings', icon: '⚙️' },
 ];
 
@@ -65,13 +76,16 @@ interface SidebarProps {
 export function Sidebar({ activeMenu, onMenuChange }: SidebarProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
+  const preferences = useCognitivePreferences();
+  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
   return (
     <View style={styles.sidebar}>
       <View style={styles.sidebarHeader}>
         <Text style={styles.logo}>{t('app.name')}</Text>
-        <Text style={styles.logoSubtitle}>{t('app.tagline')}</Text>
+        {!preferences.simpleInterface && (
+          <Text style={styles.logoSubtitle}>{t('app.tagline')}</Text>
+        )}
       </View>
       
       {menuItems.map((item) => (

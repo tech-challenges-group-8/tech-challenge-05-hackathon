@@ -5,6 +5,7 @@ import Home from './page';
 import '../i18n';
 import { ThemeProvider } from '../theme';
 import { AuthProvider } from '../auth';
+import { CognitiveSettingsProvider } from '../cognitive';
 import { FocusTimerProvider } from './context/FocusTimerContext';
 
 export default function App() {
@@ -12,9 +13,11 @@ export default function App() {
     <SafeAreaProvider>
       <ThemeProvider initialTheme="light">
         <AuthProvider>
-          <FocusTimerProvider>
-            <Home />
-          </FocusTimerProvider>
+          <CognitiveSettingsProvider>
+            <FocusTimerProvider>
+              <Home />
+            </FocusTimerProvider>
+          </CognitiveSettingsProvider>
         </AuthProvider>
       </ThemeProvider>
       <StatusBar style="auto" />

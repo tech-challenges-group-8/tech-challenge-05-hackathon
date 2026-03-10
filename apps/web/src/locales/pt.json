@@ -149,6 +149,124 @@
       "dark": "Escuro",
       "softPastel": "Pastel Suave",
       "highContrast": "Alto Contraste"
+    },
+    "quickTheme": {
+      "description": "Ajuste rapidamente o tema visual. Esta seleção é compartilhada com o painel cognitivo e fica disponível para o restante do app."
+    }
+  },
+  "cognitiveSettings": {
+    "description": "Personalize leitura, foco, carga sensorial e perfis cognitivos. As alterações são salvas automaticamente e distribuídas para outras telas.",
+    "actions": {
+      "retry": "Sincronizar",
+      "reset": "Restaurar padrão"
+    },
+    "status": {
+      "loading": "Carregando preferências...",
+      "saving": "Salvando alterações...",
+      "saved": "Alterações salvas automaticamente",
+      "error": "Não foi possível sincronizar tudo agora: {{message}}"
+    },
+    "sections": {
+      "reading": {
+        "title": "Leitura",
+        "description": "Fonte, tamanho e espaçamento para reduzir esforço cognitivo."
+      },
+      "focus": {
+        "title": "Foco",
+        "description": "Reduza distrações e priorize a tarefa ativa."
+      },
+      "sensory": {
+        "title": "Sensorial",
+        "description": "Controle tema, sons e indicadores intensos da interface."
+      },
+      "emotion": {
+        "title": "Emoção",
+        "description": "Aplique perfis prontos e acompanhe o estado atual da interface."
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "title": "Fonte",
+        "system": "Sistema",
+        "dyslexiaFriendly": "Dislexia"
+      },
+      "textSize": {
+        "title": "Tamanho do texto",
+        "normal": "Normal",
+        "large": "Grande",
+        "extraLarge": "Extra grande"
+      },
+      "lineHeight": {
+        "title": "Espaçamento entre linhas",
+        "normal": "Padrão",
+        "relaxed": "Confortável",
+        "loose": "Amplo"
+      },
+      "letterSpacing": {
+        "title": "Aumentar espaço entre letras",
+        "description": "Cria mais respiro visual entre caracteres."
+      }
+    },
+    "focus": {
+      "hideSidebar": {
+        "title": "Ocultar sidebar",
+        "description": "Remove a navegação lateral no desktop para manter foco na tarefa."
+      },
+      "highlightActiveTask": {
+        "title": "Destacar tarefa ativa",
+        "description": "Permite marcar visualmente a tarefa atual na checklist."
+      },
+      "animationsEnabled": {
+        "title": "Manter animações",
+        "description": "Desative para reduzir transições e movimentos."
+      },
+      "simpleInterface": {
+        "title": "Interface simples",
+        "description": "Reduz sombra, metadados e elementos visuais secundários."
+      }
+    },
+    "sensory": {
+      "theme": {
+        "title": "Tema visual"
+      },
+      "muteSounds": {
+        "title": "Silenciar sons",
+        "description": "Desativa alertas sonoros e reforços auditivos."
+      },
+      "hideUrgencyIndicators": {
+        "title": "Ocultar indicadores de urgência",
+        "description": "Esconde badges de prioridade e estímulos visuais intensos."
+      }
+    },
+    "presets": {
+      "custom": "Perfil personalizado",
+      "items": {
+        "default": {
+          "label": "Padrão",
+          "description": "Configuração equilibrada para uso geral."
+        },
+        "reading": {
+          "label": "Leitura",
+          "description": "Mais espaçamento, fonte amigável e texto ampliado."
+        },
+        "focus": {
+          "label": "Foco",
+          "description": "Interface enxuta, sem animações e com tarefa ativa em destaque."
+        },
+        "sensory": {
+          "label": "Sensorial",
+          "description": "Cores suaves, sem urgência visual e menos estímulos."
+        },
+        "emotion": {
+          "label": "Emoção",
+          "description": "Tom visual mais acolhedor para reduzir ansiedade digital."
+        }
+      }
+    },
+    "summary": {
+      "title": "Resumo atual",
+      "currentPreset": "Perfil",
+      "currentTheme": "Tema"
     }
   }
 }

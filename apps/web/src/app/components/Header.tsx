@@ -6,12 +6,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../theme';
 import { useAuth } from '../../auth';
 import { UserProfilePage } from '../pages/UserProfilePage';
+import { useCognitivePreferences } from '../../cognitive';
 
 // Helper to convert rem to pixels (assuming 16px base)
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
 
-const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+const createStyles = (
+  themeColors: ReturnType<typeof useTheme>['theme']['colors'],
+  preferences: ReturnType<typeof useCognitivePreferences>,
+) =>
   StyleSheet.create({
     header: {
       height: rem(space[16]),
@@ -24,9 +28,11 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       paddingHorizontal: rem(space[6]),
     },
     headerTitle: {
-      fontSize: rem(fontSizes.xl),
-      fontWeight: fontWeights.semiBold,
+      fontSize: rem(fontSizes.xl) * preferences.fontScale,
+      fontWeight: fontWeights.semiBold as any,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     headerActions: {
       flexDirection: 'row',
@@ -77,9 +83,11 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       borderBottomWidth: 0,
     },
     dropdownItemText: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
       fontWeight: fontWeights.semiBold as any,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     dropdownItemLogout: {
       color: themeColors.primary.DEFAULT,
@@ -99,7 +107,8 @@ export function Header({ title, onNewTask, onProfile }: HeaderProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { logout, currentUser } = useAuth();
-  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
+  const preferences = useCognitivePreferences();
+  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showProfilePage, setShowProfilePage] = useState(false);
 
@@ -158,12 +167,14 @@ export function Header({ title, onNewTask, onProfile }: HeaderProps) {
                     <Ionicons name="person" size={rem(fontSizes.md)} color={theme.colors.foreground} />
                     <Text style={styles.dropdownItemText}>{currentUser?.name || t('header.profile')}</Text>
                   </TouchableOpacity>
-                  <View style={styles.dropdownItem}>
-                    <Ionicons name="mail" size={rem(fontSizes.md)} color={theme.colors.muted.foreground} />
-                    <Text style={{ ...styles.dropdownItemText, color: theme.colors.muted.foreground }}>
-                      {currentUser?.email}
-                    </Text>
-                  </View>
+                  {!preferences.simpleInterface && (
+                    <View style={styles.dropdownItem}>
+                      <Ionicons name="mail" size={rem(fontSizes.md)} color={theme.colors.muted.foreground} />
+                      <Text style={{ ...styles.dropdownItemText, color: theme.colors.muted.foreground }}>
+                        {currentUser?.email}
+                      </Text>
+                    </View>
+                  )}
                   <TouchableOpacity
                     style={[styles.dropdownItem, styles.dropdownItemLast]}
                     onPress={handleLogout}
@@ -179,7 +190,11 @@ export function Header({ title, onNewTask, onProfile }: HeaderProps) {
           )}
 
           {showProfilePage && (
-            <Modal visible={showProfilePage} onRequestClose={() => setShowProfilePage(false)}>
+            <Modal
+              visible={showProfilePage}
+              animationType={preferences.animationsEnabled ? 'fade' : 'none'}
+              onRequestClose={() => setShowProfilePage(false)}
+            >
               <UserProfilePage onClose={() => setShowProfilePage(false)} />
             </Modal>
           )}

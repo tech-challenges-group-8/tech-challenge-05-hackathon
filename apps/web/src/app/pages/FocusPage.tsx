@@ -3,17 +3,21 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
+import { useCognitivePreferences } from '../../cognitive';
 import { PomodoroTimer } from '../components/PomodoroTimer';
 import { TaskList } from '../components/TaskList';
 
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
 
-const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+const createStyles = (
+  themeColors: ReturnType<typeof useTheme>['theme']['colors'],
+  preferences: ReturnType<typeof useCognitivePreferences>,
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      padding: rem(space[4]),
+      padding: preferences.simpleInterface ? rem(space[3]) : rem(space[4]),
     },
     card: {
       backgroundColor: themeColors.card.DEFAULT,
@@ -21,21 +25,25 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       padding: rem(space[6]),
       shadowColor: themeColors.black,
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 3,
+      shadowOpacity: preferences.simpleInterface ? 0 : 0.1,
+      shadowRadius: preferences.simpleInterface ? 0 : 8,
+      elevation: preferences.simpleInterface ? 0 : 3,
       marginBottom: rem(space[6]),
     },
     title: {
-      fontSize: rem(fontSizes['2xl']),
+      fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
       fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     text: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
-      lineHeight: rem(fontSizes.sm) * 1.5,
+      lineHeight: rem(fontSizes.sm) * preferences.lineHeightMultiplier,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     contentRow: {
       flex: 1,
@@ -50,13 +58,14 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     taskColumn: {
       flex: 1,
       minWidth: 250,
-    }
+    },
   });
 
 export function FocusPage() {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
+  const preferences = useCognitivePreferences();
+  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
   return (
     <View style={styles.container}>

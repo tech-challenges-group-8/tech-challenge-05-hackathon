@@ -3,6 +3,7 @@ export interface FocusTask {
   title: string;
   completed: boolean;
   timeSpent?: number;
+  pomodoros?: number;
 }
 
 export interface AudioTheme {

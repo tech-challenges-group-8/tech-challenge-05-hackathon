@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
+import { useCognitivePreferences } from '../../../cognitive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -40,7 +41,10 @@ const completionMessages = [
 ];
 
 // Styles
-const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+const createStyles = (
+  themeColors: ReturnType<typeof useTheme>['theme']['colors'],
+  preferences: ReturnType<typeof useCognitivePreferences>,
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -53,14 +57,18 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       marginBottom: rem(space[6]),
     },
     headerTitle: {
-      fontSize: rem(fontSizes['2xl']),
+      fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
       fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     headerSubtitle: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.muted.foreground,
       marginTop: rem(space[1]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     addButton: {
       backgroundColor: themeColors.primary.DEFAULT,
@@ -74,7 +82,9 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     addButtonText: {
       color: themeColors.primary.foreground,
       fontWeight: fontWeights.semiBold as any,
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     completionMessage: {
       backgroundColor: 'rgba(77, 153, 115, 0.1)', // success/10
@@ -96,13 +106,17 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       marginBottom: rem(space[2]),
     },
     progressLabel: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       fontWeight: fontWeights.medium as any,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     progressCount: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.muted.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     progressBarContainer: {
       height: rem(space[2]),
@@ -122,9 +136,9 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       marginBottom: rem(space[4]),
       shadowColor: themeColors.black,
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3,
+      shadowOpacity: preferences.simpleInterface ? 0 : 0.1,
+      shadowRadius: preferences.simpleInterface ? 0 : 4,
+      elevation: preferences.simpleInterface ? 0 : 3,
     },
     input: {
       borderWidth: 1,
@@ -132,9 +146,11 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       borderRadius: extractPixels(radii.md),
       paddingHorizontal: rem(space[4]),
       paddingVertical: rem(space[3]),
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
       backgroundColor: themeColors.background,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     addButtonsContainer: {
       flexDirection: 'row',
@@ -155,13 +171,17 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       alignItems: 'center',
     },
     listTitle: {
-      fontSize: rem(fontSizes.xl),
+      fontSize: rem(fontSizes.xl) * preferences.fontScale,
       fontWeight: fontWeights.medium as any,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     clearButtonText: {
-      fontSize: rem(fontSizes.xs),
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
       color: themeColors.muted.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     listContent: {
       padding: rem(space[2]),
@@ -173,10 +193,14 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     emptyListText: {
       color: themeColors.muted.foreground,
       marginTop: rem(space[3]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     emptyListSubtext: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.muted.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     taskItem: {
       flexDirection: 'row',
@@ -206,8 +230,10 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     taskText: {
       flex: 1,
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     taskTextCompleted: {
       textDecorationLine: 'line-through',
@@ -221,9 +247,11 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     encouragementText: {
       textAlign: 'center',
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.muted.foreground,
       marginTop: rem(space[4]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     successText: {
       color: '#4D9973',
@@ -254,7 +282,8 @@ const CustomCheckbox = ({
 export function TaskList() {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
+  const preferences = useCognitivePreferences();
+  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -481,11 +510,15 @@ export function TaskList() {
             </View>
           ) : (
             tasks.map((task) => {
-              const isActive = activeTaskId === task.id;
+              const isActive = preferences.highlightActiveTask && activeTaskId === task.id;
               return (
                 <TouchableOpacity
                   key={task.id}
-                  onPress={() => setActiveTaskId(isActive ? null : task.id)}
+                  onPress={
+                    preferences.highlightActiveTask
+                      ? () => setActiveTaskId(isActive ? null : task.id)
+                      : undefined
+                  }
                   style={[
                     styles.taskItem,
                     isActive && styles.taskItemActive,

@@ -1,7 +1,12 @@
-import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosError,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
 /**
  * Create axios instance with base configuration
@@ -38,7 +43,7 @@ api.interceptors.request.use(
  * Response interceptor for handling errors
  */
 api.interceptors.response.use(
-  (response) => response,
+  (response: AxiosResponse) => response,
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
       // Token expired or invalid - clear auth data

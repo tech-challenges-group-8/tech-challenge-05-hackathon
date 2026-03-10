@@ -15,11 +15,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../theme';
 import { useAuth } from '../../auth';
 import { userService } from '../../services';
+import { useCognitivePreferences } from '../../cognitive';
 
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
 
-const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
+const createStyles = (
+  themeColors: ReturnType<typeof useTheme>['theme']['colors'],
+  preferences: ReturnType<typeof useCognitivePreferences>,
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -44,10 +48,12 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       justifyContent: 'center',
     },
     headerTitle: {
-      fontSize: rem(fontSizes.xl),
+      fontSize: rem(fontSizes.xl) * preferences.fontScale,
       fontWeight: fontWeights.semiBold as any,
       color: themeColors.foreground,
       flex: 1,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     content: {
       flex: 1,
@@ -63,24 +69,28 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       marginBottom: rem(space[6]),
       shadowColor: themeColors.black,
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 3,
+      shadowOpacity: preferences.simpleInterface ? 0 : 0.1,
+      shadowRadius: preferences.simpleInterface ? 0 : 8,
+      elevation: preferences.simpleInterface ? 0 : 3,
     },
     sectionTitle: {
-      fontSize: rem(fontSizes.lg),
+      fontSize: rem(fontSizes.lg) * preferences.fontScale,
       fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
       marginBottom: rem(space[4]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     inputGroup: {
       marginBottom: rem(space[4]),
     },
     label: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       fontWeight: fontWeights.semiBold as any,
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     input: {
       borderWidth: 1,
@@ -88,9 +98,11 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       borderRadius: extractPixels(radii.md),
       paddingHorizontal: rem(space[4]),
       paddingVertical: rem(space[3]),
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
       backgroundColor: themeColors.background,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     button: {
       height: rem(space[12]),
@@ -105,19 +117,25 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     buttonText: {
       color: themeColors.primary.foreground,
       fontWeight: fontWeights.semiBold as any,
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     successText: {
       color: '#4D9973',
-      fontSize: rem(fontSizes.xs),
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
       marginBottom: rem(space[3]),
       textAlign: 'center',
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     errorText: {
       color: themeColors.primary.DEFAULT,
-      fontSize: rem(fontSizes.xs),
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
       marginBottom: rem(space[3]),
       textAlign: 'center',
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
     divider: {
       height: 1,
@@ -125,9 +143,11 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       marginVertical: rem(space[4]),
     },
     infoText: {
-      fontSize: rem(fontSizes.sm),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.muted.foreground,
       marginBottom: rem(space[2]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
     },
   });
 
@@ -138,7 +158,8 @@ interface UserProfilePageProps {
 export function UserProfilePage({ onClose }: UserProfilePageProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
+  const preferences = useCognitivePreferences();
+  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
   const { currentUser } = useAuth();
 
   const [name, setName] = useState(currentUser?.name || '');
