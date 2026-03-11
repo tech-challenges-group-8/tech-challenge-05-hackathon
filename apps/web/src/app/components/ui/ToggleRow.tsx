@@ -19,7 +19,7 @@ const createStyles = (
   StyleSheet.create({
     container: {
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'space-between',
       paddingHorizontal: rem(space[4]),
       paddingVertical: rem(space[3]),
@@ -29,6 +29,7 @@ const createStyles = (
     },
     content: {
       flex: 1,
+      minWidth: 0,
       gap: rem(space[1]),
     },
     title: {

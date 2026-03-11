@@ -23,6 +23,8 @@ const createStyles = (
   StyleSheet.create({
     button: {
       flex: 1,
+      width: '100%',
+      minWidth: 0,
       minHeight: rem(space[10]),
       paddingHorizontal: rem(space[3]),
       paddingVertical: rem(space[3]),
@@ -41,6 +43,8 @@ const createStyles = (
     content: {
       alignItems: 'center',
       gap: rem(space[1]),
+      width: '100%',
+      minWidth: 0,
     },
     label: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
@@ -49,6 +53,7 @@ const createStyles = (
       textAlign: 'center',
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+      flexShrink: 1,
     },
     labelActive: {
       color: themeColors.primary.foreground,
@@ -59,6 +64,7 @@ const createStyles = (
       textAlign: 'center',
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+      flexShrink: 1,
     },
     descriptionActive: {
       color: themeColors.primary.foreground,

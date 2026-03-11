@@ -26,26 +26,32 @@ import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
-  isDesktop: boolean,
+  isTwoColumnLayout: boolean,
+  isWideHeaderLayout: boolean,
   preferences: ReturnType<typeof useCognitivePreferences>,
 ) =>
   StyleSheet.create({
+    pageCard: {
+      padding: rem(isWideHeaderLayout ? space[6] : space[4]),
+    },
     headerRow: {
-      flexDirection: isDesktop ? 'row' : 'column',
+      flexDirection: isWideHeaderLayout ? 'row' : 'column',
       justifyContent: 'space-between',
       gap: rem(space[4]),
       marginBottom: rem(space[6]),
     },
     headerCopy: {
       flex: 1,
+      minWidth: 0,
       gap: rem(space[2]),
     },
     title: {
-      fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
+      fontSize: rem((isWideHeaderLayout ? fontSizes['2xl'] : fontSizes.xl)) * preferences.fontScale,
       fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+      flexShrink: 1,
     },
     subtitle: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
@@ -53,19 +59,22 @@ const createStyles = (
       lineHeight: rem(fontSizes.sm) * preferences.lineHeightMultiplier,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+      flexShrink: 1,
     },
     headerActions: {
-      flexDirection: isDesktop ? 'row' : 'column',
+      flexDirection: 'column',
       gap: rem(space[3]),
-      alignItems: isDesktop ? 'center' : 'stretch',
-      minWidth: isDesktop ? 320 : undefined,
+      alignItems: 'stretch',
+      width: isWideHeaderLayout ? 320 : '100%',
+      maxWidth: '100%',
     },
     statusPill: {
       borderRadius: extractPixels(radii.full),
       paddingHorizontal: rem(space[4]),
       paddingVertical: rem(space[2]),
       backgroundColor: themeColors.accent.DEFAULT,
-      alignSelf: isDesktop ? 'center' : 'flex-start',
+      alignSelf: 'flex-start',
+      maxWidth: '100%',
     },
     statusText: {
       fontSize: rem(fontSizes.xs) * preferences.fontScale,
@@ -76,7 +85,7 @@ const createStyles = (
     },
     actionButton: {
       marginTop: 0,
-      minWidth: isDesktop ? 120 : undefined,
+      width: '100%',
     },
     errorBanner: {
       backgroundColor: themeColors.secondary.DEFAULT,
@@ -94,7 +103,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     sections: {
-      flexDirection: isDesktop ? 'row' : 'column',
+      flexDirection: isTwoColumnLayout ? 'row' : 'column',
       flexWrap: 'wrap',
       gap: rem(space[4]),
     },
@@ -119,10 +128,11 @@ export function CognitiveSettingsPage() {
   } = useCognitiveSettings();
   const preferences = useCognitivePreferences();
   const { width } = useWindowDimensions();
-  const isDesktop = Platform.OS === 'web' && width >= 960;
+  const isWideHeaderLayout = Platform.OS === 'web' && width >= 1380;
+  const isTwoColumnLayout = Platform.OS === 'web' && width >= 1200;
   const styles = useMemo(
-    () => createStyles(theme.colors, isDesktop, preferences),
-    [isDesktop, preferences, theme.colors],
+    () => createStyles(theme.colors, isTwoColumnLayout, isWideHeaderLayout, preferences),
+    [isTwoColumnLayout, isWideHeaderLayout, preferences, theme.colors],
   );
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     reading: true,
@@ -159,7 +169,7 @@ export function CognitiveSettingsPage() {
       content: (
         <TypographySettings
           settings={settings}
-          isDesktop={isDesktop}
+          isDesktop={isTwoColumnLayout}
           updateTypography={updateTypography}
         />
       ),
@@ -179,7 +189,7 @@ export function CognitiveSettingsPage() {
       content: (
         <SensorySettings
           settings={settings}
-          isDesktop={isDesktop}
+          isDesktop={isTwoColumnLayout}
           setTheme={setTheme}
           updateSensory={updateSensory}
         />
@@ -194,7 +204,7 @@ export function CognitiveSettingsPage() {
         <PresetSelector
           currentPreset={currentPreset}
           settings={settings}
-          isDesktop={isDesktop}
+          isDesktop={isTwoColumnLayout}
           applyPreset={applyPreset}
         />
       ),
@@ -202,7 +212,7 @@ export function CognitiveSettingsPage() {
   ];
 
   return (
-    <Card>
+    <Card style={styles.pageCard}>
       <View style={styles.headerRow}>
         <View style={styles.headerCopy}>
           <Text style={styles.title}>{t('pages.cognitive.title')}</Text>
@@ -246,7 +256,7 @@ export function CognitiveSettingsPage() {
             title={section.title}
             description={section.description}
             icon={section.icon}
-            isDesktop={isDesktop}
+            isDesktop={isTwoColumnLayout}
             expanded={expandedSections[section.key]}
             onToggle={() => toggleSection(section.key)}
           >
