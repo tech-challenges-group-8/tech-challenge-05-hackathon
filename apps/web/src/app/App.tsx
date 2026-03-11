@@ -7,6 +7,7 @@ import { ThemeProvider } from '../theme';
 import { AuthProvider } from '../auth';
 import { CognitiveSettingsProvider } from '../cognitive';
 import { FocusTimerProvider } from './context/FocusTimerContext';
+import { HiddenYouTubePlayer } from './components/pomodoro/HiddenYouTubePlayer';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <CognitiveSettingsProvider>
             <FocusTimerProvider>
               <Home />
+              <HiddenYouTubePlayer />
             </FocusTimerProvider>
           </CognitiveSettingsProvider>
         </AuthProvider>

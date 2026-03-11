@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-// @ts-ignore
 import Slider from '@react-native-community/slider';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space, colors as uiColors } from '@mindease/ui-kit';
@@ -105,22 +104,14 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
   const {
     allThemes,
     selectedThemeId,
-    setSelectedThemeId,
+    selectTheme,
     isAudioPlaying,
     toggleAudioPlay,
     audioVolume,
-    setAudioVolume
+    setVolume,
+    changeVolume,
+    playNextTheme,
   } = useFocusTimer();
-
-  const playNextTheme = () => {
-    const currentIndex = allThemes.findIndex(t => t.id === selectedThemeId);
-    let nextIndex = currentIndex + 1;
-    if (nextIndex >= allThemes.length) {
-      nextIndex = 0;
-    }
-    const nextTheme = allThemes[nextIndex];
-    setSelectedThemeId(nextTheme.id);
-  };
 
   return (
     <View style={styles.miniPlayer}>
@@ -133,7 +124,7 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
           <TouchableOpacity 
             key={themeItem.id}
             style={[styles.themePill, selectedThemeId === themeItem.id && styles.themePillActive]}
-            onPress={() => themeItem.id === 'custom' ? onCustomUrlClick() : setSelectedThemeId(themeItem.id)}
+            onPress={() => themeItem.id === 'custom' ? onCustomUrlClick() : selectTheme(themeItem.id)}
           >
             <Text style={[styles.themePillText, selectedThemeId === themeItem.id && styles.themePillTextActive]}>
               {themeItem.name}
@@ -145,7 +136,7 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
       <View style={styles.audioControlsContainer}>
         {/* Volume Controls on their own row for mobile-friendly layout */}
         <View style={styles.volumeControls}>
-          <TouchableOpacity onPress={() => setAudioVolume(Math.max(0, audioVolume - 10))} style={styles.volumeBtn}>
+          <TouchableOpacity onPress={() => changeVolume(-10)} style={styles.volumeBtn}>
               <Ionicons name="volume-low" size={20} color={theme.colors.foreground} />
           </TouchableOpacity>
           <Slider
@@ -153,12 +144,12 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
             minimumValue={0}
             maximumValue={100}
             value={audioVolume}
-            onSlidingComplete={setAudioVolume}
+            onSlidingComplete={setVolume}
             minimumTrackTintColor={theme.colors.primary.DEFAULT}
             maximumTrackTintColor={theme.colors.border}
             thumbTintColor={theme.colors.primary.DEFAULT}
           />
-          <TouchableOpacity onPress={() => setAudioVolume(Math.min(100, audioVolume + 10))} style={styles.volumeBtn}>
+          <TouchableOpacity onPress={() => changeVolume(10)} style={styles.volumeBtn}>
               <Ionicons name="volume-high" size={20} color={theme.colors.foreground} />
           </TouchableOpacity>
         </View>
