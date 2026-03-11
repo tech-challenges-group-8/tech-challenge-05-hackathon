@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
-import { rem, extractPixels } from '../../utils';
+import { rem, extractPixels, fontWeight } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -23,7 +23,7 @@ const createStyles = (
     },
     logo: {
       fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.primary.DEFAULT,
       marginBottom: rem(space[2]),
       letterSpacing: preferences.letterSpacing,
@@ -51,7 +51,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     menuItemTextActive: {
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       color: themeColors.primary.DEFAULT,
     },
   });
@@ -65,8 +65,8 @@ const menuItems = [
 ];
 
 interface SidebarProps {
-  activeMenu: string;
-  onMenuChange: (menuId: string) => void;
+  readonly activeMenu: string;
+  readonly onMenuChange: (menuId: string) => void;
 }
 
 export function Sidebar({ activeMenu, onMenuChange }: SidebarProps) {
@@ -92,6 +92,8 @@ export function Sidebar({ activeMenu, onMenuChange }: SidebarProps) {
             activeMenu === item.id && styles.menuItemActive,
           ]}
           onPress={() => onMenuChange(item.id)}
+          accessibilityRole="button"
+          accessibilityLabel={t(item.labelKey)}
         >
           <Text
             style={[

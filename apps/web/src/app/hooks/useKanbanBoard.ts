@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { taskKanbanService } from '../../services/task-kanban';
 import type { ResponseTaskKanbanDTO, TaskKanbanStatus, TaskKanbanPriority } from '../../services/task-kanban/types';
+import { logger } from '../../utils';
 
 export interface KanbanTask {
   id: string;
@@ -77,7 +78,7 @@ export function useKanbanBoard() {
       const initializedColumns = initializeColumns(mappedTasks);
       setColumns(initializedColumns);
     } catch (err) {
-      console.error('Error fetching kanban tasks:', err);
+      logger.error('Error fetching kanban tasks:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch kanban tasks');
     } finally {
       setIsLoading(false);
@@ -118,7 +119,7 @@ export function useKanbanBoard() {
           )
         );
       } catch (err) {
-        console.error('Error adding kanban task:', err);
+        logger.error('Error adding kanban task:', err);
         setError(err instanceof Error ? err.message : 'Failed to add kanban task');
       } finally {
         setIsLoading(false);
@@ -164,7 +165,7 @@ export function useKanbanBoard() {
       try {
         await taskKanbanService.updateTask(taskId, { status: newStatus });
       } catch (err) {
-        console.error('Error moving kanban task:', err);
+        logger.error('Error moving kanban task:', err);
         // Revert on error
         setColumns((prevColumns) =>
           prevColumns.map((col) => {
@@ -217,7 +218,7 @@ export function useKanbanBoard() {
           priority: updates.priority,
         });
       } catch (err) {
-        console.error('Error updating kanban task:', err);
+        logger.error('Error updating kanban task:', err);
         // Revert on error
         setColumns((prevColumns) =>
           prevColumns.map((col) => ({
@@ -248,7 +249,7 @@ export function useKanbanBoard() {
       try {
         await taskKanbanService.deleteTask(taskId);
       } catch (err) {
-        console.error('Error deleting kanban task:', err);
+        logger.error('Error deleting kanban task:', err);
         // Revert on error
         setColumns(previousColumns);
         setError(err instanceof Error ? err.message : 'Failed to delete kanban task');

@@ -22,7 +22,7 @@ import {
   TypographySettings,
 } from '../components/cognitive';
 import { AppButton, Card } from '../components/ui';
-import { rem, extractPixels } from '../../utils';
+import { rem, extractPixels, fontWeight } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -42,7 +42,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -70,7 +70,7 @@ const createStyles = (
     statusText: {
       fontSize: rem(fontSizes.xs) * preferences.fontScale,
       color: themeColors.accent.foreground,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },

@@ -35,6 +35,7 @@
       "title": "Focus Mode",
       "body": "Mock focus session setup. You will configure timers, ambient sounds, and focus settings tailored to your needs.",
       "customizeTimer": "Focus Mode Settings",
+      "openFocusApp": "Open Focus Mode",
       "settingsTitle": "Timer Options",
       "settingsTabTimer": "Durations",
       "settingsTabAudio": "Audio & Player",
@@ -50,6 +51,11 @@
       "focusMusic": "Focus Music (Custom YouTube URL)",
       "musicPlayer": "Focus Audio",
       "volume": "Volume",
+      "addCustomAudio": "Add Custom Audio",
+      "audioName": "Audio Name",
+      "audioUrl": "YouTube URL",
+      "addAudio": "Add Audio",
+      "myCustomAudios": "My Custom Audios",
       "pomodorosCompleted": "Pomodoros Completed",
       "tasks": "Focus Tasks",
       "addTask": "Add a task to focus on...",
@@ -295,6 +301,14 @@
   "common": {
     "add": "Add",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "close": "Close",
+    "next": "Next",
+    "loading": "Loading...",
+    "reset": "Reset",
+    "pause": "Pause",
+    "start": "Start",
+    "skip": "Skip",
+    "save": "Save"
   }
 }

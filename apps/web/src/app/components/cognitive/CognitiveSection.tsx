@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 interface CognitiveSectionProps {
   readonly title: string;
@@ -45,7 +45,7 @@ const createStyles = (
     },
     sectionTitle: {
       fontSize: rem(fontSizes.lg) * preferences.fontScale,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,

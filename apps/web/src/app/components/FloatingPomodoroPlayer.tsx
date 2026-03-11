@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useFocusTimer } from '../context/FocusTimerContext';
-import { rem, extractPixels, formatTime } from '../../utils';
+import { rem, extractPixels, formatTime, fontWeight } from '../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -35,7 +35,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     title: {
       fontSize: rem(fontSizes.sm),
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.muted.foreground,
     },
     closeButton: {
@@ -48,7 +48,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     timerText: {
       fontSize: rem(fontSizes.xl),
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
     },
     controls: {
@@ -74,12 +74,12 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     navButtonText: {
       fontSize: rem(fontSizes.xs),
       color: themeColors.primary.DEFAULT,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
     }
   });
 
 interface Props {
-  onNavigateToFocus?: () => void;
+  readonly onNavigateToFocus?: () => void;
 }
 
 export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
@@ -127,9 +127,9 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
       <View style={styles.header}>
         <Text style={styles.title}>
-          {mode === 'FOCUS' ? t('pages.focus.focusMode', 'Focus') : t('pages.focus.shortBreak', 'Break')}
+          {mode === 'FOCUS' ? t('pages.focus.focusMode') : t('pages.focus.shortBreak')}
         </Text>
-        <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+        <TouchableOpacity style={styles.closeButton} onPress={handleClose} accessibilityLabel={t('common.close')}>
           <Ionicons name="close" size={16} color={theme.colors.muted.foreground} />
         </TouchableOpacity>
       </View>
@@ -138,13 +138,13 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
         <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
         
         <View style={styles.controls}>
-          <TouchableOpacity onPress={toggleAudioPlay} style={styles.iconButton}>
+          <TouchableOpacity onPress={toggleAudioPlay} style={styles.iconButton} accessibilityLabel={t('pages.focus.musicPlayer')}>
             <Ionicons name={isAudioPlaying ? "volume-high" : "volume-mute"} size={18} color={theme.colors.foreground} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={playNextTheme} style={styles.iconButton}>
+          <TouchableOpacity onPress={playNextTheme} style={styles.iconButton} accessibilityLabel={t('common.next')}>
             <Ionicons name="play-forward" size={18} color={theme.colors.foreground} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={toggleTimer} style={styles.playBtn}>
+          <TouchableOpacity onPress={toggleTimer} style={styles.playBtn} accessibilityLabel={isActive ? t('common.pause') : t('common.start')}>
             <Ionicons name={isActive ? "pause" : "play"} size={20} color={theme.colors.primary.foreground} />
           </TouchableOpacity>
         </View>
@@ -152,7 +152,7 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
 
       {onNavigateToFocus && (
         <TouchableOpacity style={styles.navButton} onPress={onNavigateToFocus}>
-          <Text style={styles.navButtonText}>{t('pages.focus.openFocusApp', 'Open Focus')}</Text>
+          <Text style={styles.navButtonText}>{t('pages.focus.openFocusApp')}</Text>
         </TouchableOpacity>
       )}
     </Animated.View>

@@ -2,9 +2,13 @@ import { useState } from 'react';
 import { Platform, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../services';
-import { validateRegisterForm } from '../../utils';
+import { logger, validateRegisterForm } from '../../utils';
 import { Toast } from '../components/Toast';
 import { AppButton, AppTextInput, AuthFormLayout } from '../components/ui';
+
+const styles = {
+  container: { flex: 1 } as const,
+};
 
 interface RegisterPageProps {
   readonly onSwitchToLogin?: () => void;
@@ -46,7 +50,7 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
         onSwitchToLogin?.();
       }, 2000);
     } catch (authError) {
-      console.error('Registration failed:', authError);
+      logger.error('Registration failed:', authError);
       const message = authError instanceof Error ? authError.message : '';
       if (message.includes('already exists')) {
         setServerError(t('register.errors.emailExists'));
@@ -60,7 +64,7 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <Toast visible={success} message={t('register.success')} variant="success" />
       <AuthFormLayout
         title={t('register.title')}

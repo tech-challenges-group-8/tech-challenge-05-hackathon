@@ -10,19 +10,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 import { useTranslation } from 'react-i18next';
 import type { KanbanTask } from '../../hooks/useKanbanBoard';
 import type { TaskKanbanStatus } from '../../../services/task-kanban/types';
 
 interface KanbanActionModalProps {
-  visible: boolean;
-  activeTask: { task: KanbanTask; columnId: TaskKanbanStatus } | null;
-  onClose: () => void;
-  onMoveToTodo: () => void;
-  onMoveToInProgress: () => void;
-  onMoveToDone: () => void;
-  onDelete: () => void;
+  readonly visible: boolean;
+  readonly activeTask: { task: KanbanTask; columnId: TaskKanbanStatus } | null;
+  readonly onClose: () => void;
+  readonly onMoveToTodo: () => void;
+  readonly onMoveToInProgress: () => void;
+  readonly onMoveToDone: () => void;
+  readonly onDelete: () => void;
 }
 
 const createStyles = (
@@ -43,7 +43,7 @@ const createStyles = (
     },
     modalTitle: {
       fontSize: rem(fontSizes.lg) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       marginBottom: rem(space[4]),
       letterSpacing: preferences.letterSpacing,
@@ -64,7 +64,10 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     modalDeleteText: {
-      color: themeColors.accent.foreground,
+      color: themeColors.destructive.foreground,
+    },
+    modalOptionLast: {
+      borderBottomWidth: 0,
     },
   });
 
@@ -105,7 +108,7 @@ export function KanbanActionModal({
               onPress={onMoveToTodo}
               accessible={true}
               accessibilityRole="button"
-              accessibilityLabel="Move to To Do"
+              accessibilityLabel={t('kanban.moveToTodo')}
             >
               <Ionicons name="arrow-back" size={20} color={theme.colors.foreground} />
               <Text style={styles.modalOptionText}>
@@ -120,7 +123,7 @@ export function KanbanActionModal({
               onPress={onMoveToInProgress}
               accessible={true}
               accessibilityRole="button"
-              accessibilityLabel="Move to In Progress"
+              accessibilityLabel={t('kanban.moveToInProgress')}
             >
               <Ionicons name="construct" size={20} color={theme.colors.foreground} />
               <Text style={styles.modalOptionText}>
@@ -135,7 +138,7 @@ export function KanbanActionModal({
               onPress={onMoveToDone}
               accessible={true}
               accessibilityRole="button"
-              accessibilityLabel="Mark as Done"
+              accessibilityLabel={t('kanban.moveToDone')}
             >
               <Ionicons name="checkmark-circle" size={20} color={theme.colors.foreground} />
               <Text style={styles.modalOptionText}>
@@ -145,11 +148,11 @@ export function KanbanActionModal({
           )}
 
           <TouchableOpacity
-            style={[styles.modalOption, { borderBottomWidth: 0 }]}
+            style={[styles.modalOption, styles.modalOptionLast]}
             onPress={onDelete}
             accessible={true}
             accessibilityRole="button"
-            accessibilityLabel="Delete task"
+            accessibilityLabel={t('common.delete')}
           >
             <Ionicons name="trash" size={20} color={theme.colors.accent.foreground} />
             <Text style={[styles.modalOptionText, styles.modalDeleteText]}>

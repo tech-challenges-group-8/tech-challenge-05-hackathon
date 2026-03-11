@@ -3,14 +3,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import { fontSizes, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 type BadgeVariant = 'primary' | 'secondary' | 'accent' | 'danger' | 'success' | 'warning';
 
 interface BadgeProps {
-  label: string;
-  variant?: BadgeVariant;
-  size?: 'sm' | 'md' | 'lg';
+  readonly label: string;
+  readonly variant?: BadgeVariant;
+  readonly size?: 'sm' | 'md' | 'lg';
 }
 
 const createStyles = (
@@ -28,7 +28,7 @@ const createStyles = (
     },
     text: {
       fontSize: rem(fontSizes.xs) * preferences.fontScale,
-      fontWeight: '600' as any,
+      fontWeight: fontWeight('600'),
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },
@@ -48,8 +48,8 @@ const createStyles = (
       text: { color: themeColors.accent.foreground },
     },
     danger: {
-      backgroundColor: themeColors.accent.DEFAULT,
-      text: { color: themeColors.accent.foreground },
+      backgroundColor: themeColors.destructive.DEFAULT,
+      text: { color: themeColors.destructive.foreground },
     },
     success: {
       backgroundColor: '#22c55e',

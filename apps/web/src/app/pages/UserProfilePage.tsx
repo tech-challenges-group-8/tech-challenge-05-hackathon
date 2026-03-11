@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../theme';
 import { useAuth } from '../../auth';
 import { useCognitivePreferences } from '../../cognitive';
-import { rem, extractPixels } from '../../utils';
+import { rem, extractPixels, fontWeight } from '../../utils';
 import { useChangePassword, useUpdateProfile } from '../hooks';
 import { PasswordSection, ProfileSection } from '../components/profile';
 
@@ -45,7 +45,7 @@ const createStyles = (
     },
     headerTitle: {
       fontSize: rem(fontSizes.xl) * preferences.fontScale,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       color: themeColors.foreground,
       flex: 1,
       letterSpacing: preferences.letterSpacing,

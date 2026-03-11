@@ -9,14 +9,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 import { useTranslation } from 'react-i18next';
 import type { KanbanTask } from '../../hooks/useKanbanBoard';
 import type { TaskKanbanPriority } from '../../../services/task-kanban/types';
 
 interface KanbanTaskCardProps {
-  task: KanbanTask;
-  onPress: () => void;
+  readonly task: KanbanTask;
+  readonly onPress: () => void;
 }
 
 const createStyles = (
@@ -42,7 +42,7 @@ const createStyles = (
     },
     taskTitle: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
       color: themeColors.foreground,
       flex: 1,
       marginRight: rem(space[2]),
@@ -70,7 +70,7 @@ const createStyles = (
     },
     priorityText: {
       fontSize: 10,
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },

@@ -7,11 +7,11 @@ import { useTheme } from '../../../theme';
 import { rem, extractPixels } from '../../../utils';
 
 interface TaskItemProps {
-  id: string;
-  title: string;
-  completed: boolean;
-  onToggle: (id: string) => void;
-  onDelete: (id: string) => void;
+  readonly id: string;
+  readonly title: string;
+  readonly completed: boolean;
+  readonly onToggle: (id: string) => void;
+  readonly onDelete: (id: string) => void;
 }
 
 const createStyles = (

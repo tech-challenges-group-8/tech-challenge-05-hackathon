@@ -10,13 +10,11 @@ import { Header } from './Header';
 import { BottomTabBar } from './BottomTabBar';
 
 interface AppLayoutProps {
-  activeMenu: string;
-  onMenuChange: (menuId: string) => void;
-  title: string;
-  onNewTask: () => void;
-  onProfile: () => void;
-  children: React.ReactNode;
-  floatingElement?: React.ReactNode;
+  readonly activeMenu: string;
+  readonly onMenuChange: (menuId: string) => void;
+  readonly title: string;
+  readonly children: React.ReactNode;
+  readonly floatingElement?: React.ReactNode;
 }
 
 const createStyles = (
@@ -47,8 +45,6 @@ export function AppLayout({
   activeMenu,
   onMenuChange,
   title,
-  onNewTask,
-  onProfile,
   children,
   floatingElement,
 }: AppLayoutProps) {
@@ -74,8 +70,6 @@ export function AppLayout({
         {/* Header */}
         <Header 
           title={title}
-          onNewTask={onNewTask}
-          onProfile={onProfile}
         />
 
         {/* Page content */}

@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService, type LoginDTO } from '../services';
+import { logger } from '../utils';
 
 type AuthUser = {
   id: string;
@@ -44,7 +45,7 @@ export function AuthProvider({ children }: Readonly<AuthProviderProps>) {
         setCurrentUser(null);
       }
     } catch (error) {
-      console.error('Failed to restore session:', error);
+      logger.error('Failed to restore session:', error);
       setCurrentUser(null);
     } finally {
       setIsLoading(false);

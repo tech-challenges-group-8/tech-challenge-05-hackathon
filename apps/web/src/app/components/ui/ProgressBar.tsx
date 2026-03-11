@@ -6,9 +6,9 @@ import { useTheme } from '../../../theme';
 import { rem, extractPixels } from '../../../utils';
 
 interface ProgressBarProps {
-  progress: number; // 0-1
-  height?: string;
-  animated?: boolean;
+  readonly progress: number; // 0-1
+  readonly height?: string;
+  readonly animated?: boolean;
 }
 
 const createStyles = (

@@ -4,12 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../cognitive';
 import { useTheme } from '../../theme';
-import { rem } from '../../utils';
+import { rem, fontWeight } from '../../utils';
 import { BOTTOM_TABS, type BottomTab } from '../navigation.config';
 
 interface BottomTabBarProps {
-  activeTab: string;
-  onTabChange: (tabId: string) => void;
+  readonly activeTab: string;
+  readonly onTabChange: (tabId: string) => void;
 }
 
 const createStyles = (
@@ -56,7 +56,7 @@ const createStyles = (
     },
     labelActive: {
       color: themeColors.primary.DEFAULT,
-      fontWeight: '600' as any,
+      fontWeight: fontWeight('600'),
     },
   });
 

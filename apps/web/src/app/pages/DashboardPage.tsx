@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
-import { rem } from '../../utils';
+import { rem, fontWeight } from '../../utils';
 import { Card } from '../components/ui';
 import { StatCard } from '../components/dashboard/StatCard';
 
@@ -18,7 +18,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
       letterSpacing: preferences.letterSpacing,

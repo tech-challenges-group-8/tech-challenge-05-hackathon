@@ -41,14 +41,6 @@ export default function Home() {
   const { activeMenu, navigateTo } = useClientRouter('dashboard');
   const { isActive, mode, isFloatingPlayerDismissed } = useFocusTimer();
 
-  const handleNewTask = () => {
-    console.log(t('actions.newTaskClicked'));
-  };
-
-  const handleProfile = () => {
-    console.log(t('actions.profileClicked'));
-  };
-
   const pageTitleByMenu: Record<string, string> = {
     dashboard: t('menu.dashboard'),
     tasks: t('menu.tasks'),
@@ -70,8 +62,6 @@ export default function Home() {
         activeMenu={activeMenu}
         onMenuChange={navigateTo}
         title={pageTitleByMenu[activeMenu] ?? t('menu.dashboard')}
-        onNewTask={handleNewTask}
-        onProfile={handleProfile}
         floatingElement={floatingElement}
       >
         {renderPageContent(activeMenu)}

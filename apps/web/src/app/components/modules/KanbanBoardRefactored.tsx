@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 import { useKanbanBoard } from '../../hooks';
 import type { KanbanTask } from '../../hooks/useKanbanBoard';
 import type { TaskKanbanStatus } from '../../../services/task-kanban/types';
@@ -33,7 +33,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem(fontSizes.xl) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -81,7 +81,7 @@ const createStyles = (
     actionButtonText: {
       color: themeColors.primary.foreground,
       fontSize: rem(fontSizes.xs) * preferences.fontScale,
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },

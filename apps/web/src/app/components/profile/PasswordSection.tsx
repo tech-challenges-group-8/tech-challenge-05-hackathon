@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import { rem } from '../../../utils';
+import { rem, fontWeight } from '../../../utils';
 import { AppButton, AppTextInput, Card } from '../ui';
 
 interface PasswordSectionProps {
@@ -27,7 +27,7 @@ const createStyles = (
   StyleSheet.create({
     sectionTitle: {
       fontSize: rem(fontSizes.lg) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       marginBottom: rem(space[4]),
       letterSpacing: preferences.letterSpacing,
@@ -41,7 +41,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     errorText: {
-      color: themeColors.accent.DEFAULT,
+      color: themeColors.destructive.DEFAULT,
     },
     successText: {
       color: themeColors.primary.DEFAULT,

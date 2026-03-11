@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { TextInput, Text, View, StyleSheet, TextInputProps } from 'react-native';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 
 interface AppTextInputProps extends TextInputProps {
@@ -21,7 +21,7 @@ const createStyles = (
     },
     label: {
       fontSize: rem(fontSizes.sm),
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
       letterSpacing: preferences.letterSpacing,
@@ -40,10 +40,10 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     inputError: {
-      borderColor: themeColors.accent.DEFAULT,
+      borderColor: themeColors.destructive.DEFAULT,
     },
     errorText: {
-      color: themeColors.accent.DEFAULT,
+      color: themeColors.destructive.DEFAULT,
       fontSize: rem(fontSizes.xs),
       marginTop: rem(space[1]),
       letterSpacing: preferences.letterSpacing,

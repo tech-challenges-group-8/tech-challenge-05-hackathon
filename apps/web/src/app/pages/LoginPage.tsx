@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth';
-import { validateLoginForm } from '../../utils';
+import { logger, validateLoginForm } from '../../utils';
 import { AppButton, AppTextInput, AuthFormLayout } from '../components/ui';
 
 interface LoginPageProps {
@@ -38,7 +38,7 @@ export function LoginPage({ onSwitchToRegister }: LoginPageProps) {
       setServerError(null);
       await login({ email, password });
     } catch (authError) {
-      console.error('Login failed:', authError);
+      logger.error('Login failed:', authError);
       setServerError(t('login.errors.invalidCredentials'));
     } finally {
       setIsSubmitting(false);

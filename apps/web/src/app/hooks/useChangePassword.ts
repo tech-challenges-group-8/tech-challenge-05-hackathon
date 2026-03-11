@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userService } from '../../services';
+import { logger } from '../../utils';
 
 export function useChangePassword() {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ export function useChangePassword() {
       setConfirmPassword('');
       globalThis.setTimeout(() => setSuccess(false), 3000);
     } catch (requestError) {
-      console.error('Failed to change password:', requestError);
+      logger.error('Failed to change password:', requestError);
       const message = requestError instanceof Error ? requestError.message : '';
 
       if (message.includes('401') || message.includes('Unauthorized')) {
