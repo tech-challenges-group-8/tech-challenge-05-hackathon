@@ -1,15 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import YoutubePlayer from 'react-native-youtube-iframe';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
-import focusSettingsService from '../../services/focus-settings/focusSettingsService';
 import { useFocusTimer } from '../context/FocusTimerContext';
 import { PomodoroAudioControls } from './pomodoro/PomodoroAudioControls';
 import { PomodoroSettingsModal } from './pomodoro/PomodoroSettingsModal';
 import { PomodoroTaskModal } from './pomodoro/PomodoroTaskModal';
-import { rem, extractPixels } from '../../utils';
+import { AppButton } from './ui';
+import { rem, extractPixels, formatTime } from '../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -55,25 +54,9 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       alignItems: 'center',
       gap: rem(space[4]),
     },
-    button: {
-      backgroundColor: themeColors.primary.DEFAULT,
-      paddingVertical: rem(space[3]),
-      paddingHorizontal: rem(space[6]),
-      borderRadius: extractPixels(radii.full),
-    },
-    buttonBreak: {
-      backgroundColor: themeColors.secondary.DEFAULT,
-    },
-    buttonSecondary: {
-      backgroundColor: themeColors.muted.DEFAULT,
-    },
-    buttonText: {
-      color: themeColors.primary.foreground,
-      fontSize: rem(fontSizes.lg),
-      fontWeight: fontWeights.semiBold as any,
-    },
-    buttonTextSecondary: {
-      color: themeColors.muted.foreground,
+    controlButton: {
+      minWidth: 110,
+      marginTop: 0,
     },
     statsContainer: {
       marginTop: rem(space[8]),
@@ -152,12 +135,6 @@ export function PomodoroTimer() {
     setSettingsTab('audio');
   };
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
   if (!settings) {
     return (
       <View style={styles.container}>
@@ -205,32 +182,21 @@ export function PomodoroTimer() {
 
       {/* Controls */}
       <View style={styles.controls}>
-        <TouchableOpacity 
-          style={[styles.button, styles.buttonSecondary]} 
-          onPress={resetTimer}
-        >
-          <Text style={[styles.buttonText, styles.buttonTextSecondary]}>
-            {t('common.reset', 'Reset')}
-          </Text>
-        </TouchableOpacity>
+        <AppButton variant="ghost" style={styles.controlButton} onPress={resetTimer}>
+          {t('common.reset', 'Reset')}
+        </AppButton>
 
-        <TouchableOpacity 
-          style={[styles.button, isBreak && styles.buttonBreak, { paddingHorizontal: rem(space[10]) }]} 
+        <AppButton
+          variant={isBreak ? 'secondary' : 'primary'}
+          style={styles.controlButton}
           onPress={toggleTimer}
         >
-          <Text style={styles.buttonText}>
-            {isActive ? t('common.pause', 'Pause') : t('common.start', 'Start')}
-          </Text>
-        </TouchableOpacity>
+          {isActive ? t('common.pause', 'Pause') : t('common.start', 'Start')}
+        </AppButton>
 
-        <TouchableOpacity 
-          style={[styles.button, styles.buttonSecondary]} 
-          onPress={skipTimer}
-        >
-          <Text style={[styles.buttonText, styles.buttonTextSecondary]}>
-            {t('common.skip', 'Skip')}
-          </Text>
-        </TouchableOpacity>
+        <AppButton variant="ghost" style={styles.controlButton} onPress={skipTimer}>
+          {t('common.skip', 'Skip')}
+        </AppButton>
       </View>
 
       {/* Stats */}

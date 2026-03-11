@@ -45,11 +45,6 @@ export class CognitiveSettingsService {
     focusMode?: any,
     sensory?: any
   ): Promise<CognitiveSettings> {
-    const existing = await this.repository.findByUserId(idUser);
-    if (!existing) {
-      throw new NotFoundException('Cognitive settings not found for this user');
-    }
-
     const update: any = {};
     if (themeMode !== undefined) update.themeMode = themeMode;
     if (typography !== undefined) update.typography = typography;
@@ -58,7 +53,7 @@ export class CognitiveSettingsService {
 
     const record = await this.repository.update(idUser, update);
     if (!record) {
-      throw new NotFoundException('Failed to update settings');
+      throw new NotFoundException('Failed to save settings');
     }
 
     return this.toDomain(record);

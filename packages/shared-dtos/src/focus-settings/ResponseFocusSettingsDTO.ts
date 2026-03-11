@@ -36,6 +36,7 @@ export class ResponseFocusSettingsDTO {
   sessions!: FocusSessionDTO[];
 
   constructor(
+    idUser: string,
     foco: number,
     pausaCurta: number,
     pausaLonga: number,
@@ -44,6 +45,7 @@ export class ResponseFocusSettingsDTO {
     audioThemes: AudioThemeDTO[] = [],
     sessions: FocusSessionDTO[] = [],
   ) {
+    this.idUser = idUser;
     this.foco = foco;
     this.pausaCurta = pausaCurta;
     this.pausaLonga = pausaLonga;
