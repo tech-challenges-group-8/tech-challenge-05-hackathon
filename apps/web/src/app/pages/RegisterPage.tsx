@@ -70,7 +70,7 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
         onSwitchClick={onSwitchToLogin}
       >
         {serverError && (
-          <AppTextInput disabled error={serverError} />
+          <AppTextInput error={serverError} editable={false} />
         )}
 
         <AppTextInput

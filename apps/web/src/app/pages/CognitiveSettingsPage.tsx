@@ -274,7 +274,7 @@ export function CognitiveSettingsPage() {
     emotion: false,
   });
 
-  const presetOptions: Array<{ id: CognitivePreset; icon: keyof typeof Ionicons.glyphMap }> = [
+  const presetOptions: { id: CognitivePreset; icon: keyof typeof Ionicons.glyphMap }[] = [
     { id: 'default', icon: 'sparkles-outline' },
     { id: 'reading', icon: 'book-outline' },
     { id: 'focus', icon: 'eye-outline' },
