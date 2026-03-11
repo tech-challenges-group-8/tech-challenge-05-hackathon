@@ -11,7 +11,6 @@
     "kanban": "Kanban"
   },
   "header": {
-    "newTask": "Nova Tarefa",
     "profile": "Perfil",
     "logout": "Sair"
   },
@@ -278,5 +277,19 @@
       "currentPreset": "Perfil",
       "currentTheme": "Tema"
     }
+  },
+  "tasks": {
+    "list": {
+      "completionMessage1": "Excelente! Você concluiu uma tarefa 🎉",
+      "completionMessage2": "Muito bem! Continue assim 💪",
+      "completionMessage3": "Ótimo trabalho! 🌟",
+      "completionMessage4": "Incrível! Você está progredindo ✨",
+      "completionMessage5": "Perfeito! Cada passo conta 🚀"
+    }
+  },
+  "kanban": {
+    "todoTitle": "A Fazer",
+    "inProgressTitle": "Em Progresso",
+    "doneTitle": "Concluído"
   }
 }

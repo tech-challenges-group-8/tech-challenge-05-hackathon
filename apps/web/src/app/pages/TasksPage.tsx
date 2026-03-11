@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
@@ -36,7 +35,6 @@ const createStyles = (
   });
 
 export function TasksPage() {
-  const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);

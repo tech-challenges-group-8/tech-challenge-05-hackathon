@@ -1,10 +1,8 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
-import { TaskList } from '../components/modules/TaskList';
 import { KanbanBoard } from '../components/modules/KanbanBoard';
 import { rem, extractPixels } from '../../utils';
 
@@ -37,7 +35,6 @@ const createStyles = (
   });
 
 export function KanbanPage() {
-  const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);

@@ -23,10 +23,11 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   const PORT = process.env.PORT || 3001;
+  const HOST = process.env.HOST || 'localhost';
   await app.listen(PORT);
 
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`📚 Swagger docs at http://localhost:${PORT}/api`);
+  console.log(`✅ Server running on http://${HOST}:${PORT}`);
+  console.log(`📚 Swagger docs at http://${HOST}:${PORT}/api`);
 }
 
 bootstrap().catch((err) => {

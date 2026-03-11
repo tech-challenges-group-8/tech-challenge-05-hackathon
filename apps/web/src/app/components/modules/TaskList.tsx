@@ -16,7 +16,10 @@ import { useCognitivePreferences } from '../../../cognitive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useFocusTimer } from '../../context/FocusTimerContext';
-import { rem, extractPixels } from '../../../utils';
+
+// Helper functions from other files
+const rem = (value: string) => Number.parseFloat(value) * 16;
+const extractPixels = (value: string) => Number.parseInt(value, 10);
 
 // API Configuration
 const API_URL = 'http://localhost:3001/task-checklist';

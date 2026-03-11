@@ -5,7 +5,11 @@ import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
 import { PomodoroTimer } from '../components/PomodoroTimer';
+<<<<<<< HEAD
 import { TaskList } from '../components/modules/TaskList';
+=======
+import { FocusTaskList } from '../components/FocusTaskList';
+>>>>>>> 7cbdb787403598b8db9cb620417019cdebcb6881
 import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
@@ -77,7 +81,7 @@ export function FocusPage() {
           <PomodoroTimer />
         </View>
         <View style={styles.taskColumn}>
-          <TaskList />
+          <FocusTaskList />
         </View>
       </View>
     </View>
