@@ -35,17 +35,17 @@ export function useKanbanBoard() {
     return [
       {
         id: 'todo',
-        title: t('kanban.todoTitle', 'A Fazer'),
+        title: t('kanban.todoTitle'),
         tasks: tasks.filter((t) => t.status === 'todo'),
       },
       {
         id: 'in-progress',
-        title: t('kanban.inProgressTitle', 'Em Progresso'),
+        title: t('kanban.inProgressTitle'),
         tasks: tasks.filter((t) => t.status === 'in-progress'),
       },
       {
         id: 'done',
-        title: t('kanban.doneTitle', 'Concluído'),
+        title: t('kanban.doneTitle'),
         tasks: tasks.filter((t) => t.status === 'done'),
       },
     ];

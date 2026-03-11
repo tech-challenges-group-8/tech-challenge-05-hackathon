@@ -280,6 +280,17 @@
   },
   "tasks": {
     "list": {
+      "title": "Lista de Tarefas",
+      "subtitle": "Acompanhe suas tarefas do dia",
+      "newTask": "Nova Tarefa",
+      "progress": "Progresso",
+      "placeholder": "O que você precisa fazer?",
+      "tasks": "Tarefas",
+      "clearCompleted": "Limpar concluídas",
+      "noTasks": "Nenhuma tarefa ainda",
+      "addFirst": "Adicione sua primeira tarefa acima",
+      "allDone": "🎉 Parabéns! Você completou todas as tarefas!",
+      "keepGoing": "Continue assim! Cada tarefa concluída é uma vitória. 💚",
       "completionMessage1": "Excelente! Você concluiu uma tarefa 🎉",
       "completionMessage2": "Muito bem! Continue assim 💪",
       "completionMessage3": "Ótimo trabalho! 🌟",
@@ -288,8 +299,20 @@
     }
   },
   "kanban": {
+    "title": "Quadro Kanban",
+    "subtitle": "Organize suas tarefas de forma visual",
+    "newTaskPlaceholder": "Título da tarefa...",
+    "actions": "Ações",
+    "moveToTodo": "Mover para A Fazer",
+    "moveToInProgress": "Mover para Em Progresso",
+    "moveToDone": "Marcar como Concluído",
     "todoTitle": "A Fazer",
     "inProgressTitle": "Em Progresso",
     "doneTitle": "Concluído"
+  },
+  "common": {
+    "add": "Adicionar",
+    "cancel": "Cancelar",
+    "delete": "Excluir"
   }
 }

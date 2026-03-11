@@ -131,10 +131,10 @@ export function KanbanBoardRefactored() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{t('kanban.title', 'Quadro Kanban')}</Text>
-        <Text style={styles.subtitle}>{t('kanban.subtitle', 'Organize suas tarefas de forma visual')}</Text>
+        <Text style={styles.title}>{t('kanban.title')}</Text>
+        <Text style={styles.subtitle}>{t('kanban.subtitle')}</Text>
         <Text style={styles.statusText}>
-          {completedTasks}/{totalTasks} {t('tasks.list.progress', 'Progresso')}
+          {completedTasks}/{totalTasks} {t('tasks.list.progress')}
         </Text>
         {error && <Text style={styles.statusText}>{error}</Text>}
       </View>
@@ -152,7 +152,7 @@ export function KanbanBoardRefactored() {
               <View style={styles.inputCard}>
                 <TextInput
                   style={styles.input}
-                  placeholder={t('kanban.newTaskPlaceholder', 'Título da tarefa...')}
+                  placeholder={t('kanban.newTaskPlaceholder')}
                   placeholderTextColor={theme.colors.muted.foreground}
                   value={newTaskTitle}
                   onChangeText={setNewTaskTitle}
@@ -161,7 +161,7 @@ export function KanbanBoardRefactored() {
                 />
                 <View style={styles.inputActions}>
                   <TouchableOpacity style={styles.actionButton} onPress={() => handleAddTask(column.id)}>
-                    <Text style={styles.actionButtonText}>{t('common.add', 'Adicionar')}</Text>
+                    <Text style={styles.actionButtonText}>{t('common.add')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.cancelButton}
@@ -170,7 +170,7 @@ export function KanbanBoardRefactored() {
                       setNewTaskTitle('');
                     }}
                   >
-                    <Text style={styles.cancelButtonText}>{t('common.cancel', 'Cancelar')}</Text>
+                    <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>

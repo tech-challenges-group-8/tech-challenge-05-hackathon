@@ -97,7 +97,7 @@ export function KanbanActionModal({
         onPress={onClose}
       >
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>{t('kanban.actions', 'Ações')}</Text>
+          <Text style={styles.modalTitle}>{t('kanban.actions')}</Text>
           
           {activeTask.columnId !== 'todo' && (
             <TouchableOpacity
@@ -109,7 +109,7 @@ export function KanbanActionModal({
             >
               <Ionicons name="arrow-back" size={20} color={theme.colors.foreground} />
               <Text style={styles.modalOptionText}>
-                {t('kanban.moveToTodo', 'Mover para A Fazer')}
+                {t('kanban.moveToTodo')}
               </Text>
             </TouchableOpacity>
           )}
@@ -124,7 +124,7 @@ export function KanbanActionModal({
             >
               <Ionicons name="construct" size={20} color={theme.colors.foreground} />
               <Text style={styles.modalOptionText}>
-                {t('kanban.moveToInProgress', 'Mover para Em Progresso')}
+                {t('kanban.moveToInProgress')}
               </Text>
             </TouchableOpacity>
           )}
@@ -139,7 +139,7 @@ export function KanbanActionModal({
             >
               <Ionicons name="checkmark-circle" size={20} color={theme.colors.foreground} />
               <Text style={styles.modalOptionText}>
-                {t('kanban.moveToDone', 'Marcar como Concluído')}
+                {t('kanban.moveToDone')}
               </Text>
             </TouchableOpacity>
           )}
@@ -153,7 +153,7 @@ export function KanbanActionModal({
           >
             <Ionicons name="trash" size={20} color={theme.colors.accent.foreground} />
             <Text style={[styles.modalOptionText, styles.modalDeleteText]}>
-              {t('common.delete', 'Excluir')}
+              {t('common.delete')}
             </Text>
           </TouchableOpacity>
         </View>

@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '../../../theme';
-import { rem, extractPixels } from '../../../utils';
-import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
+import { rem } from '../../../utils';
+import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { Card } from './Card';
 
 interface AuthFormLayoutProps {

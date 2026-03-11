@@ -1,31 +1,29 @@
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
+import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
+<<<<<<< HEAD
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ResponseDashboardStatsDto } from '@mindease/dtos';
 import { useAuth } from '../../auth';
 import { rem, extractPixels } from '../../utils';
+=======
+import { rem } from '../../utils';
+import { Card } from '../components/ui';
+import { StatCard } from '../components/dashboard/StatCard';
+>>>>>>> 5c7a7469d7b51d25ecd2114b6b40b536a48d4615
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
   preferences: ReturnType<typeof useCognitivePreferences>,
 ) =>
   StyleSheet.create({
-    card: {
-      backgroundColor: themeColors.card.DEFAULT,
-      borderRadius: extractPixels(radii.lg),
-      padding: rem(space[6]),
+    cardSpacing: {
       marginBottom: rem(space[4]),
-      shadowColor: themeColors.black,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: preferences.simpleInterface ? 0 : 0.1,
-      shadowRadius: preferences.simpleInterface ? 0 : 8,
-      elevation: preferences.simpleInterface ? 0 : 3,
     },
     title: {
       fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
@@ -52,38 +50,6 @@ const createStyles = (
     statsContainer: {
       flexDirection: 'row',
       marginTop: rem(space[4]),
-    },
-    statCard: {
-      flex: 1,
-      backgroundColor: preferences.hideUrgencyIndicators
-        ? themeColors.card.DEFAULT
-        : themeColors.accent.DEFAULT,
-      borderRadius: parseInt(radii.md),
-      padding: rem(space[4]),
-      marginRight: rem(space[3]),
-      borderWidth: 1,
-      borderColor: themeColors.border,
-    },
-    statCardLast: {
-      marginRight: 0,
-    },
-    statLabel: {
-      fontSize: rem(fontSizes.xs) * preferences.fontScale,
-      color: preferences.hideUrgencyIndicators
-        ? themeColors.muted.foreground
-        : themeColors.accent.foreground,
-      marginBottom: rem(space[1]),
-      letterSpacing: preferences.letterSpacing,
-      fontFamily: preferences.fontFamily,
-    },
-    statValue: {
-      fontSize: rem(fontSizes['3xl']) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
-      color: preferences.hideUrgencyIndicators
-        ? themeColors.foreground
-        : themeColors.accent.foreground,
-      letterSpacing: preferences.letterSpacing,
-      fontFamily: preferences.fontFamily,
     },
   });
 
@@ -134,7 +100,7 @@ export function DashboardPage() {
 
   return (
     <View>
-      <View style={styles.card}>
+      <Card style={styles.cardSpacing}>
         <Text style={styles.title}>{t('pages.dashboard.title')}</Text>
         {!preferences.simpleInterface && (
           <Text style={styles.subtitle}>{t('pages.dashboard.subtitle')}</Text>
@@ -142,6 +108,7 @@ export function DashboardPage() {
         <Text style={styles.text}>{t('pages.dashboard.body')}</Text>
 
         <View style={styles.statsContainer}>
+<<<<<<< HEAD
           <View style={styles.statCard}>
             <Text style={styles.statLabel}>{t('pages.dashboard.stats.activeTasks')}</Text>
             <Text style={styles.statValue}>{isLoading ? '...' : stats?.activeTasks ?? 0}</Text>
@@ -158,13 +125,18 @@ export function DashboardPage() {
             <Text style={styles.statLabel}>{t('pages.dashboard.stats.focusTime')}</Text>
             <Text style={styles.statValue}>{isLoading ? '...' : formatFocusTime(stats?.totalFocusTime ?? 0)}</Text>
           </View>
+=======
+          <StatCard label={t('pages.dashboard.stats.activeTasks')} value="12" />
+          <StatCard label={t('pages.dashboard.stats.completedToday')} value="8" />
+          <StatCard label={t('pages.dashboard.stats.focusTime')} value="4h" isLast />
+>>>>>>> 5c7a7469d7b51d25ecd2114b6b40b536a48d4615
         </View>
-      </View>
+      </Card>
 
-      <View style={styles.card}>
+      <Card>
         <Text style={styles.title}>{t('pages.dashboard.quickActionsTitle')}</Text>
         <Text style={styles.text}>{t('pages.dashboard.quickActionsBody')}</Text>
-      </View>
+      </Card>
     </View>
   );
 }

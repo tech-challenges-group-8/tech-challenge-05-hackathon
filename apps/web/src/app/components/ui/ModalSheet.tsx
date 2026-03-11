@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
 import {
-  Animated,
   Modal,
   StyleSheet,
   Text,
