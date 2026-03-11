@@ -32,3 +32,6 @@ export * from './task-kanban/ResponseTaskKanbanDTO';
 export * from './task-checklist/CreateTaskCheckListDTO';
 export * from './task-checklist/ResponseTaskCheckListDTO';
 
+// Export Dashboard DTOs
+export * from './dashboard/ResponseDashboardStatsDTO';
+

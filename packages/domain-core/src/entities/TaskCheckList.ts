@@ -4,6 +4,8 @@ export class TaskCheckList {
     idUser: string;
     description: string;
     completed: boolean;
+    pomodoros: number;
+    timeSpent: number;
     createdAt: Date;
     updatedAt: Date;
 
@@ -12,6 +14,8 @@ export class TaskCheckList {
         idUser: string,
         description: string,
         completed: boolean = false,
+        pomodoros: number = 0,
+        timeSpent: number = 0,
         createdAt: Date = new Date()
     ) {
         this.validateDescription(description);
@@ -24,6 +28,8 @@ export class TaskCheckList {
         this.idUser = idUser;
         this.description = description;
         this.completed = completed;
+        this.pomodoros = pomodoros;
+        this.timeSpent = timeSpent;
         this.createdAt = createdAt;
         this.updatedAt = createdAt;
     }

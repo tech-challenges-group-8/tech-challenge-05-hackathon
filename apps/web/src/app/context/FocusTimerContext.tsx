@@ -46,6 +46,10 @@ export interface FocusTimerContextData {
     longBreakDuration: number,
   ) => Promise<void>;
   updateFocusTasks: (tasks: FocusTask[]) => Promise<void>;
+  addTask: (title: string) => Promise<void>;
+  toggleTask: (id: string) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+  clearCompletedTasks: () => Promise<void>;
   addAudioTheme: (theme: AudioTheme) => Promise<void>;
   deleteAudioTheme: (id: string) => Promise<void>;
 }
@@ -62,6 +66,10 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     saveDurations,
     incrementPomodoroCount,
     updateFocusTasks,
+    addTask,
+    toggleTask,
+    deleteTask,
+    clearCompletedTasks,
     addAudioTheme,
     deleteAudioTheme,
     submitTaskCompletionTime,
@@ -157,6 +165,10 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       changeVolume,
       saveTimerDurations,
       updateFocusTasks,
+      addTask,
+      toggleTask,
+      deleteTask,
+      clearCompletedTasks,
       addAudioTheme,
       deleteAudioTheme,
     }),
@@ -189,6 +201,10 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       setVolume,
       changeVolume,
       updateFocusTasks,
+      addTask,
+      toggleTask,
+      deleteTask,
+      clearCompletedTasks,
       addAudioTheme,
       deleteAudioTheme,
     ],

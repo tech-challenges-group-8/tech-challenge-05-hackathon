@@ -14,16 +14,24 @@
     "profile": "Profile",
     "logout": "Sign out"
   },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "skip": "Skip",
+    "start": "Start",
+    "reset": "Reset"
+  },
   "pages": {
     "dashboard": {
       "title": "Welcome to MindEase",
-      "subtitle": "Your cognitive support companion",
-      "body": "MindEase is designed to help you manage tasks, maintain focus, and optimize your cognitive performance. Use the sidebar to navigate between different features and customize your experience.",
+      "subtitle": "Your focus and task manager",
+      "body": "Stay organized and productive with our tools. Track your progress below.",
       "quickActionsTitle": "Quick Actions",
-      "quickActionsBody": "Start your day by reviewing your task list, setting up a focus session, or adjusting your cognitive settings to match your current needs.",
+      "quickActionsBody": "Start a focus session or organize your board to stay on top of your goals.",
       "stats": {
         "activeTasks": "Active Tasks",
         "completedToday": "Completed Today",
+        "totalCompleted": "Total Completed",
         "focusTime": "Focus Time"
       }
     },

@@ -6,7 +6,7 @@ import { useCognitivePreferences, type CognitiveSettingsState } from '../../../c
 import { OptionButton, ToggleRow } from '../ui';
 import { useTheme } from '../../../theme';
 import type { Typography } from '../../../services';
-import { rem, fontWeight } from '../../../utils';
+import { rem } from '../../../utils';
 
 interface TypographySettingsProps {
   readonly settings: CognitiveSettingsState;
@@ -25,7 +25,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
-      fontWeight: fontWeight(fontWeights.semiBold),
+      fontWeight: fontWeights.semiBold as any,
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,

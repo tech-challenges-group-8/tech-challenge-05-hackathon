@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,10 +13,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
+import { useFocusTimer } from '../../context/FocusTimerContext';
 import { rem, extractPixels, fontWeight } from '../../../utils';
-import { useTaskList } from '../../hooks';
-import { TaskItem } from './TaskItem';
+import type { FocusTask } from '../../../services/focus-settings/types';
 
+
+// Interface for a task
+type TaskItem = FocusTask;
+
+// Messages for when a task is completed
+const completionMessages = [
+  'Excelente! Você concluiu uma tarefa 🎉',
+  'Muito bem! Continue assim 💪',
+  'Ótimo trabalho! 🌟',
+  'Incrível! Você está progredindo ✨',
+  'Perfeito! Cada passo conta 🚀',
+];
+
+// Styles
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
   preferences: ReturnType<typeof useCognitivePreferences>,
@@ -184,6 +199,55 @@ const createStyles = (
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },
+    taskItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rem(space[3]),
+      padding: rem(space[3]),
+      borderRadius: extractPixels(radii.lg),
+    },
+    taskItemActive: {
+      backgroundColor: themeColors.accent.DEFAULT,
+    },
+    taskItemCompleted: {
+      opacity: 0.6,
+    },
+    checkboxBase: {
+      width: rem(fontSizes.lg),
+      height: rem(fontSizes.lg),
+      borderRadius: extractPixels(radii.sm),
+      borderWidth: 2,
+      borderColor: themeColors.border,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    checkboxChecked: {
+      backgroundColor: themeColors.primary.DEFAULT,
+      borderColor: themeColors.primary.DEFAULT,
+    },
+    taskText: {
+      flex: 1,
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
+      color: themeColors.foreground,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
+    },
+    taskTextCompleted: {
+      textDecorationLine: 'line-through',
+      color: themeColors.muted.foreground,
+    },
+    pomodoroCount: {
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
+      color: themeColors.muted.foreground,
+      marginRight: rem(space[2]),
+      fontFamily: preferences.fontFamily,
+    },
+    deleteButton: {
+      width: rem(space[8]),
+      height: rem(space[8]),
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     encouragementText: {
       textAlign: 'center',
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
@@ -198,36 +262,78 @@ const createStyles = (
     },
   });
 
+// Custom Checkbox Component
+const CustomCheckbox = ({
+  checked,
+  onCheckedChange,
+  style,
+  checkedStyle,
+}: {
+  checked: boolean;
+  onCheckedChange: () => void;
+  style: any;
+  checkedStyle: any;
+}) => {
+  const { theme } = useTheme();
+  return (
+    <TouchableOpacity onPress={onCheckedChange} style={[style, checked && checkedStyle]}>
+      {checked && <Ionicons name="checkmark" size={16} color={theme.colors.card.DEFAULT} />}
+    </TouchableOpacity>
+  );
+};
+
 export function TaskList() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
+  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+  const [completionMessage, setCompletionMessage] = useState<string | null>(null);
+
   const {
-    tasks,
-    isLoading,
-    completionMessage,
-    completedCount,
-    totalCount,
-    addTask,
-    toggleTask,
-    deleteTask,
-    clearCompleted,
-  } = useTaskList();
+    settings,
+    addTask: addTaskToGlobal,
+    toggleTask: toggleTaskInGlobal,
+    deleteTask: deleteTaskFromGlobal,
+    clearCompletedTasks
+  } = useFocusTimer();
 
-  const [newTaskTitle, setNewTaskTitle] = React.useState('');
-  const [isAdding, setIsAdding] = React.useState(false);
+  const tasks = settings?.tasks || [];
 
-  useEffect(() => {
-    // Tasks are fetched automatically by the hook
-  }, []);
+  const completedCount = tasks.filter((t) => t.completed).length;
+  const totalCount = tasks.length;
 
-  const handleAddTask = async () => {
+
+  const addTask = async () => {
     if (!newTaskTitle.trim()) return;
-    await addTask(newTaskTitle);
+    await addTaskToGlobal(newTaskTitle);
     setNewTaskTitle('');
-    setIsAdding(false);
+  };
+
+  const toggleTask = async (id: string) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+
+    const wasCompleted = task.completed;
+    if (!wasCompleted) {
+      const randomMessage =
+        completionMessages[Math.floor(Math.random() * completionMessages.length)];
+      setCompletionMessage(randomMessage);
+      setTimeout(() => setCompletionMessage(null), 3000);
+    }
+
+    await toggleTaskInGlobal(id);
+  };
+
+  const deleteTask = async (id: string) => {
+    await deleteTaskFromGlobal(id);
+  };
+
+  const clearCompleted = async () => {
+    await clearCompletedTasks();
   };
 
   return (
@@ -272,12 +378,12 @@ export function TaskList() {
             placeholderTextColor={theme.colors.muted.foreground}
             value={newTaskTitle}
             onChangeText={setNewTaskTitle}
-            onSubmitEditing={handleAddTask}
+            onSubmitEditing={addTask}
             autoFocus
           />
           <View style={styles.addButtonsContainer}>
-            <TouchableOpacity style={styles.addButton} onPress={handleAddTask}>
-              <Text style={styles.addButtonText}>{t('common.add')}</Text>
+            <TouchableOpacity style={styles.addButton} onPress={addTask}>
+              <Text style={styles.addButtonText}>{t('common.add', 'Adicionar')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -321,16 +427,46 @@ export function TaskList() {
               </Text>
             </View>
           ) : (
-            tasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                id={task.id}
-                title={task.title}
-                completed={task.completed}
-                onToggle={() => toggleTask(task.id)}
-                onDelete={() => deleteTask(task.id)}
-              />
-            ))
+            tasks.map((task) => {
+              const isActive = preferences.highlightActiveTask && activeTaskId === task.id;
+              return (
+                <TouchableOpacity
+                  key={task.id}
+                  onPress={
+                    preferences.highlightActiveTask
+                      ? () => setActiveTaskId(isActive ? null : task.id)
+                      : undefined
+                  }
+                  style={[
+                    styles.taskItem,
+                    isActive && styles.taskItemActive,
+                    task.completed && styles.taskItemCompleted,
+                  ]}
+                >
+                  <CustomCheckbox
+                    checked={task.completed}
+                    onCheckedChange={() => toggleTask(task.id)}
+                    style={styles.checkboxBase}
+                    checkedStyle={styles.checkboxChecked}
+                  />
+                  <Text style={[styles.taskText, task.completed && styles.taskTextCompleted]}>
+                    {task.title}
+                  </Text>
+                  {(task.pomodoros ?? 0) > 0 && (
+                    <Text style={styles.pomodoroCount}>
+                      🍅 {task.pomodoros}
+                    </Text>
+                  )}
+                  <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTask(task.id)}>
+                    <Ionicons
+                      name="trash-outline"
+                      size={20}
+                      color={theme.colors.muted.foreground}
+                    />
+                  </TouchableOpacity>
+                </TouchableOpacity>
+              );
+            })
           )}
         </View>
       </View>
