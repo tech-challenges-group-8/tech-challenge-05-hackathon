@@ -5,13 +5,12 @@ import { fontSizes, fontWeights, space, WEB_SIDEBAR_BREAKPOINT } from '@mindease
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ResponseDashboardStatsDto } from '@mindease/dtos';
 import { useAuth } from '../../auth';
 import { rem, fontWeight } from '../../utils';
 import { Card } from '../components/ui';
 import { StatCard } from '../components/dashboard/StatCard';
+import { api } from '../../services';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -66,10 +65,7 @@ export function DashboardPage() {
     if (!currentUser) return;
     
     try {
-      const token = await AsyncStorage.getItem('authToken');
-      const response = await axios.get('http://localhost:3001/dashboard/stats', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get<ResponseDashboardStatsDto>('/dashboard/stats');
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);

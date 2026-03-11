@@ -14,7 +14,7 @@ export function useClientRouter(initialMenu: string = 'dashboard') {
 
     // Only sync with browser history on web
     const windowObj = getWindowObject();
-    if (!windowObj) return;
+    if (!windowObj?.location || !windowObj.history?.pushState) return;
 
     const nextPath = PATH_BY_MENU[menuId] ?? '/';
     if (windowObj.location.pathname !== nextPath) {
@@ -25,7 +25,13 @@ export function useClientRouter(initialMenu: string = 'dashboard') {
   // Sync from browser location on mount and popstate (back button)
   useEffect(() => {
     const windowObj = getWindowObject();
-    if (!windowObj) return;
+    if (
+      !windowObj?.location ||
+      typeof windowObj.addEventListener !== 'function' ||
+      typeof windowObj.removeEventListener !== 'function'
+    ) {
+      return;
+    }
 
     const syncFromLocation = () => {
       const pathname = windowObj.location.pathname;

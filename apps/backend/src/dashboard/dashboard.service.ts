@@ -11,7 +11,7 @@ export class DashboardService {
     ) { }
 
     async getStats(userId: string): Promise<ResponseDashboardStatsDto> {
-        const tasks = await this.taskRepository.findByUser(userId);
+        const tasks = (await this.taskRepository.findByUser(userId)) ?? [];
 
         const activeTasks = tasks.filter(t => !t.completed).length;
 

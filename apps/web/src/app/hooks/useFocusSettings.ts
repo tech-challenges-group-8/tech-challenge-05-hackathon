@@ -1,29 +1,41 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from '../../auth';
 import focusSettingsService from '../../services/focus-settings/focusSettingsService';
 import type {
   AudioTheme,
   FocusTask,
   ResponseFocusSettingsDTO,
 } from '../../services/focus-settings/types';
+import { logger } from '../../utils';
 
 export function useFocusSettings() {
+  const { currentUser, isLoading: isAuthLoading } = useAuth();
   const [settings, setSettings] = useState<ResponseFocusSettingsDTO | null>(null);
   const [isFocusCompleteModalOpen, setIsFocusCompleteModalOpen] = useState(false);
   const [lastFocusDuration, setLastFocusDuration] = useState(25);
 
   useEffect(() => {
+    if (isAuthLoading) {
+      return;
+    }
+
+    if (!currentUser) {
+      setSettings(focusSettingsService.getDefaultSettings());
+      return;
+    }
+
     const loadSettings = async () => {
       try {
         const data = await focusSettingsService.getSettings();
         setSettings(data);
       } catch (error) {
-        console.error('Failed to load focus settings, falling back to defaults', error);
+        logger.error('Failed to load focus settings, falling back to defaults', error);
         setSettings(focusSettingsService.getDefaultSettings());
       }
     };
 
-    loadSettings();
-  }, []);
+    void loadSettings();
+  }, [currentUser, isAuthLoading]);
 
   const openFocusCompleteModal = useCallback((focusDurationInMinutes: number) => {
     setLastFocusDuration(focusDurationInMinutes);
@@ -36,6 +48,17 @@ export function useFocusSettings() {
 
   const saveDurations = useCallback(
     async (focusDuration: number, shortBreakDuration: number, longBreakDuration: number) => {
+      if (!currentUser) {
+        const fallback = {
+          ...(settings ?? focusSettingsService.getDefaultSettings()),
+          foco: focusDuration,
+          pausaCurta: shortBreakDuration,
+          pausaLonga: longBreakDuration,
+        };
+        setSettings(fallback);
+        return fallback;
+      }
+
       const updated = await focusSettingsService.setPomodoroDurations(
         focusDuration,
         shortBreakDuration,
@@ -44,7 +67,7 @@ export function useFocusSettings() {
       setSettings(updated);
       return updated;
     },
-    [],
+    [currentUser, settings],
   );
 
   const incrementPomodoroCount = useCallback(async () => {
@@ -76,7 +99,7 @@ export function useFocusSettings() {
         const updated = await focusSettingsService.updateTasks(tasks);
         setSettings(updated);
       } catch (error) {
-        console.error('Failed to sync tasks:', error);
+        logger.error('Failed to sync tasks:', error);
       }
     },
     [settings],
@@ -93,7 +116,7 @@ export function useFocusSettings() {
         const updated = await focusSettingsService.updateAudioThemes(updatedThemes);
         setSettings(updated);
       } catch (error) {
-        console.error('Failed to save audio theme', error);
+        logger.error('Failed to save audio theme', error);
       }
     },
     [settings],
@@ -110,7 +133,7 @@ export function useFocusSettings() {
         const updated = await focusSettingsService.updateAudioThemes(updatedThemes);
         setSettings(updated);
       } catch (error) {
-        console.error('Failed to delete audio theme', error);
+        logger.error('Failed to delete audio theme', error);
       }
     },
     [settings],
@@ -139,7 +162,7 @@ export function useFocusSettings() {
         const updated = await focusSettingsService.updateTasks(updatedTasks);
         setSettings(updated);
       } catch (error) {
-        console.error('Could not save task time assignment', error);
+        logger.error('Could not save task time assignment', error);
       }
 
       closeFocusCompleteModal();

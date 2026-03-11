@@ -4,6 +4,10 @@ import { Model } from 'mongoose';
 import { TaskCheckList, TaskCheckListRepository } from '@mindease/domain';
 import { TaskCheckListDocument, TaskCheckListModel } from './task-checklist.schema';
 
+type LegacyTaskCheckListDocument = TaskCheckListDocument & {
+  title?: string;
+};
+
 @Injectable()
 export class TaskCheckListRepositoryMongoose implements TaskCheckListRepository {
   constructor(
@@ -35,7 +39,9 @@ export class TaskCheckListRepositoryMongoose implements TaskCheckListRepository 
 
   async findByUser(idUser: string): Promise<TaskCheckList[]> {
     const docs = await this.taskModel.find({ idUser }).exec();
-    return docs.map((doc) => this.toEntity(doc));
+    return docs
+      .map((doc) => this.toEntity(doc))
+      .filter((task): task is TaskCheckList => task !== null);
   }
 
   async update(task: TaskCheckList): Promise<void> {
@@ -46,18 +52,28 @@ export class TaskCheckListRepositoryMongoose implements TaskCheckListRepository 
     await this.taskModel.deleteOne({ _id: id }).exec();
   }
 
-  private toEntity(doc: TaskCheckListDocument): TaskCheckList {
+  private toEntity(doc: TaskCheckListDocument): TaskCheckList | null {
+    const legacyDoc = doc as LegacyTaskCheckListDocument;
+    const description = legacyDoc.description ?? legacyDoc.title;
+
+    if (!description || description.trim().length === 0) {
+      return null;
+    }
+
+    const createdAt = doc.createdAt ?? new Date();
+    const updatedAt = doc.updatedAt ?? createdAt;
+
     const task = new TaskCheckList(
-      doc._id,
+      String(doc._id),
       doc.idUser,
-      doc.description,
+      description,
       doc.completed,
       doc.pomodoros || 0,
       doc.timeSpent || 0,
-      doc.createdAt
+      createdAt
     );
     // Força a atualização da data de update que pode não estar no construtor da entidade dependendo da versão
-    task.updatedAt = doc.updatedAt;
+    task.updatedAt = updatedAt;
     return task;
   }
 }
