@@ -13,26 +13,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { useFocusTimer } from '../../context/FocusTimerContext';
+import { rem, extractPixels, fontWeight } from '../../../utils';
+import type { FocusTask } from '../../../services/focus-settings/types';
 
-// Helper functions from other files
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
-
-// API Configuration
-const API_URL = 'http://localhost:3001/task-checklist';
 
 // Interface for a task
-interface TaskItem {
-  id: string;
-  title: string;
-  completed: boolean;
-  pomodoros: number;
-  timeSpent: number;
-  createdAt: Date;
-}
+type TaskItem = FocusTask;
 
 // Messages for when a task is completed
 const completionMessages = [
@@ -307,24 +294,18 @@ export function TaskList() {
   const [completionMessage, setCompletionMessage] = useState<string | null>(null);
 
   const {
-    tasks,
+    settings,
     addTask: addTaskToGlobal,
     toggleTask: toggleTaskInGlobal,
     deleteTask: deleteTaskFromGlobal,
     clearCompletedTasks
   } = useFocusTimer();
 
+  const tasks = settings?.tasks || [];
+
   const completedCount = tasks.filter((t) => t.completed).length;
   const totalCount = tasks.length;
 
-  const getAuthHeaders = async () => {
-    const token = await AsyncStorage.getItem('authToken');
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-  };
 
   const addTask = async () => {
     if (!newTaskTitle.trim()) return;

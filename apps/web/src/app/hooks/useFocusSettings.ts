@@ -147,6 +147,47 @@ export function useFocusSettings() {
     [settings, lastFocusDuration, closeFocusCompleteModal],
   );
 
+  const addTask = useCallback(
+    async (title: string) => {
+      if (!settings) return;
+      const newTask: FocusTask = {
+        id: Date.now().toString(),
+        title,
+        completed: false,
+        timeSpent: 0,
+        pomodoros: 0,
+      };
+      await updateFocusTasks([...settings.tasks, newTask]);
+    },
+    [settings, updateFocusTasks],
+  );
+
+  const toggleTask = useCallback(
+    async (id: string) => {
+      if (!settings) return;
+      const updatedTasks = settings.tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task,
+      );
+      await updateFocusTasks(updatedTasks);
+    },
+    [settings, updateFocusTasks],
+  );
+
+  const deleteTask = useCallback(
+    async (id: string) => {
+      if (!settings) return;
+      const updatedTasks = settings.tasks.filter((task) => task.id !== id);
+      await updateFocusTasks(updatedTasks);
+    },
+    [settings, updateFocusTasks],
+  );
+
+  const clearCompletedTasks = useCallback(async () => {
+    if (!settings) return;
+    const updatedTasks = settings.tasks.filter((task) => !task.completed);
+    await updateFocusTasks(updatedTasks);
+  }, [settings, updateFocusTasks]);
+
   return {
     settings,
     isFocusCompleteModalOpen,
@@ -156,6 +197,10 @@ export function useFocusSettings() {
     saveDurations,
     incrementPomodoroCount,
     updateFocusTasks,
+    addTask,
+    toggleTask,
+    deleteTask,
+    clearCompletedTasks,
     addAudioTheme,
     deleteAudioTheme,
     submitTaskCompletionTime,

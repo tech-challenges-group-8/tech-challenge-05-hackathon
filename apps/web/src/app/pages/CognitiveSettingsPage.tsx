@@ -22,11 +22,7 @@ import {
   TypographySettings,
 } from '../components/cognitive';
 import { AppButton, Card } from '../components/ui';
-<<<<<<< HEAD
-import { rem, extractPixels } from '../../utils';
-=======
 import { rem, extractPixels, fontWeight } from '../../utils';
->>>>>>> 6022489e7174664b5db61d44421d43d8d45fdcfa
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -51,11 +47,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem((isWideHeaderLayout ? fontSizes['2xl'] : fontSizes.xl)) * preferences.fontScale,
-<<<<<<< HEAD
       fontWeight: fontWeights.bold as any,
-=======
-      fontWeight: fontWeight(fontWeights.bold),
->>>>>>> 6022489e7174664b5db61d44421d43d8d45fdcfa
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,

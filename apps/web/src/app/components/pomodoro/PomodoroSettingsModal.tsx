@@ -7,7 +7,7 @@ import { useTheme } from '../../../theme';
 import { useFocusTimer, extractYoutubeId } from '../../context/FocusTimerContext';
 import type { AudioTheme } from '../../../services/focus-settings/types';
 import { AppButton, AppTextInput, ModalSheet } from '../ui';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight, logger } from '../../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -43,9 +43,6 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     modalTabTextActive: {
       color: themeColors.primary.DEFAULT,
       fontWeight: fontWeight(fontWeights.bold),
-    },
-    inputGroup: {
-      marginBottom: rem(space[2]),
     },
     inputGroup: {
       marginBottom: rem(space[2]),
@@ -186,44 +183,6 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
               />
             </View>
 
-                <View style={styles.inputGroup}>
-                  <Text style={styles.inputLabel}>{t('pages.focus.longBreakDuration', 'Long Break Duration (minutes)')}</Text>
-                  <TextInput
-                    style={styles.textInput}
-                    keyboardType="numeric"
-                    value={customLongBreak}
-                    onChangeText={setCustomLongBreak}
-                    placeholder="15"
-                  />
-                </View>
-              </>
-            ) : (
-              <>
-                <Text style={[styles.inputLabel, { fontWeight: 'bold' }]}>{t('pages.focus.addCustomAudio', 'Add Custom Audio')}</Text>
-                
-                <View style={styles.inputGroup}>
-                  <Text style={styles.inputLabel}>{t('pages.focus.audioName', 'Audio Name')}</Text>
-                  <TextInput
-                    style={styles.textInput}
-                    value={newAudioName}
-                    onChangeText={setNewAudioName}
-                    placeholder={t('pages.focus.audioNamePlaceholder', 'ex: Rock')}
-                  />
-                </View>
-                <View style={styles.inputGroup}>
-                  <Text style={styles.inputLabel}>{t('pages.focus.audioUrl', 'YouTube URL')}</Text>
-                  <TextInput
-                    style={styles.textInput}
-                    value={newAudioUrl}
-                    onChangeText={setNewAudioUrl}
-                    placeholder="https://www.youtube.com/watch?v=..."
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                  />
-                </View>
-                <TouchableOpacity style={[styles.button, { marginBottom: rem(space[6]) }]} onPress={handleAddAudioTheme}>
-                  <Text style={styles.buttonText}>{t('pages.focus.addAudio', 'Add Audio')}</Text>
-                </TouchableOpacity>
             <View style={styles.inputGroup}>
               <AppTextInput
                 label={t('pages.focus.longBreakDuration', 'Long Break Duration (minutes)')}

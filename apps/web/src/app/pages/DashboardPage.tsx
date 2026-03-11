@@ -9,7 +9,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ResponseDashboardStatsDto } from '@mindease/dtos';
 import { useAuth } from '../../auth';
-import { rem } from '../../utils';
+import { rem, fontWeight } from '../../utils';
 import { Card } from '../components/ui';
 import { StatCard } from '../components/dashboard/StatCard';
 
@@ -104,9 +104,9 @@ export function DashboardPage() {
         <Text style={styles.text}>{t('pages.dashboard.body')}</Text>
 
         <View style={styles.statsContainer}>
-          <StatCard label={t('pages.dashboard.stats.activeTasks')} value={isLoading ? '...' : stats?.activeTasks as any ?? 0} />
-          <StatCard label={t('pages.dashboard.stats.completedToday')} value={isLoading ? '...' : stats?.completedToday as any ?? 0} />
-          <StatCard label={t('pages.dashboard.stats.totalCompleted')} value={isLoading ? '...' : stats?.totalCompleted as any ?? 0} />
+          <StatCard label={t('pages.dashboard.stats.activeTasks')} value={isLoading ? '...' : String(stats?.activeTasks ?? 0)} />
+          <StatCard label={t('pages.dashboard.stats.completedToday')} value={isLoading ? '...' : String(stats?.completedToday ?? 0)} />
+          <StatCard label={t('pages.dashboard.stats.totalCompleted')} value={isLoading ? '...' : String(stats?.totalCompleted ?? 0)} />
           <StatCard label={t('pages.dashboard.stats.focusTime')} value={isLoading ? '...' : formatFocusTime(stats?.totalFocusTime ?? 0)} isLast />
         </View>
       </Card>
