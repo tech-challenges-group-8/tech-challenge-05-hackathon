@@ -164,52 +164,23 @@ export function KanbanBoardRefactored() {
         {...boardWebProps}
       >
         {columns.map((column) => (
-          <React.Fragment key={column.id}>
-            {addingToColumn === column.id && (
-              <View style={styles.inputCard}>
-                <TextInput
-                  style={styles.input}
-                  placeholder={t('kanban.newTaskPlaceholder')}
-                  placeholderTextColor={theme.colors.muted.foreground}
-                  value={newTaskTitle}
-                  onChangeText={setNewTaskTitle}
-                  onSubmitEditing={() => handleAddTask(column.id)}
-                  autoFocus
-                  accessibilityLabel={t('accessibility.modules.newTaskInput')}
-                />
-                <View style={styles.inputActions}>
-                  <TouchableOpacity
-                    style={styles.actionButton}
-                    onPress={() => handleAddTask(column.id)}
-                    accessibilityRole="button"
-                    accessibilityLabel={t('accessibility.modules.confirmAddTask')}
-                  >
-                    <Text style={styles.actionButtonText}>{t('common.add')}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.cancelButton}
-                    onPress={() => {
-                      setAddingToColumn(null);
-                      setNewTaskTitle('');
-                    }}
-                    accessibilityRole="button"
-                    accessibilityLabel={t('accessibility.modules.cancelAddTask')}
-                  >
-                    <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-
-            <KanbanColumn
-              id={column.id}
-              title={column.title}
-              tasks={column.tasks}
-              columnWidth={columnWidth}
-              onTaskPress={(task, columnId) => setActiveTask({ task, columnId })}
-              onAddPress={(columnId) => setAddingToColumn(columnId)}
-            />
-          </React.Fragment>
+          <KanbanColumn
+            key={column.id}
+            id={column.id}
+            title={column.title}
+            tasks={column.tasks}
+            columnWidth={columnWidth}
+            isAdding={addingToColumn === column.id}
+            newTaskTitle={newTaskTitle}
+            onNewTaskTitleChange={setNewTaskTitle}
+            onAddTask={() => handleAddTask(column.id)}
+            onCancelAdd={() => {
+              setAddingToColumn(null);
+              setNewTaskTitle('');
+            }}
+            onTaskPress={(task, columnId) => setActiveTask({ task, columnId })}
+            onAddPress={(columnId) => setAddingToColumn(columnId)}
+          />
         ))}
       </ScrollView>
 

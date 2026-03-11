@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +24,11 @@ interface KanbanColumnProps {
   readonly columnWidth: number;
   readonly onTaskPress: (task: KanbanTask, columnId: TaskKanbanStatus) => void;
   readonly onAddPress: (columnId: TaskKanbanStatus) => void;
+  readonly isAdding: boolean;
+  readonly newTaskTitle: string;
+  readonly onNewTaskTitleChange: (text: string) => void;
+  readonly onAddTask: () => void;
+  readonly onCancelAdd: () => void;
 }
 
 const createStyles = (
@@ -75,6 +81,51 @@ const createStyles = (
     taskList: {
       flex: 1,
     },
+    inputCard: {
+      backgroundColor: themeColors.card.DEFAULT,
+      borderRadius: extractPixels(radii.lg),
+      padding: rem(space[3]),
+      marginBottom: rem(space[3]),
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: themeColors.border,
+      borderRadius: extractPixels(radii.md),
+      paddingHorizontal: rem(space[3]),
+      paddingVertical: rem(space[2]),
+      fontSize: rem(fontSizes.sm) * preferences.fontScale,
+      color: themeColors.foreground,
+      marginBottom: rem(space[2]),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
+    },
+    inputActions: {
+      flexDirection: 'row',
+      gap: rem(space[2]),
+    },
+    actionButton: {
+      paddingHorizontal: rem(space[3]),
+      paddingVertical: rem(space[2]),
+      borderRadius: extractPixels(radii.md),
+      backgroundColor: themeColors.primary.DEFAULT,
+    },
+    actionButtonText: {
+      color: themeColors.primary.foreground,
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
+      fontWeight: fontWeight(fontWeights.medium),
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
+    },
+    cancelButton: {
+      paddingHorizontal: rem(space[3]),
+      paddingVertical: rem(space[2]),
+    },
+    cancelButtonText: {
+      color: themeColors.muted.foreground,
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
+    },
   });
 
 export function KanbanColumn({
@@ -84,6 +135,11 @@ export function KanbanColumn({
   columnWidth,
   onTaskPress,
   onAddPress,
+  isAdding,
+  newTaskTitle,
+  onNewTaskTitleChange,
+  onAddTask,
+  onCancelAdd,
 }: KanbanColumnProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -136,6 +192,41 @@ export function KanbanColumn({
           />
         </TouchableOpacity>
       </View>
+
+      {isAdding && (
+        <View style={styles.inputCard}>
+          <TextInput
+            style={styles.input}
+            placeholder={t('kanban.newTaskPlaceholder')}
+            placeholderTextColor={theme.colors.muted.foreground}
+            value={newTaskTitle}
+            onChangeText={onNewTaskTitleChange}
+            onSubmitEditing={onAddTask}
+            autoFocus
+            accessibilityLabel={t('accessibility.modules.newTaskInput')}
+          />
+          <View style={styles.inputActions}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={onAddTask}
+              accessibilityRole="button"
+              accessibilityLabel={t('accessibility.modules.confirmAddTask')}
+            >
+              <Text style={styles.actionButtonText}>{t('common.add')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={onCancelAdd}
+              accessibilityRole="button"
+              accessibilityLabel={t('accessibility.modules.cancelAddTask')}
+            >
+              <Text style={styles.cancelButtonText}>
+                {t('common.cancel')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       <ScrollView
         style={styles.taskList}
