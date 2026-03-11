@@ -33,15 +33,20 @@ const createStyles = (
     },
     sectionHeader: {
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'space-between',
       gap: rem(space[3]),
     },
     sectionHeaderCopy: {
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       gap: rem(space[3]),
       flex: 1,
+      minWidth: 0,
+    },
+    sectionTextGroup: {
+      flex: 1,
+      minWidth: 0,
     },
     sectionTitle: {
       fontSize: rem(fontSizes.lg) * preferences.fontScale,
@@ -49,6 +54,7 @@ const createStyles = (
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+      flexShrink: 1,
     },
     sectionDescription: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
@@ -56,6 +62,7 @@ const createStyles = (
       lineHeight: rem(fontSizes.sm) * preferences.lineHeightMultiplier,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+      flexShrink: 1,
     },
   });
 
@@ -81,7 +88,7 @@ export function CognitiveSection({
         <View style={styles.sectionHeader}>
           <View style={styles.sectionHeaderCopy}>
             <Ionicons name={icon} size={20} color={theme.colors.primary.DEFAULT} />
-            <View>
+            <View style={styles.sectionTextGroup}>
               <Text style={styles.sectionTitle}>{title}</Text>
               <Text style={styles.sectionDescription}>{description}</Text>
             </View>
@@ -97,7 +104,7 @@ export function CognitiveSection({
       <TouchableOpacity style={styles.sectionHeader} onPress={onToggle}>
         <View style={styles.sectionHeaderCopy}>
           <Ionicons name={icon} size={20} color={theme.colors.primary.DEFAULT} />
-          <View>
+          <View style={styles.sectionTextGroup}>
             <Text style={styles.sectionTitle}>{title}</Text>
             <Text style={styles.sectionDescription}>{description}</Text>
           </View>
