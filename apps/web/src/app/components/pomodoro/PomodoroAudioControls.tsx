@@ -129,6 +129,9 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
             key={themeItem.id}
             style={[styles.themePill, selectedThemeId === themeItem.id && styles.themePillActive]}
             onPress={() => themeItem.id === 'custom' ? onCustomUrlClick() : selectTheme(themeItem.id)}
+            accessibilityRole="radio"
+            accessibilityState={{ selected: selectedThemeId === themeItem.id }}
+            accessibilityLabel={themeItem.name}
           >
             <Text style={[styles.themePillText, selectedThemeId === themeItem.id && styles.themePillTextActive]}>
               {themeItem.name}
@@ -140,7 +143,12 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
       <View style={styles.audioControlsContainer}>
         {/* Volume Controls on their own row for mobile-friendly layout */}
         <View style={styles.volumeControls}>
-          <TouchableOpacity onPress={() => changeVolume(-10)} style={styles.volumeBtn}>
+          <TouchableOpacity
+            onPress={() => changeVolume(-10)}
+            style={styles.volumeBtn}
+            accessibilityRole="button"
+            accessibilityLabel={t('accessibility.pomodoro.decreaseVolume')}
+          >
               <Ionicons name="volume-low" size={20} color={theme.colors.foreground} />
           </TouchableOpacity>
           <Slider
@@ -152,23 +160,45 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
             minimumTrackTintColor={theme.colors.primary.DEFAULT}
             maximumTrackTintColor={theme.colors.border}
             thumbTintColor={theme.colors.primary.DEFAULT}
+            accessibilityLabel={t('pages.focus.volume')}
+            accessibilityValue={{ min: 0, max: 100, now: Math.round(audioVolume) }}
           />
-          <TouchableOpacity onPress={() => changeVolume(10)} style={styles.volumeBtn}>
+          <TouchableOpacity
+            onPress={() => changeVolume(10)}
+            style={styles.volumeBtn}
+            accessibilityRole="button"
+            accessibilityLabel={t('accessibility.pomodoro.increaseVolume')}
+          >
               <Ionicons name="volume-high" size={20} color={theme.colors.foreground} />
           </TouchableOpacity>
         </View>
 
         {/* Playback Controls below volume */}
         <View style={styles.audioControls}>
-          <TouchableOpacity onPress={rewindAudio} style={styles.audioButton}>
+          <TouchableOpacity
+            onPress={rewindAudio}
+            style={styles.audioButton}
+            accessibilityRole="button"
+            accessibilityLabel={t('accessibility.pomodoro.rewind')}
+          >
             <Ionicons name="play-back" size={24} color={theme.colors.foreground} />
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={toggleAudioPlay} style={styles.audioButtonPrimary}>
+          <TouchableOpacity
+            onPress={toggleAudioPlay}
+            style={styles.audioButtonPrimary}
+            accessibilityRole="button"
+            accessibilityLabel={isAudioPlaying ? t('common.pause') : t('common.start')}
+          >
             <Ionicons name={isAudioPlaying ? "pause" : "play"} size={24} color={theme.colors.card.DEFAULT} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={playNextTheme} style={styles.audioButton}>
+          <TouchableOpacity
+            onPress={playNextTheme}
+            style={styles.audioButton}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.next')}
+          >
             <Ionicons name="play-forward" size={24} color={theme.colors.foreground} />
           </TouchableOpacity>
         </View>

@@ -152,11 +152,23 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
       type="centered"
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.modalTabs}>
-          <TouchableOpacity onPress={() => setSettingsTab('timer')} style={[styles.modalTab, settingsTab === 'timer' && styles.modalTabActive]}>
+        <View style={styles.modalTabs} accessibilityRole="tablist" accessibilityLabel={t('accessibility.pomodoro.settingsTabs')}>
+          <TouchableOpacity
+            onPress={() => setSettingsTab('timer')}
+            style={[styles.modalTab, settingsTab === 'timer' && styles.modalTabActive]}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: settingsTab === 'timer' }}
+            accessibilityLabel={t('pages.focus.settingsTabTimer', 'Durations')}
+          >
             <Text style={[styles.modalTabText, settingsTab === 'timer' && styles.modalTabTextActive]}>{t('pages.focus.settingsTabTimer', 'Durations')}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setSettingsTab('audio')} style={[styles.modalTab, settingsTab === 'audio' && styles.modalTabActive]}>
+          <TouchableOpacity
+            onPress={() => setSettingsTab('audio')}
+            style={[styles.modalTab, settingsTab === 'audio' && styles.modalTabActive]}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: settingsTab === 'audio' }}
+            accessibilityLabel={t('pages.focus.settingsTabAudio', 'Audio & Player')}
+          >
             <Text style={[styles.modalTabText, settingsTab === 'audio' && styles.modalTabTextActive]}>{t('pages.focus.settingsTabAudio', 'Audio & Player')}</Text>
           </TouchableOpacity>
         </View>
@@ -240,7 +252,12 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
             {(settings?.audioThemes || []).map((audioTheme: AudioTheme) => (
               <View key={audioTheme.id} style={[styles.themePill, { flexDirection: 'row', justifyContent: 'space-between', marginBottom: rem(space[2]), borderWidth: 1 }]}>
                 <Text style={[styles.themePillText, { padding: rem(space[1]) }]}>{audioTheme.name}</Text>
-                <TouchableOpacity style={styles.themePillDelete} onPress={() => handleDeleteAudioTheme(audioTheme.id)}>
+                <TouchableOpacity
+                  style={styles.themePillDelete}
+                  onPress={() => handleDeleteAudioTheme(audioTheme.id)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('accessibility.pomodoro.deleteAudioFile', { name: audioTheme.name })}
+                >
                   <Ionicons name="trash" size={16} color={uiColors.destructive.DEFAULT} />
                 </TouchableOpacity>
               </View>

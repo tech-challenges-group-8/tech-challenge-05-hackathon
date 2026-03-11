@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { useCognitivePreferences, type CognitiveSettingsState } from '../../../cognitive';
 import { OptionButton, ToggleRow } from '../ui';
@@ -49,6 +49,9 @@ export function SensorySettings({ settings, isDesktop, setTheme, updateSensory }
     () => createStyles(isDesktop, theme.colors, preferences),
     [isDesktop, theme.colors, preferences],
   );
+  const webRadioGroupProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'radiogroup' }
+    : {};
 
   const themeOptions: { id: ThemeMode; label: string }[] = [
     { id: 'light', label: t('settings.theme.light') },
@@ -61,7 +64,12 @@ export function SensorySettings({ settings, isDesktop, setTheme, updateSensory }
     <View style={styles.group}>
       <View style={styles.group}>
         <Text style={styles.title}>{t('cognitiveSettings.sensory.theme.title')}</Text>
-        <View style={styles.segmentRow}>
+        <View
+          style={styles.segmentRow}
+          accessibilityRole="radiogroup"
+          accessibilityLabel={t('accessibility.cognitive.themeGroup')}
+          {...webRadioGroupProps}
+        >
           {themeOptions.map((option) => (
             <View key={option.id} style={styles.optionWrapper}>
               <OptionButton

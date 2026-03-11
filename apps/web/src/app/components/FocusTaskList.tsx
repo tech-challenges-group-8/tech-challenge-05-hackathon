@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, ActivityIndicator } from 'react-native';
+import { Platform, View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
@@ -112,6 +112,7 @@ export function FocusTaskList() {
   const { settings, updateFocusTasks } = useFocusTimer();
 
   const tasks = settings?.tasks || [];
+  const webPoliteLiveProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-live': 'polite' } : {};
 
   const syncTasks = async (newTasks: FocusTask[]) => {
     await updateFocusTasks(newTasks);
@@ -149,6 +150,7 @@ export function FocusTaskList() {
           onChangeText={setNewTaskText}
           placeholder={t('pages.focus.addTask')}
           onSubmitEditing={addTask}
+          accessibilityLabel={t('accessibility.focus.newTaskInput')}
         />
         <TouchableOpacity style={styles.addButton} onPress={addTask} accessibilityLabel={t('common.add')}>
           <Text style={styles.addButtonText}>+</Text>
@@ -157,7 +159,10 @@ export function FocusTaskList() {
 
       <ScrollView style={styles.taskList}>
         {!settings ? (
-          <ActivityIndicator size="small" color={theme.colors.primary.DEFAULT} style={styles.loadingIndicator} />
+          <View accessibilityLiveRegion="polite" {...webPoliteLiveProps}>
+            <ActivityIndicator size="small" color={theme.colors.primary.DEFAULT} style={styles.loadingIndicator} />
+            <Text>{t('common.loading')}</Text>
+          </View>
         ) : (
           tasks.map(task => (
             <View key={task.id} style={styles.taskItem}>
@@ -171,8 +176,11 @@ export function FocusTaskList() {
               <Text style={[styles.taskText, task.completed && styles.taskTextCompleted]}>
                 {task.title}
               </Text>
-              <Text style={styles.pomodoroCount}>
-                🍅 {task.pomodoros || 0}
+              <Text
+                style={styles.pomodoroCount}
+                accessibilityLabel={t('accessibility.focus.pomodorosCount', { count: task.pomodoros || 0 })}
+              >
+                {t('accessibility.focus.pomodorosShort', { count: task.pomodoros || 0 })}
               </Text>
               <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTask(task.id)} accessibilityLabel={t('common.delete')}>
                 <Text style={styles.deleteButtonText}>×</Text>

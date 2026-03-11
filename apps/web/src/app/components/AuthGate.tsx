@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../theme';
 import { useAuth } from '../../auth';
@@ -40,6 +40,9 @@ export function AuthGate({ children }: AuthGateProps) {
   const [isRegistering, setIsRegistering] = useState(false);
 
   const styles = createStyles(theme.colors);
+  const webLoadingAlertProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'alert', 'aria-live': 'polite' }
+    : {};
 
   // Show loading state
   if (isLoading || (currentUser && isLoadingCognitive)) {
@@ -47,7 +50,14 @@ export function AuthGate({ children }: AuthGateProps) {
       <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
         <View style={styles.mainContent}>
           <ScrollView style={styles.content}>
-            <Text>{t('login.loading')}</Text>
+            <Text
+              accessibilityRole="alert"
+              accessibilityLiveRegion="polite"
+              accessibilityLabel={t('accessibility.auth.loadingApp')}
+              {...webLoadingAlertProps}
+            >
+              {t('login.loading')}
+            </Text>
           </ScrollView>
         </View>
       </SafeAreaView>

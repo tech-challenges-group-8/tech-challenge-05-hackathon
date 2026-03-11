@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
@@ -144,15 +144,28 @@ export function PomodoroTimer() {
   }
 
   const isBreak = mode !== 'FOCUS';
+  const webTimeLiveProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-live': 'assertive' } : {};
+  const webModeLiveProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-live': 'polite' } : {};
+  const currentModeLabel =
+    mode === 'FOCUS'
+      ? t('pages.focus.focusMode')
+      : mode === 'SHORT_BREAK'
+        ? t('pages.focus.shortBreak')
+        : t('pages.focus.longBreak');
+  const timerAccessibilityLabel = t('accessibility.pomodoro.timerCircle', {
+    time: formatTime(timeLeft),
+    mode: currentModeLabel,
+  });
 
   return (
     <View style={styles.container}>
       {/* Mode Selector */}
-      <View style={styles.modeSelector}>
+      <View style={styles.modeSelector} accessibilityRole="tablist" accessibilityLabel={t('accessibility.pomodoro.modeSelector')}>
         <TouchableOpacity 
           style={[styles.modeTab, mode === 'FOCUS' && styles.modeTabActive]} 
           onPress={() => handleModeSelect('FOCUS')}
-          accessibilityRole="button"
+          accessibilityRole="tab"
+          accessibilityState={{ selected: mode === 'FOCUS' }}
           accessibilityLabel={t('pages.focus.focusMode')}
         >
           <Text style={[styles.modeTabText, mode === 'FOCUS' && styles.modeTabTextActive]}>
@@ -162,7 +175,8 @@ export function PomodoroTimer() {
         <TouchableOpacity 
           style={[styles.modeTab, mode === 'SHORT_BREAK' && styles.modeTabActiveBreak]} 
           onPress={() => handleModeSelect('SHORT_BREAK')}
-          accessibilityRole="button"
+          accessibilityRole="tab"
+          accessibilityState={{ selected: mode === 'SHORT_BREAK' }}
           accessibilityLabel={t('pages.focus.shortBreak')}
         >
           <Text style={[styles.modeTabText, mode === 'SHORT_BREAK' && styles.modeTabTextActive]}>
@@ -172,7 +186,8 @@ export function PomodoroTimer() {
         <TouchableOpacity 
           style={[styles.modeTab, mode === 'LONG_BREAK' && styles.modeTabActiveBreak]} 
           onPress={() => handleModeSelect('LONG_BREAK')}
-          accessibilityRole="button"
+          accessibilityRole="tab"
+          accessibilityState={{ selected: mode === 'LONG_BREAK' }}
           accessibilityLabel={t('pages.focus.longBreak')}
         >
           <Text style={[styles.modeTabText, mode === 'LONG_BREAK' && styles.modeTabTextActive]}>
@@ -182,13 +197,34 @@ export function PomodoroTimer() {
       </View>
 
       {/* Timer Display */}
-      <View style={[styles.timerCircle, isBreak && styles.timerCircleBreak]}>
-        <Text style={styles.timeText}>{formatTime(timeLeft)}</Text>
+      <View
+        style={[styles.timerCircle, isBreak && styles.timerCircleBreak]}
+        accessibilityLabel={timerAccessibilityLabel}
+      >
+        <Text
+          style={styles.timeText}
+          accessibilityLiveRegion="assertive"
+          {...webTimeLiveProps}
+        >
+          {formatTime(timeLeft)}
+        </Text>
+        <Text
+          style={styles.modeText}
+          accessibilityLiveRegion="polite"
+          {...webModeLiveProps}
+        >
+          {currentModeLabel}
+        </Text>
       </View>
 
       {/* Controls */}
       <View style={styles.controls}>
-        <AppButton variant="ghost" style={styles.controlButton} onPress={resetTimer}>
+        <AppButton
+          variant="ghost"
+          style={styles.controlButton}
+          onPress={resetTimer}
+          accessibilityLabel={t('common.reset')}
+        >
           {t('common.reset')}
         </AppButton>
 
@@ -196,18 +232,27 @@ export function PomodoroTimer() {
           variant={isBreak ? 'secondary' : 'primary'}
           style={styles.controlButton}
           onPress={toggleTimer}
+          accessibilityLabel={isActive ? t('common.pause') : t('common.start')}
         >
           {isActive ? t('common.pause') : t('common.start')}
         </AppButton>
 
-        <AppButton variant="ghost" style={styles.controlButton} onPress={skipTimer}>
+        <AppButton
+          variant="ghost"
+          style={styles.controlButton}
+          onPress={skipTimer}
+          accessibilityLabel={t('common.skip')}
+        >
           {t('common.skip')}
         </AppButton>
       </View>
 
       {/* Stats */}
       <View style={styles.statsContainer}>
-        <Text style={styles.statsText}>
+        <Text
+          style={styles.statsText}
+          accessibilityLabel={t('accessibility.pomodoro.completedSessions', { count: settings.pomodorosCompleted })}
+        >
           {t('pages.focus.pomodorosCompleted')}: {settings.pomodorosCompleted}
         </Text>
       </View>

@@ -35,7 +35,9 @@
       "openUserMenu": "Open user menu",
       "closeMenu": "Close menu",
       "userMenu": "User menu",
-      "openProfile": "Open profile"
+      "openProfile": "Open profile",
+      "openSidebar": "Open sidebar",
+      "closeSidebar": "Close sidebar"
     },
     "auth": {
       "switchToRegister": "Switch to registration",
@@ -43,12 +45,52 @@
       "loginForm": "Sign in form",
       "registerForm": "Registration form",
       "submitLogin": "Sign in",
-      "submitRegister": "Create account"
+      "submitRegister": "Create account",
+      "loadingApp": "Loading application"
+    },
+    "dashboard": {
+      "pageRegion": "Dashboard content"
+    },
+    "profile": {
+      "emailValue": "Email: {{email}}"
     },
     "components": {
       "closeModal": "Close modal",
       "progress": "Task completion progress",
       "dismissNotification": "Dismiss notification"
+    },
+    "pomodoro": {
+      "modeSelector": "Pomodoro mode selector",
+      "timerCircle": "Timer {{time}} in {{mode}} mode",
+      "completedSessions": "Completed sessions: {{count}}",
+      "miniPlayer": "Pomodoro mini player",
+      "openFocusApp": "Open Focus Mode",
+      "decreaseVolume": "Decrease volume",
+      "increaseVolume": "Increase volume",
+      "rewind": "Rewind",
+      "settingsTabs": "Pomodoro settings tabs",
+      "deleteAudioFile": "Delete audio file {{name}}"
+    },
+    "focus": {
+      "newTaskInput": "New focus task",
+      "pomodorosCount": "{{count}} pomodoros",
+      "pomodorosShort": "{{count}} pomodoros"
+    },
+    "cognitive": {
+      "states": {
+        "expanded": "expanded",
+        "collapsed": "collapsed"
+      },
+      "sectionToggle": "{{section}} settings, {{state}}",
+      "sectionHintExpand": "Double tap to expand",
+      "sectionHintCollapse": "Double tap to collapse",
+      "presetGroup": "Preset",
+      "themeGroup": "Theme",
+      "fontFamilyGroup": "Font family",
+      "textSizeGroup": "Text size",
+      "lineHeightGroup": "Line spacing",
+      "statusPill": "Settings synchronization status",
+      "errorBanner": "Cognitive settings synchronization error"
     },
     "modules": {
       "kanbanBoardColumns": "Kanban columns",
@@ -72,8 +114,6 @@
       "title": "Welcome to MindEase",
       "subtitle": "Your focus and task manager",
       "body": "Stay organized and productive with our tools. Track your progress below.",
-      "quickActionsTitle": "Quick Actions",
-      "quickActionsBody": "Start a focus session or organize your board to stay on top of your goals.",
       "stats": {
         "activeTasks": "Active Tasks",
         "completedToday": "Completed Today",

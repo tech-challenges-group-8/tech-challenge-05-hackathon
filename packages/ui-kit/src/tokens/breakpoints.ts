@@ -1,0 +1,1 @@
+export const WEB_SIDEBAR_BREAKPOINT = 1024;

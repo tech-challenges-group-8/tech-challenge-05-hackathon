@@ -134,6 +134,13 @@ export function CognitiveSettingsPage() {
     () => createStyles(theme.colors, isTwoColumnLayout, isWideHeaderLayout, preferences),
     [isTwoColumnLayout, isWideHeaderLayout, preferences, theme.colors],
   );
+  const webPoliteLiveProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-live': 'polite' } : {};
+  const webErrorAlertProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'alert', 'aria-live': 'assertive' }
+    : {};
+  const webTitleHeadingProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'heading', 'aria-level': 1 }
+    : {};
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     reading: true,
     focus: false,
@@ -215,12 +222,17 @@ export function CognitiveSettingsPage() {
     <Card style={styles.pageCard}>
       <View style={styles.headerRow}>
         <View style={styles.headerCopy}>
-          <Text style={styles.title}>{t('pages.cognitive.title')}</Text>
+          <Text style={styles.title} accessibilityRole="header" {...webTitleHeadingProps}>{t('pages.cognitive.title')}</Text>
           <Text style={styles.subtitle}>{t('cognitiveSettings.description')}</Text>
         </View>
 
         <View style={styles.headerActions}>
-          <View style={styles.statusPill}>
+          <View
+            style={styles.statusPill}
+            accessibilityLiveRegion="polite"
+            accessibilityLabel={t('accessibility.cognitive.statusPill')}
+            {...webPoliteLiveProps}
+          >
             <Text style={styles.statusText}>{statusLabel}</Text>
           </View>
           <AppButton
@@ -244,7 +256,13 @@ export function CognitiveSettingsPage() {
       </View>
 
       {error ? (
-        <View style={styles.errorBanner}>
+        <View
+          style={styles.errorBanner}
+          accessibilityRole="alert"
+          accessibilityLiveRegion="assertive"
+          accessibilityLabel={t('accessibility.cognitive.errorBanner')}
+          {...webErrorAlertProps}
+        >
           <Text style={styles.errorText}>{t('cognitiveSettings.status.error', { message: error })}</Text>
         </View>
       ) : null}

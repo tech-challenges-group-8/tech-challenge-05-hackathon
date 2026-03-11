@@ -9,6 +9,7 @@ interface StatCardProps {
   readonly label: string;
   readonly value: string;
   readonly isLast?: boolean;
+  readonly stacked?: boolean;
 }
 
 const createStyles = (
@@ -30,6 +31,13 @@ const createStyles = (
     cardLast: {
       marginRight: 0,
     },
+    cardStacked: {
+      marginRight: 0,
+      marginBottom: rem(space[3]),
+    },
+    cardStackedLast: {
+      marginBottom: 0,
+    },
     label: {
       fontSize: rem(fontSizes.xs) * preferences.fontScale,
       color: preferences.hideUrgencyIndicators
@@ -50,15 +58,25 @@ const createStyles = (
     },
   });
 
-export function StatCard({ label, value, isLast = false }: StatCardProps) {
+export function StatCard({ label, value, isLast = false, stacked = false }: StatCardProps) {
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [theme.colors, preferences]);
+  const combinedLabel = `${label}: ${value}`;
 
   return (
-    <View style={[styles.card, isLast && styles.cardLast]}>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={styles.value}>{value}</Text>
+    <View
+      style={[
+        styles.card,
+        isLast && styles.cardLast,
+        stacked && styles.cardStacked,
+        stacked && isLast && styles.cardStackedLast,
+      ]}
+      accessible
+      accessibilityLabel={combinedLabel}
+    >
+      <Text style={styles.label} accessible={false}>{label}</Text>
+      <Text style={styles.value} accessible={false}>{value}</Text>
     </View>
   );
 }

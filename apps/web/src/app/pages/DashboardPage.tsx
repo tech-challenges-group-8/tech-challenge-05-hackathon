@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
+import { fontSizes, fontWeights, space, WEB_SIDEBAR_BREAKPOINT } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
 import { useState, useEffect, useCallback } from 'react';
@@ -58,6 +58,9 @@ export function DashboardPage() {
 
   const [stats, setStats] = useState<ResponseDashboardStatsDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(
+    Platform.OS === 'web' ? window.innerWidth : 0,
+  );
 
   const fetchStats = useCallback(async () => {
     if (!currentUser) return;
@@ -86,6 +89,25 @@ export function DashboardPage() {
     }
   }, [fetchStats]);
 
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      return;
+    }
+
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isSmallWebResolution = Platform.OS === 'web' && windowWidth < WEB_SIDEBAR_BREAKPOINT;
+  const webDashboardLandmarkProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'region', 'aria-label': t('accessibility.dashboard.pageRegion') }
+    : {};
+  const webHeadingProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'heading', 'aria-level': 1 }
+    : {};
+
   const formatFocusTime = (minutes: number) => {
     const roundedMinutes = Math.round(minutes * 100) / 100;
     if (roundedMinutes < 60) return `${roundedMinutes}m`;
@@ -95,25 +117,37 @@ export function DashboardPage() {
   };
 
   return (
-    <View>
+    <View accessibilityLabel={t('accessibility.dashboard.pageRegion')} {...webDashboardLandmarkProps}>
       <Card style={styles.cardSpacing}>
-        <Text style={styles.title}>{t('pages.dashboard.title')}</Text>
+        <Text style={styles.title} accessibilityRole="header" {...webHeadingProps}>{t('pages.dashboard.title')}</Text>
         {!preferences.simpleInterface && (
           <Text style={styles.subtitle}>{t('pages.dashboard.subtitle')}</Text>
         )}
         <Text style={styles.text}>{t('pages.dashboard.body')}</Text>
 
-        <View style={styles.statsContainer}>
-          <StatCard label={t('pages.dashboard.stats.activeTasks')} value={isLoading ? '...' : String(stats?.activeTasks ?? 0)} />
-          <StatCard label={t('pages.dashboard.stats.completedToday')} value={isLoading ? '...' : String(stats?.completedToday ?? 0)} />
-          <StatCard label={t('pages.dashboard.stats.totalCompleted')} value={isLoading ? '...' : String(stats?.totalCompleted ?? 0)} />
-          <StatCard label={t('pages.dashboard.stats.focusTime')} value={isLoading ? '...' : formatFocusTime(stats?.totalFocusTime ?? 0)} isLast />
+        <View style={[styles.statsContainer, isSmallWebResolution && { flexDirection: 'column' }]}>
+          <StatCard
+            label={t('pages.dashboard.stats.activeTasks')}
+            value={isLoading ? '...' : String(stats?.activeTasks ?? 0)}
+            stacked={isSmallWebResolution}
+          />
+          <StatCard
+            label={t('pages.dashboard.stats.completedToday')}
+            value={isLoading ? '...' : String(stats?.completedToday ?? 0)}
+            stacked={isSmallWebResolution}
+          />
+          <StatCard
+            label={t('pages.dashboard.stats.totalCompleted')}
+            value={isLoading ? '...' : String(stats?.totalCompleted ?? 0)}
+            stacked={isSmallWebResolution}
+          />
+          <StatCard
+            label={t('pages.dashboard.stats.focusTime')}
+            value={isLoading ? '...' : formatFocusTime(stats?.totalFocusTime ?? 0)}
+            isLast
+            stacked={isSmallWebResolution}
+          />
         </View>
-      </Card>
-
-      <Card>
-        <Text style={styles.title}>{t('pages.dashboard.quickActionsTitle')}</Text>
-        <Text style={styles.text}>{t('pages.dashboard.quickActionsBody')}</Text>
       </Card>
     </View>
   );

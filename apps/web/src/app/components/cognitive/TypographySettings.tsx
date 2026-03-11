@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useId, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { useCognitivePreferences, type CognitiveSettingsState } from '../../../cognitive';
 import { OptionButton, ToggleRow } from '../ui';
@@ -51,12 +51,25 @@ export function TypographySettings({ settings, isDesktop, updateTypography }: Ty
     () => createStyles(isDesktop, theme.colors, preferences),
     [isDesktop, theme.colors, preferences],
   );
+  const reactId = useId();
+  const fontFamilyTitleId = `typography-font-family-title-${reactId}`;
+  const textSizeTitleId = `typography-text-size-title-${reactId}`;
+  const lineHeightTitleId = `typography-line-height-title-${reactId}`;
+  const webRadioGroupProps = (titleId: string): Record<string, unknown> =>
+    Platform.OS === 'web'
+      ? { role: 'radiogroup', 'aria-labelledby': titleId }
+      : {};
 
   return (
     <View style={styles.group}>
       <View style={styles.group}>
-        <Text style={styles.title}>{t('cognitiveSettings.typography.fontFamily.title')}</Text>
-        <View style={styles.segmentRow}>
+        <Text style={styles.title} nativeID={fontFamilyTitleId}>{t('cognitiveSettings.typography.fontFamily.title')}</Text>
+        <View
+          style={styles.segmentRow}
+          accessibilityRole="radiogroup"
+          accessibilityLabel={t('accessibility.cognitive.fontFamilyGroup')}
+          {...webRadioGroupProps(fontFamilyTitleId)}
+        >
           <View style={styles.optionWrapperHalf}>
             <OptionButton
               value="system"
@@ -77,8 +90,13 @@ export function TypographySettings({ settings, isDesktop, updateTypography }: Ty
       </View>
 
       <View style={styles.group}>
-        <Text style={styles.title}>{t('cognitiveSettings.typography.textSize.title')}</Text>
-        <View style={styles.segmentRow}>
+        <Text style={styles.title} nativeID={textSizeTitleId}>{t('cognitiveSettings.typography.textSize.title')}</Text>
+        <View
+          style={styles.segmentRow}
+          accessibilityRole="radiogroup"
+          accessibilityLabel={t('accessibility.cognitive.textSizeGroup')}
+          {...webRadioGroupProps(textSizeTitleId)}
+        >
           <View style={styles.optionWrapperThird}>
             <OptionButton
               value="normal"
@@ -107,8 +125,13 @@ export function TypographySettings({ settings, isDesktop, updateTypography }: Ty
       </View>
 
       <View style={styles.group}>
-        <Text style={styles.title}>{t('cognitiveSettings.typography.lineHeight.title')}</Text>
-        <View style={styles.segmentRow}>
+        <Text style={styles.title} nativeID={lineHeightTitleId}>{t('cognitiveSettings.typography.lineHeight.title')}</Text>
+        <View
+          style={styles.segmentRow}
+          accessibilityRole="radiogroup"
+          accessibilityLabel={t('accessibility.cognitive.lineHeightGroup')}
+          {...webRadioGroupProps(lineHeightTitleId)}
+        >
           <View style={styles.optionWrapperThird}>
             <OptionButton
               value="normal"

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences, type CognitivePreset, type CognitiveSettingsState } from '../../../cognitive';
 import { OptionButton } from '../ui';
@@ -62,6 +62,9 @@ export function PresetSelector({ currentPreset, settings, isDesktop, applyPreset
     () => createStyles(isDesktop, theme.colors, preferences),
     [isDesktop, theme.colors, preferences],
   );
+  const webRadioGroupProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'radiogroup' }
+    : {};
 
   const presetOptions: { id: CognitivePreset; icon: keyof typeof Ionicons.glyphMap }[] = [
     { id: 'default', icon: 'sparkles-outline' },
@@ -80,7 +83,12 @@ export function PresetSelector({ currentPreset, settings, isDesktop, applyPreset
 
   return (
     <View style={styles.group}>
-      <View style={styles.segmentRow}>
+      <View
+        style={styles.segmentRow}
+        accessibilityRole="radiogroup"
+        accessibilityLabel={t('accessibility.cognitive.presetGroup')}
+        {...webRadioGroupProps}
+      >
         {presetOptions.map((preset) => (
           <View key={preset.id} style={styles.optionWrapper}>
             <OptionButton

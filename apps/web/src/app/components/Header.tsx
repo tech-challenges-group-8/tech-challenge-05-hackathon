@@ -31,6 +31,11 @@ const createStyles = (
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },
+    headerLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: rem(space[3]),
+    },
     headerActions: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -46,6 +51,9 @@ const createStyles = (
       backgroundColor: themeColors.primary.DEFAULT,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    headerButtonNoMargin: {
+      marginLeft: 0,
     },
     headerButtonIcon: {
       color: themeColors.primary.foreground,
@@ -104,9 +112,17 @@ interface HeaderProps {
   readonly title: string;
   readonly onNewTask?: () => void;
   readonly onProfile?: () => void;
+  readonly showSidebarToggle?: boolean;
+  readonly isSidebarOpen?: boolean;
+  readonly onToggleSidebar?: () => void;
 }
 
-export function Header({ title }: HeaderProps) {
+export function Header({
+  title,
+  showSidebarToggle = false,
+  isSidebarOpen = false,
+  onToggleSidebar,
+}: HeaderProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { logout, currentUser } = useAuth();
@@ -176,7 +192,28 @@ export function Header({ title }: HeaderProps) {
 
   return (
     <View style={styles.header} accessibilityRole="summary" accessibilityLabel={t('accessibility.header.pageHeader')}>
-      <Text style={styles.headerTitle}>{title}</Text>
+      <View style={styles.headerLeft}>
+        {showSidebarToggle && (
+          <TouchableOpacity
+            style={[styles.headerButton, styles.headerButtonSecondary, styles.headerButtonNoMargin]}
+            onPress={onToggleSidebar}
+            accessibilityRole="button"
+            accessibilityState={{ expanded: isSidebarOpen }}
+            accessibilityLabel={
+              isSidebarOpen
+                ? t('accessibility.header.closeSidebar')
+                : t('accessibility.header.openSidebar')
+            }
+          >
+            <Ionicons
+              name="menu"
+              size={rem(fontSizes.lg)}
+              style={styles.headerButtonSecondaryIcon}
+            />
+          </TouchableOpacity>
+        )}
+        <Text style={styles.headerTitle}>{title}</Text>
+      </View>
       <View style={styles.headerActions}>
         <View style={styles.profileTriggerContainer}>
           <TouchableOpacity

@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
@@ -75,19 +76,35 @@ export function CognitiveSection({
   onToggle,
   children,
 }: CognitiveSectionProps) {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(
     () => createStyles(theme.colors, isDesktop, preferences),
     [theme.colors, isDesktop, preferences],
   );
+  const webHiddenProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-hidden': true } : {};
+  const expandedState = expanded
+    ? t('accessibility.cognitive.states.expanded')
+    : t('accessibility.cognitive.states.collapsed');
+  const toggleLabel = t('accessibility.cognitive.sectionToggle', {
+    section: title,
+    state: expandedState,
+  });
 
   if (isDesktop) {
     return (
       <View style={styles.sectionCard}>
         <View style={styles.sectionHeader}>
           <View style={styles.sectionHeaderCopy}>
-            <Ionicons name={icon} size={20} color={theme.colors.primary.DEFAULT} />
+            <Ionicons
+              name={icon}
+              size={20}
+              color={theme.colors.primary.DEFAULT}
+              accessibilityElementsHidden
+              importantForAccessibility="no"
+              {...webHiddenProps}
+            />
             <View style={styles.sectionTextGroup}>
               <Text style={styles.sectionTitle}>{title}</Text>
               <Text style={styles.sectionDescription}>{description}</Text>
@@ -101,9 +118,27 @@ export function CognitiveSection({
 
   return (
     <View style={styles.sectionCard}>
-      <TouchableOpacity style={styles.sectionHeader} onPress={onToggle}>
+      <TouchableOpacity
+        style={styles.sectionHeader}
+        onPress={onToggle}
+        accessibilityRole="button"
+        accessibilityState={{ expanded }}
+        accessibilityLabel={toggleLabel}
+        accessibilityHint={
+          expanded
+            ? t('accessibility.cognitive.sectionHintCollapse')
+            : t('accessibility.cognitive.sectionHintExpand')
+        }
+      >
         <View style={styles.sectionHeaderCopy}>
-          <Ionicons name={icon} size={20} color={theme.colors.primary.DEFAULT} />
+          <Ionicons
+            name={icon}
+            size={20}
+            color={theme.colors.primary.DEFAULT}
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+            {...webHiddenProps}
+          />
           <View style={styles.sectionTextGroup}>
             <Text style={styles.sectionTitle}>{title}</Text>
             <Text style={styles.sectionDescription}>{description}</Text>
@@ -113,6 +148,9 @@ export function CognitiveSection({
           name={expanded ? 'chevron-up' : 'chevron-down'}
           size={18}
           color={theme.colors.muted.foreground}
+          accessibilityElementsHidden
+          importantForAccessibility="no"
+          {...webHiddenProps}
         />
       </TouchableOpacity>
       {expanded ? children : null}

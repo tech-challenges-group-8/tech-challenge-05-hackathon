@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { space } from '@mindease/ui-kit';
+import { space, WEB_SIDEBAR_BREAKPOINT } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../cognitive';
 import { useTheme } from '../../theme';
 import { rem } from '../../utils';
@@ -32,6 +32,19 @@ const createStyles = (
       flex: 1,
       flexDirection: 'column',
     },
+    sidebarOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: themeColors.black,
+      opacity: 0.25,
+      zIndex: 30,
+    },
+    sidebarDrawer: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      zIndex: 40,
+    },
     content: {
       flex: 1,
       padding: simpleInterface ? rem(space[4]) : rem(space[6]),
@@ -56,9 +69,39 @@ export function AppLayout({
     () => createStyles(theme.colors, preferences.simpleInterface),
     [preferences.simpleInterface, theme.colors],
   );
+  const [windowWidth, setWindowWidth] = useState(
+    Platform.OS === 'web' ? window.innerWidth : 0,
+  );
+  const [isSmallWebSidebarOpen, setIsSmallWebSidebarOpen] = useState(false);
 
-  const showSidebar = Platform.OS === 'web' && !preferences.hideSidebar;
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      return;
+    }
+
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isSmallWebResolution = Platform.OS === 'web' && windowWidth < WEB_SIDEBAR_BREAKPOINT;
+  const canShowSidebar = Platform.OS === 'web' && !preferences.hideSidebar;
+  const showSidebar = canShowSidebar && (!isSmallWebResolution || isSmallWebSidebarOpen);
   const showBottomTabs = Platform.OS !== 'web';
+
+  useEffect(() => {
+    if (!isSmallWebResolution) {
+      setIsSmallWebSidebarOpen(false);
+    }
+  }, [isSmallWebResolution]);
+
+  const handleMenuChange = (menuId: string) => {
+    onMenuChange(menuId);
+    if (isSmallWebResolution) {
+      setIsSmallWebSidebarOpen(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
@@ -79,8 +122,22 @@ export function AppLayout({
       )}
 
       {/* Sidebar for desktop */}
-      {showSidebar && (
-        <Sidebar activeMenu={activeMenu} onMenuChange={onMenuChange} />
+      {showSidebar && !isSmallWebResolution && (
+        <Sidebar activeMenu={activeMenu} onMenuChange={handleMenuChange} />
+      )}
+
+      {showSidebar && isSmallWebResolution && (
+        <>
+          <TouchableOpacity
+            onPress={() => setIsSmallWebSidebarOpen(false)}
+            accessibilityRole="button"
+            accessibilityLabel={t('accessibility.header.closeSidebar')}
+            style={styles.sidebarOverlay}
+          />
+          <View style={styles.sidebarDrawer}>
+            <Sidebar activeMenu={activeMenu} onMenuChange={handleMenuChange} />
+          </View>
+        </>
       )}
 
       {/* Main content area */}
@@ -88,6 +145,9 @@ export function AppLayout({
         {/* Header */}
         <Header 
           title={title}
+          showSidebarToggle={canShowSidebar && isSmallWebResolution}
+          isSidebarOpen={isSmallWebSidebarOpen}
+          onToggleSidebar={() => setIsSmallWebSidebarOpen((prev) => !prev)}
         />
 
         {/* Page content */}

@@ -94,6 +94,8 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
   } = useFocusTimer();
 
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const webTimerLiveOffProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-live': 'off' } : {};
+  const webToolbarProps: Record<string, unknown> = Platform.OS === 'web' ? { role: 'toolbar' } : {};
 
   const handleClose = () => {
     Animated.timing(fadeAnim, {
@@ -124,7 +126,12 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
   };
 
   return (
-    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+    <Animated.View
+      style={[styles.container, { opacity: fadeAnim }]}
+      accessibilityRole="summary"
+      accessibilityLabel={t('accessibility.pomodoro.miniPlayer')}
+      {...webToolbarProps}
+    >
       <View style={styles.header}>
         <Text style={styles.title}>
           {mode === 'FOCUS' ? t('pages.focus.focusMode') : t('pages.focus.shortBreak')}
@@ -135,7 +142,13 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
       </View>
 
       <View style={styles.mainRow}>
-        <Text style={styles.timerText}>{formatTime(timeLeft)}</Text>
+        <Text
+          style={styles.timerText}
+          accessibilityLiveRegion="none"
+          {...webTimerLiveOffProps}
+        >
+          {formatTime(timeLeft)}
+        </Text>
         
         <View style={styles.controls}>
           <TouchableOpacity onPress={toggleAudioPlay} style={styles.iconButton} accessibilityLabel={t('pages.focus.musicPlayer')}>
@@ -151,7 +164,12 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
       </View>
 
       {onNavigateToFocus && (
-        <TouchableOpacity style={styles.navButton} onPress={onNavigateToFocus}>
+        <TouchableOpacity
+          style={styles.navButton}
+          onPress={onNavigateToFocus}
+          accessibilityRole="link"
+          accessibilityLabel={t('accessibility.pomodoro.openFocusApp')}
+        >
           <Text style={styles.navButtonText}>{t('pages.focus.openFocusApp')}</Text>
         </TouchableOpacity>
       )}

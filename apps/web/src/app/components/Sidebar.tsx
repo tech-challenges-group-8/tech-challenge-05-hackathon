@@ -13,6 +13,7 @@ const createStyles = (
   StyleSheet.create({
     sidebar: {
       width: 250,
+      height: '100%',
       backgroundColor: themeColors.card.DEFAULT,
       borderRightWidth: 1,
       borderRightColor: themeColors.border,

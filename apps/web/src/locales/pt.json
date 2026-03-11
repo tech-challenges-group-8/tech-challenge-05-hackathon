@@ -48,7 +48,9 @@
       "openUserMenu": "Abrir menu do usuário",
       "closeMenu": "Fechar menu",
       "userMenu": "Menu do usuário",
-      "openProfile": "Abrir perfil"
+      "openProfile": "Abrir perfil",
+      "openSidebar": "Abrir sidebar",
+      "closeSidebar": "Fechar sidebar"
     },
     "auth": {
       "switchToRegister": "Ir para cadastro",
@@ -56,12 +58,52 @@
       "loginForm": "Formulário de login",
       "registerForm": "Formulário de cadastro",
       "submitLogin": "Entrar",
-      "submitRegister": "Criar conta"
+      "submitRegister": "Criar conta",
+      "loadingApp": "Carregando aplicação"
+    },
+    "dashboard": {
+      "pageRegion": "Conteúdo do painel"
+    },
+    "profile": {
+      "emailValue": "E-mail: {{email}}"
     },
     "components": {
       "closeModal": "Fechar modal",
       "progress": "Progresso de conclusão das tarefas",
       "dismissNotification": "Dispensar notificação"
+    },
+    "pomodoro": {
+      "modeSelector": "Seletor de modo pomodoro",
+      "timerCircle": "Temporizador {{time}} no modo {{mode}}",
+      "completedSessions": "Sessões concluídas: {{count}}",
+      "miniPlayer": "Mini player pomodoro",
+      "openFocusApp": "Abrir Modo Foco",
+      "decreaseVolume": "Diminuir volume",
+      "increaseVolume": "Aumentar volume",
+      "rewind": "Retroceder",
+      "settingsTabs": "Abas de configurações do pomodoro",
+      "deleteAudioFile": "Excluir arquivo de áudio {{name}}"
+    },
+    "focus": {
+      "newTaskInput": "Nova tarefa de foco",
+      "pomodorosCount": "{{count}} pomodoros",
+      "pomodorosShort": "{{count}} pomodoros"
+    },
+    "cognitive": {
+      "states": {
+        "expanded": "expandido",
+        "collapsed": "recolhido"
+      },
+      "sectionToggle": "Configurações de {{section}}, {{state}}",
+      "sectionHintExpand": "Toque duas vezes para expandir",
+      "sectionHintCollapse": "Toque duas vezes para recolher",
+      "presetGroup": "Perfil",
+      "themeGroup": "Tema",
+      "fontFamilyGroup": "Família da fonte",
+      "textSizeGroup": "Tamanho do texto",
+      "lineHeightGroup": "Espaçamento entre linhas",
+      "statusPill": "Status de sincronização das configurações",
+      "errorBanner": "Erro de sincronização das configurações cognitivas"
     },
     "modules": {
       "kanbanBoardColumns": "Colunas do kanban",
@@ -85,8 +127,6 @@
       "title": "Bem-vindo ao MindEase",
       "subtitle": "Seu gerenciador de foco e tarefas",
       "body": "Mantenha-se organizado e produtivo com nossas ferramentas. Acompanhe seu progresso abaixo.",
-      "quickActionsTitle": "Ações Rápidas",
-      "quickActionsBody": "Inicie uma sessão de foco ou organize seu quadro para ficar por dentro de seus objetivos.",
       "stats": {
         "activeTasks": "Tarefas Ativas",
         "focusTime": "Tempo de Foco",

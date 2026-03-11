@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -69,6 +70,9 @@ export function UserProfilePage({ onClose }: UserProfilePageProps) {
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const webHeadingProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'heading', 'aria-level': 1 }
+    : {};
   const { currentUser } = useAuth();
 
   const {
@@ -103,7 +107,7 @@ export function UserProfilePage({ onClose }: UserProfilePageProps) {
         >
           <Ionicons name="arrow-back" size={rem(fontSizes.lg)} color={theme.colors.secondary.foreground} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('userProfile.title')}</Text>
+        <Text style={styles.headerTitle} accessibilityRole="header" {...webHeadingProps}>{t('userProfile.title')}</Text>
       </View>
 
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>

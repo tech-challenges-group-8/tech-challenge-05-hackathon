@@ -64,6 +64,14 @@ export function PasswordSection({
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const webPoliteLiveProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-live': 'polite' } : {};
+
+  const requiredFieldsError = error === t('userProfile.errors.passwordFieldsRequired') ? error : undefined;
+  const currentPasswordError =
+    error === t('userProfile.errors.invalidCurrentPassword') ? error : requiredFieldsError;
+  const newPasswordError = error === t('userProfile.errors.passwordTooShort') ? error : requiredFieldsError;
+  const confirmPasswordError = error === t('userProfile.errors.passwordMismatch') ? error : requiredFieldsError;
+  const formError = error === t('userProfile.errors.changeFailed') ? error : undefined;
 
   return (
     <Card>
@@ -77,6 +85,7 @@ export function PasswordSection({
         onChangeText={onCurrentPasswordChange}
         editable={!isSubmitting}
         textContentType={Platform.OS === 'ios' ? 'password' : 'none'}
+        error={currentPasswordError}
       />
 
       <AppTextInput
@@ -87,6 +96,7 @@ export function PasswordSection({
         onChangeText={onNewPasswordChange}
         editable={!isSubmitting}
         textContentType={Platform.OS === 'ios' ? 'newPassword' : 'none'}
+        error={newPasswordError}
       />
 
       <AppTextInput
@@ -97,11 +107,23 @@ export function PasswordSection({
         onChangeText={onConfirmPasswordChange}
         editable={!isSubmitting}
         textContentType={Platform.OS === 'ios' ? 'newPassword' : 'none'}
-        error={error ?? undefined}
+        error={confirmPasswordError}
       />
 
+      {formError ? (
+        <Text style={[styles.feedbackText, styles.errorText]} accessibilityRole="alert">
+          {formError}
+        </Text>
+      ) : null}
+
       {success ? (
-        <Text style={[styles.feedbackText, styles.successText]}>{t('userProfile.changeSuccess')}</Text>
+        <Text
+          style={[styles.feedbackText, styles.successText]}
+          accessibilityLiveRegion="polite"
+          {...webPoliteLiveProps}
+        >
+          {t('userProfile.changeSuccess')}
+        </Text>
       ) : null}
 
       <AppButton onPress={onSubmit} loading={isSubmitting}>

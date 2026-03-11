@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
@@ -76,12 +76,16 @@ export function ProfileSection({
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const webPoliteLiveProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-live': 'polite' } : {};
+  const emailCombinedLabel = t('accessibility.profile.emailValue', { email: email ?? '-' });
 
   return (
     <Card style={styles.card}>
       <Text style={styles.sectionTitle}>{t('userProfile.profileSection')}</Text>
-      <Text style={styles.infoLabel}>{t('userProfile.emailLabel')}</Text>
-      <Text style={styles.infoValue}>{email}</Text>
+      <View accessible accessibilityLabel={emailCombinedLabel}>
+        <Text style={styles.infoLabel} accessible={false}>{t('userProfile.emailLabel')}</Text>
+        <Text style={styles.infoValue} accessible={false}>{email}</Text>
+      </View>
 
       <AppTextInput
         label={t('userProfile.nameLabel')}
@@ -93,7 +97,13 @@ export function ProfileSection({
       />
 
       {success ? (
-        <Text style={[styles.feedbackText, styles.successText]}>{t('userProfile.updateSuccess')}</Text>
+        <Text
+          style={[styles.feedbackText, styles.successText]}
+          accessibilityLiveRegion="polite"
+          {...webPoliteLiveProps}
+        >
+          {t('userProfile.updateSuccess')}
+        </Text>
       ) : null}
 
       <AppButton onPress={onSubmit} loading={isSubmitting}>
