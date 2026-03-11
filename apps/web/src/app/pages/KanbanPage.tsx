@@ -6,9 +6,7 @@ import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
 import { TaskList } from '../components/modules/TaskList';
 import { KanbanBoard } from '../components/modules/KanbanBoard';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],

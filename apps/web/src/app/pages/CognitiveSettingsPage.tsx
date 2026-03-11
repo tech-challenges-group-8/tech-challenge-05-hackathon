@@ -17,9 +17,7 @@ import {
   type CognitivePreset,
 } from '../../cognitive';
 import { useTheme, themes } from '../../theme';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],

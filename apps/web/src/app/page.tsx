@@ -19,8 +19,7 @@ import { useTheme } from '../theme';
 import { useAuth } from '../auth';
 import { KanbanPage } from './pages/KanbanPage';
 import { useCognitivePreferences, useCognitiveSettings } from '../cognitive';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
+import { rem } from '../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],

@@ -6,9 +6,7 @@ import { useTheme } from '../../theme';
 import focusSettingsService from '../../services/focus-settings/focusSettingsService';
 import type { FocusTask } from '../../services/focus-settings/types';
 import { useFocusTimer } from '../context/FocusTimerContext';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({

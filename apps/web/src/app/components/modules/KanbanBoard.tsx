@@ -17,6 +17,7 @@ import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { rem, extractPixels } from '../../../utils';
 
 // Types defined locally for simplicity in this conversion
 export type TaskStatus = 'todo' | 'in-progress' | 'done';
@@ -40,8 +41,6 @@ export interface KanbanColumn {
 }
 
 // Helper functions
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
 const API_URL = 'http://localhost:3001/task-kanban';
 
 const initialColumnsState: KanbanColumn[] = [
