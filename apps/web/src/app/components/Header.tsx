@@ -128,17 +128,6 @@ export function Header({ title, onNewTask, onProfile }: HeaderProps) {
     <View style={styles.header}>
       <Text style={styles.headerTitle}>{title}</Text>
       <View style={styles.headerActions}>
-        <TouchableOpacity
-          style={styles.headerButton}
-          onPress={onNewTask}
-          accessibilityLabel={t('header.newTask')}
-        >
-          <Ionicons
-            name="add"
-            size={rem(fontSizes.lg)}
-            style={styles.headerButtonIcon}
-          />
-        </TouchableOpacity>
         <View style={{ position: 'relative' }}>
           <TouchableOpacity
             style={[styles.headerButton, styles.headerButtonSecondary]}

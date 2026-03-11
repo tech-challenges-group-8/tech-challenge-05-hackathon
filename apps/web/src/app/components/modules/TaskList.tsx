@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,31 +12,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { rem, extractPixels } from '../../../utils';
+import { useTaskList } from '../../hooks';
+import { TaskItem } from './TaskItem';
 
-// API Configuration
-const API_URL = 'http://localhost:3001/task-checklist';
-
-// Interface for a task
-interface TaskItem {
-  id: string;
-  title: string;
-  completed: boolean;
-  createdAt: Date;
-}
-
-// Messages for when a task is completed
-const completionMessages = [
-  'Excelente! Você concluiu uma tarefa 🎉',
-  'Muito bem! Continue assim 💪',
-  'Ótimo trabalho! 🌟',
-  'Incrível! Você está progredindo ✨',
-  'Perfeito! Cada passo conta 🚀',
-];
-
-// Styles
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
   preferences: ReturnType<typeof useCognitivePreferences>,
@@ -199,49 +177,6 @@ const createStyles = (
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },
-    taskItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: rem(space[3]),
-      padding: rem(space[3]),
-      borderRadius: extractPixels(radii.lg),
-    },
-    taskItemActive: {
-      backgroundColor: themeColors.accent.DEFAULT,
-    },
-    taskItemCompleted: {
-      opacity: 0.6,
-    },
-    checkboxBase: {
-      width: rem(fontSizes.lg),
-      height: rem(fontSizes.lg),
-      borderRadius: extractPixels(radii.sm),
-      borderWidth: 2,
-      borderColor: themeColors.border,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    checkboxChecked: {
-      backgroundColor: themeColors.primary.DEFAULT,
-      borderColor: themeColors.primary.DEFAULT,
-    },
-    taskText: {
-      flex: 1,
-      fontSize: rem(fontSizes.sm) * preferences.fontScale,
-      color: themeColors.foreground,
-      letterSpacing: preferences.letterSpacing,
-      fontFamily: preferences.fontFamily,
-    },
-    taskTextCompleted: {
-      textDecorationLine: 'line-through',
-      color: themeColors.muted.foreground,
-    },
-    deleteButton: {
-      width: rem(space[8]),
-      height: rem(space[8]),
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
     encouragementText: {
       textAlign: 'center',
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
@@ -256,163 +191,36 @@ const createStyles = (
     },
   });
 
-// Custom Checkbox Component
-const CustomCheckbox = ({
-  checked,
-  onCheckedChange,
-  style,
-  checkedStyle,
-}: {
-  checked: boolean;
-  onCheckedChange: () => void;
-  style: any;
-  checkedStyle: any;
-}) => {
-  const { theme } = useTheme();
-  return (
-    <TouchableOpacity onPress={onCheckedChange} style={[style, checked && checkedStyle]}>
-      {checked && <Ionicons name="checkmark" size={16} color={theme.colors.card.DEFAULT} />}
-    </TouchableOpacity>
-  );
-};
-
 export function TaskList() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [isAdding, setIsAdding] = useState(false);
-  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
-  const [completionMessage, setCompletionMessage] = useState<string | null>(null);
+  const {
+    tasks,
+    isLoading,
+    completionMessage,
+    completedCount,
+    totalCount,
+    addTask,
+    toggleTask,
+    deleteTask,
+    clearCompleted,
+  } = useTaskList();
 
-  const completedCount = tasks.filter((t) => t.completed).length;
-  const totalCount = tasks.length;
-
-  const getAuthHeaders = async () => {
-    const token = await AsyncStorage.getItem('authToken');
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-  };
-
-  const fetchTasks = async () => {
-    try {
-      const config = await getAuthHeaders();
-      const response = await axios.get(API_URL, config);
-      const mappedTasks = response.data.map((t: any) => ({
-        id: t.id,
-        title: t.description, // Mapping description from backend to title
-        completed: t.completed,
-        createdAt: new Date(t.createdAt),
-      }));
-      setTasks(mappedTasks);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
+  const [newTaskTitle, setNewTaskTitle] = React.useState('');
+  const [isAdding, setIsAdding] = React.useState(false);
 
   useEffect(() => {
-    fetchTasks();
+    // Tasks are fetched automatically by the hook
   }, []);
 
-  const addTask = async () => {
+  const handleAddTask = async () => {
     if (!newTaskTitle.trim()) return;
-
-    try {
-      const config = await getAuthHeaders();
-      const response = await axios.post(
-        API_URL,
-        {
-          description: newTaskTitle,
-        },
-        config
-      );
-
-      const newTask: TaskItem = {
-        id: response.data.id,
-        title: response.data.description,
-        completed: response.data.completed,
-        createdAt: new Date(response.data.createdAt),
-      };
-
-      setTasks([newTask, ...tasks]);
-      setNewTaskTitle('');
-      setIsAdding(false);
-    } catch (error) {
-      console.error('Error adding task:', error);
-    }
-  };
-
-  const toggleTask = async (id: string) => {
-    const task = tasks.find((t) => t.id === id);
-    if (!task) return;
-
-    const wasCompleted = task?.completed;
-    const newStatus = !task.completed;
-
-    // Optimistic update
-    setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: newStatus } : t)));
-
-    if (!wasCompleted) {
-      const randomMessage =
-        completionMessages[Math.floor(Math.random() * completionMessages.length)];
-      setCompletionMessage(randomMessage);
-      setTimeout(() => setCompletionMessage(null), 3000);
-    }
-
-    try {
-      const config = await getAuthHeaders();
-      await axios.patch(
-        `${API_URL}/${id}`,
-        {
-          isDone: newStatus,
-        },
-        config
-      );
-    } catch (error) {
-      console.error('Error toggling task:', error);
-      // Revert on error
-      setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: !newStatus } : t)));
-    }
-  };
-
-  const deleteTask = async (id: string) => {
-    // Optimistic update
-    const previousTasks = [...tasks];
-    setTasks(tasks.filter((t) => t.id !== id));
-
-    try {
-      const config = await getAuthHeaders();
-      await axios.delete(`${API_URL}/${id}`, config);
-    } catch (error) {
-      console.error('Error deleting task:', error);
-      setTasks(previousTasks);
-    }
-  };
-
-  const clearCompleted = async () => {
-    const completedTasks = tasks.filter((t) => t.completed);
-    if (completedTasks.length === 0) return;
-
-    // Optimistic update
-    const previousTasks = [...tasks];
-    setTasks(tasks.filter((t) => !t.completed));
-
-    try {
-      const config = await getAuthHeaders();
-      // Delete sequentially or in parallel
-      await Promise.all(
-        completedTasks.map((t) => axios.delete(`${API_URL}/${t.id}`, config))
-      );
-    } catch (error) {
-      console.error('Error clearing completed tasks:', error);
-      setTasks(previousTasks);
-    }
+    await addTask(newTaskTitle);
+    setNewTaskTitle('');
+    setIsAdding(false);
   };
 
   return (
@@ -457,11 +265,11 @@ export function TaskList() {
             placeholderTextColor={theme.colors.muted.foreground}
             value={newTaskTitle}
             onChangeText={setNewTaskTitle}
-            onSubmitEditing={addTask}
+            onSubmitEditing={handleAddTask}
             autoFocus
           />
           <View style={styles.addButtonsContainer}>
-            <TouchableOpacity style={styles.addButton} onPress={addTask}>
+            <TouchableOpacity style={styles.addButton} onPress={handleAddTask}>
               <Text style={styles.addButtonText}>{t('common.add', 'Adicionar')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -506,41 +314,16 @@ export function TaskList() {
               </Text>
             </View>
           ) : (
-            tasks.map((task) => {
-              const isActive = preferences.highlightActiveTask && activeTaskId === task.id;
-              return (
-                <TouchableOpacity
-                  key={task.id}
-                  onPress={
-                    preferences.highlightActiveTask
-                      ? () => setActiveTaskId(isActive ? null : task.id)
-                      : undefined
-                  }
-                  style={[
-                    styles.taskItem,
-                    isActive && styles.taskItemActive,
-                    task.completed && styles.taskItemCompleted,
-                  ]}
-                >
-                  <CustomCheckbox
-                    checked={task.completed}
-                    onCheckedChange={() => toggleTask(task.id)}
-                    style={styles.checkboxBase}
-                    checkedStyle={styles.checkboxChecked}
-                  />
-                  <Text style={[styles.taskText, task.completed && styles.taskTextCompleted]}>
-                    {task.title}
-                  </Text>
-                  <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTask(task.id)}>
-                    <Ionicons
-                      name="trash-outline"
-                      size={20}
-                      color={theme.colors.muted.foreground}
-                    />
-                  </TouchableOpacity>
-                </TouchableOpacity>
-              );
-            })
+            tasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                id={task.id}
+                title={task.title}
+                completed={task.completed}
+                onToggle={() => toggleTask(task.id)}
+                onDelete={() => deleteTask(task.id)}
+              />
+            ))
           )}
         </View>
       </View>
