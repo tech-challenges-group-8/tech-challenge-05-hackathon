@@ -61,7 +61,7 @@ const createStyles = (
     },
     headerTitle: {
       fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -84,7 +84,7 @@ const createStyles = (
     },
     addButtonText: {
       color: themeColors.primary.foreground,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -110,7 +110,7 @@ const createStyles = (
     },
     progressLabel: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -160,6 +160,10 @@ const createStyles = (
       gap: rem(space[2]),
       marginTop: rem(space[3]),
     },
+    cancelButtonText: {
+      color: themeColors.muted.foreground,
+      padding: rem(space[3]),
+    },
     listCard: {
       backgroundColor: themeColors.card.DEFAULT,
       borderRadius: extractPixels(radii.lg),
@@ -175,7 +179,7 @@ const createStyles = (
     },
     listTitle: {
       fontSize: rem(fontSizes.xl) * preferences.fontScale,
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -192,6 +196,9 @@ const createStyles = (
     emptyListContainer: {
       alignItems: 'center',
       paddingVertical: rem(space[8]),
+    },
+    emptyIcon: {
+      opacity: 0.3,
     },
     emptyListText: {
       color: themeColors.muted.foreground,
@@ -264,7 +271,7 @@ const createStyles = (
     },
     successText: {
       color: themeColors.primary.DEFAULT,
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
     },
   });
 
@@ -403,7 +410,7 @@ export function TaskList() {
                 setNewTaskTitle('');
               }}
             >
-              <Text style={{ color: theme.colors.muted.foreground, padding: rem(space[3]) }}>
+              <Text style={styles.cancelButtonText}>
                 {t('common.cancel')}
               </Text>
             </TouchableOpacity>
@@ -429,7 +436,7 @@ export function TaskList() {
                 name="ellipse-outline"
                 size={48}
                 color={theme.colors.muted.foreground}
-                style={{ opacity: 0.3 }}
+                style={styles.emptyIcon}
               />
               <Text style={styles.emptyListText}>
                 {t('tasks.list.noTasks')}

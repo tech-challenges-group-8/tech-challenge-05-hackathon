@@ -6,7 +6,7 @@ import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences, type CognitivePreset, type CognitiveSettingsState } from '../../../cognitive';
 import { OptionButton } from '../ui';
 import { useTheme } from '../../../theme';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 interface PresetSelectorProps {
   readonly currentPreset: CognitivePreset | null;
@@ -40,7 +40,7 @@ const createStyles = (
     },
     summaryTitle: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,

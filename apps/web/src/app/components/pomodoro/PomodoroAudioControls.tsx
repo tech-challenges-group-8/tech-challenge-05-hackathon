@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space, colors as uiColors } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useFocusTimer } from '../../context/FocusTimerContext';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -30,7 +30,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     miniPlayerTitle: {
       fontSize: rem(fontSizes.md),
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
     },
     themesScroll: {
@@ -55,7 +55,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     themePillTextActive: {
       color: themeColors.primary.foreground,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
     },
     audioControlsContainer: {
       flexDirection: 'column', 
@@ -89,11 +89,15 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       borderWidth: 1,
       borderColor: themeColors.border,
     },
+    volumeSlider: {
+      flex: 1,
+      height: 20,
+    },
   });
 
 interface PomodoroAudioControlsProps {
-  onCustomUrlClick: () => void;
-  rewindAudio: () => void;
+  readonly onCustomUrlClick: () => void;
+  readonly rewindAudio: () => void;
 }
 
 export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: PomodoroAudioControlsProps) {
@@ -116,7 +120,7 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
   return (
     <View style={styles.miniPlayer}>
       <View style={styles.miniPlayerHeader}>
-        <Text style={styles.miniPlayerTitle}>{t('pages.focus.musicPlayer', 'Focus Audio')}</Text>
+        <Text style={styles.miniPlayerTitle}>{t('pages.focus.musicPlayer')}</Text>
       </View>
       
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.themesScroll}>
@@ -140,7 +144,7 @@ export function PomodoroAudioControls({ onCustomUrlClick, rewindAudio }: Pomodor
               <Ionicons name="volume-low" size={20} color={theme.colors.foreground} />
           </TouchableOpacity>
           <Slider
-            style={{ flex: 1, height: 20 }}
+            style={styles.volumeSlider}
             minimumValue={0}
             maximumValue={100}
             value={audioVolume}

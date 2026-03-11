@@ -18,6 +18,7 @@ import {
   type Sensory,
 } from '../services';
 import { useTheme } from '../theme';
+import { logger } from '../utils';
 import {
   COGNITIVE_PRESETS,
   DEFAULT_COGNITIVE_SETTINGS,
@@ -64,7 +65,7 @@ async function readCachedSettings(userId?: string) {
 
     return normalizeCognitiveSettings(JSON.parse(stored) as CognitiveSettingsState, userId);
   } catch (error) {
-    console.error('Failed to restore cached cognitive settings:', error);
+    logger.error('Failed to restore cached cognitive settings:', error);
     return null;
   }
 }
@@ -77,7 +78,7 @@ async function cacheSettings(settings: CognitiveSettingsState) {
   try {
     await AsyncStorage.setItem(getStorageKey(settings.userId), JSON.stringify(settings));
   } catch (error) {
-    console.error('Failed to cache cognitive settings:', error);
+    logger.error('Failed to cache cognitive settings:', error);
   }
 }
 

@@ -8,7 +8,7 @@ import { PomodoroAudioControls } from './pomodoro/PomodoroAudioControls';
 import { PomodoroSettingsModal } from './pomodoro/PomodoroSettingsModal';
 import { PomodoroTaskModal } from './pomodoro/PomodoroTaskModal';
 import { AppButton } from './ui';
-import { rem, extractPixels, formatTime } from '../../utils';
+import { rem, extractPixels, formatTime, fontWeight } from '../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -39,7 +39,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     timeText: {
       fontSize: rem(fontSizes['4xl']),
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
     },
     modeText: {
@@ -94,12 +94,12 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     modeTabText: {
       fontSize: rem(fontSizes.sm),
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
       color: themeColors.muted.foreground,
     },
     modeTabTextActive: {
       color: themeColors.primary.foreground,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
     },
     settingsButton: {
       marginTop: rem(space[4]),
@@ -138,7 +138,7 @@ export function PomodoroTimer() {
   if (!settings) {
     return (
       <View style={styles.container}>
-        <Text style={styles.timeText}>{t('common.loading', 'Loading...')}</Text>
+        <Text style={styles.timeText}>{t('common.loading')}</Text>
       </View>
     );
   }
@@ -152,25 +152,31 @@ export function PomodoroTimer() {
         <TouchableOpacity 
           style={[styles.modeTab, mode === 'FOCUS' && styles.modeTabActive]} 
           onPress={() => handleModeSelect('FOCUS')}
+          accessibilityRole="button"
+          accessibilityLabel={t('pages.focus.focusMode')}
         >
           <Text style={[styles.modeTabText, mode === 'FOCUS' && styles.modeTabTextActive]}>
-            {t('pages.focus.focusMode', 'Focus')}
+            {t('pages.focus.focusMode')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity 
           style={[styles.modeTab, mode === 'SHORT_BREAK' && styles.modeTabActiveBreak]} 
           onPress={() => handleModeSelect('SHORT_BREAK')}
+          accessibilityRole="button"
+          accessibilityLabel={t('pages.focus.shortBreak')}
         >
           <Text style={[styles.modeTabText, mode === 'SHORT_BREAK' && styles.modeTabTextActive]}>
-            {t('pages.focus.shortBreak', 'Short Break')}
+            {t('pages.focus.shortBreak')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity 
           style={[styles.modeTab, mode === 'LONG_BREAK' && styles.modeTabActiveBreak]} 
           onPress={() => handleModeSelect('LONG_BREAK')}
+          accessibilityRole="button"
+          accessibilityLabel={t('pages.focus.longBreak')}
         >
           <Text style={[styles.modeTabText, mode === 'LONG_BREAK' && styles.modeTabTextActive]}>
-            {t('pages.focus.longBreak', 'Long Break')}
+            {t('pages.focus.longBreak')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -183,7 +189,7 @@ export function PomodoroTimer() {
       {/* Controls */}
       <View style={styles.controls}>
         <AppButton variant="ghost" style={styles.controlButton} onPress={resetTimer}>
-          {t('common.reset', 'Reset')}
+          {t('common.reset')}
         </AppButton>
 
         <AppButton
@@ -191,18 +197,18 @@ export function PomodoroTimer() {
           style={styles.controlButton}
           onPress={toggleTimer}
         >
-          {isActive ? t('common.pause', 'Pause') : t('common.start', 'Start')}
+          {isActive ? t('common.pause') : t('common.start')}
         </AppButton>
 
         <AppButton variant="ghost" style={styles.controlButton} onPress={skipTimer}>
-          {t('common.skip', 'Skip')}
+          {t('common.skip')}
         </AppButton>
       </View>
 
       {/* Stats */}
       <View style={styles.statsContainer}>
         <Text style={styles.statsText}>
-          {t('pages.focus.pomodorosCompleted', 'Pomodoros Completed')}: {settings.pomodorosCompleted}
+          {t('pages.focus.pomodorosCompleted')}: {settings.pomodorosCompleted}
         </Text>
       </View>
 
@@ -214,9 +220,11 @@ export function PomodoroTimer() {
       <TouchableOpacity 
         style={styles.settingsButton}
         onPress={() => setIsSettingsOpen(true)}
+        accessibilityRole="button"
+        accessibilityLabel={t('pages.focus.customizeTimer')}
       >
         <Text style={styles.settingsButtonText}>
-          {t('pages.focus.customizeTimer', 'Focus Mode Settings')}
+          {t('pages.focus.customizeTimer')}
         </Text>
       </TouchableOpacity>
 

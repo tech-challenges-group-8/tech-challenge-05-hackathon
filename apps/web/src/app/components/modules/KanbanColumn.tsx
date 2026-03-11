@@ -10,18 +10,18 @@ import { Ionicons } from '@expo/vector-icons';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 import { KanbanTaskCard } from './KanbanTaskCard';
 import type { KanbanTask } from '../../hooks/useKanbanBoard';
 import type { TaskKanbanStatus } from '../../../services/task-kanban/types';
 
 interface KanbanColumnProps {
-  id: TaskKanbanStatus;
-  title: string;
-  tasks: KanbanTask[];
-  columnWidth: number;
-  onTaskPress: (task: KanbanTask, columnId: TaskKanbanStatus) => void;
-  onAddPress: (columnId: TaskKanbanStatus) => void;
+  readonly id: TaskKanbanStatus;
+  readonly title: string;
+  readonly tasks: KanbanTask[];
+  readonly columnWidth: number;
+  readonly onTaskPress: (task: KanbanTask, columnId: TaskKanbanStatus) => void;
+  readonly onAddPress: (columnId: TaskKanbanStatus) => void;
 }
 
 const createStyles = (
@@ -51,7 +51,7 @@ const createStyles = (
     },
     columnTitle: {
       fontSize: rem(fontSizes.md) * preferences.fontScale,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -70,6 +70,9 @@ const createStyles = (
     },
     addButton: {
       padding: rem(space[2]),
+    },
+    taskList: {
+      flex: 1,
     },
   });
 
@@ -121,7 +124,7 @@ export function KanbanColumn({
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.taskList} showsVerticalScrollIndicator={false}>
         {tasks.map((task) => (
           <KanbanTaskCard
             key={task.id}

@@ -3,13 +3,13 @@ import { StyleSheet, Switch, Text, View } from 'react-native';
 import { fontSizes, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 interface ToggleRowProps {
-  title: string;
-  description: string;
-  value: boolean;
-  onValueChange: (value: boolean) => void;
+  readonly title: string;
+  readonly description: string;
+  readonly value: boolean;
+  readonly onValueChange: (value: boolean) => void;
 }
 
 const createStyles = (
@@ -34,7 +34,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
-      fontWeight: '600' as any,
+      fontWeight: fontWeight('600'),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,

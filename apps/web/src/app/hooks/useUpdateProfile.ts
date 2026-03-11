@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { userService } from '../../services';
+import { logger } from '../../utils';
 
 interface UseUpdateProfileParams {
   readonly initialName: string;
@@ -31,7 +32,7 @@ export function useUpdateProfile({ initialName }: UseUpdateProfileParams) {
       setSuccess(true);
       globalThis.setTimeout(() => setSuccess(false), 3000);
     } catch (requestError) {
-      console.error('Failed to update name:', requestError);
+      logger.error('Failed to update name:', requestError);
       setError(t('userProfile.errors.updateFailed'));
     } finally {
       setIsSubmitting(false);

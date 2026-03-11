@@ -4,13 +4,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { fontSizes, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
-import { rem } from '../../../utils';
+import { rem, fontWeight } from '../../../utils';
 
 interface EmptyStateProps {
-  icon?: keyof typeof Ionicons.glyphMap;
-  iconSize?: number;
-  title: string;
-  subtitle?: string;
+  readonly icon?: keyof typeof Ionicons.glyphMap;
+  readonly iconSize?: number;
+  readonly title: string;
+  readonly subtitle?: string;
 }
 
 const createStyles = (
@@ -29,7 +29,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem(fontSizes.lg) * preferences.fontScale,
-      fontWeight: '600' as any,
+      fontWeight: fontWeight('600'),
       color: themeColors.foreground,
       textAlign: 'center',
       letterSpacing: preferences.letterSpacing,

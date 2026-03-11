@@ -80,6 +80,7 @@ export type ThemeTokens = {
     card: { DEFAULT: string; foreground: string };
     primary: { DEFAULT: string; foreground: string };
     secondary: { DEFAULT: string; foreground: string };
+    destructive: { DEFAULT: string; foreground: string; light?: string; dark?: string };
     muted: { DEFAULT: string; foreground: string };
     accent: { DEFAULT: string; foreground: string };
     cognitive: { highlight: string };
@@ -97,6 +98,7 @@ const lightTheme: ThemeTokens = {
     card: colors.card,
     primary: colors.primary,
     secondary: colors.secondary,
+    destructive: colors.destructive,
     muted: colors.muted,
     accent: colors.accent,
     cognitive: colors.cognitive,
@@ -114,6 +116,7 @@ const darkTheme: ThemeTokens = {
     card: { DEFAULT: 'hsl(222 18% 14%)', foreground: 'hsl(40 8% 95%)' },
     primary: { DEFAULT: 'hsl(150 41% 55%)', foreground: 'hsl(222 18% 11%)' },
     secondary: { DEFAULT: 'hsl(213 22% 20%)', foreground: 'hsl(40 8% 93%)' },
+    destructive: { DEFAULT: 'hsl(0 58% 58%)', foreground: 'hsl(0 0% 100%)' },
     muted: { DEFAULT: 'hsl(215 20% 19%)', foreground: 'hsl(40 5% 63%)' },
     accent: { DEFAULT: 'hsl(26 27% 33%)', foreground: 'hsl(28 50% 83%)' },
     cognitive: { highlight: 'hsl(148 40% 22%)' },
@@ -131,6 +134,7 @@ const softPastelTheme: ThemeTokens = {
     card: { DEFAULT: '#FFFFFF', foreground: '#4A3C3A' },
     primary: { DEFAULT: '#B7D4C9', foreground: '#2F4A40' },
     secondary: { DEFAULT: '#EADFF6', foreground: '#5A4D7A' },
+    destructive: { DEFAULT: '#D67C7C', foreground: '#FFFFFF' },
     muted: { DEFAULT: '#F2E9E7', foreground: '#7C6B67' },
     accent: { DEFAULT: '#FFE2C9', foreground: '#8C5E46' },
     cognitive: { highlight: '#E5F5EE' },
@@ -148,6 +152,7 @@ const highContrastTheme: ThemeTokens = {
     card: { DEFAULT: '#000000', foreground: '#FFFFFF' },
     primary: { DEFAULT: '#00FF6A', foreground: '#000000' },
     secondary: { DEFAULT: '#FFD400', foreground: '#000000' },
+    destructive: { DEFAULT: '#FF4D4D', foreground: '#000000' },
     muted: { DEFAULT: '#000000', foreground: '#FFFFFF' },
     accent: { DEFAULT: '#00BFFF', foreground: '#000000' },
     cognitive: { highlight: '#1A1A1A' },

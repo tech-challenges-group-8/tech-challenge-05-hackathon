@@ -4,7 +4,7 @@ import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
 import { KanbanBoard } from '../components/modules/KanbanBoard';
-import { rem, extractPixels } from '../../utils';
+import { rem, extractPixels, fontWeight } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -23,7 +23,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem(fontSizes['2xl']),
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
     },

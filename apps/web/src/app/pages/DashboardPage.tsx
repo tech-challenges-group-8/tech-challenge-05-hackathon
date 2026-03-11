@@ -23,7 +23,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
       letterSpacing: preferences.letterSpacing,

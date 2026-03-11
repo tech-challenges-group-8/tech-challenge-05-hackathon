@@ -5,6 +5,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '../utils';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -30,7 +31,7 @@ api.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (error) {
-      console.error('Error retrieving auth token:', error);
+      logger.error('Error retrieving auth token:', error);
     }
     return config;
   },
@@ -53,7 +54,7 @@ api.interceptors.response.use(
         // Redirect to login if needed
         // You can emit an event or use a global state manager here
       } catch (storageError) {
-        console.error('Error clearing auth data:', storageError);
+        logger.error('Error clearing auth data:', storageError);
       }
     }
     return Promise.reject(error);

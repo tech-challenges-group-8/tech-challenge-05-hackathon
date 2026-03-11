@@ -11,15 +11,15 @@ import {
 import { fontSizes, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 interface ModalSheetProps {
-  isVisible: boolean;
-  onClose: () => void;
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
-  type?: 'bottom-sheet' | 'centered';
+  readonly isVisible: boolean;
+  readonly onClose: () => void;
+  readonly title: string;
+  readonly subtitle?: string;
+  readonly children: React.ReactNode;
+  readonly type?: 'bottom-sheet' | 'centered';
 }
 
 const createStyles = (
@@ -60,9 +60,12 @@ const createStyles = (
     content: {
       gap: rem(space[2]),
     },
+    headerTextContainer: {
+      flex: 1,
+    },
     title: {
       fontSize: rem(fontSizes.xl) * preferences.fontScale,
-      fontWeight: '700' as any,
+      fontWeight: fontWeight('700'),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -112,7 +115,7 @@ export function ModalSheet({
               ]}
             >
               <View style={styles.header}>
-                <View style={{ flex: 1 }}>
+                <View style={styles.headerTextContainer}>
                   <Text style={styles.title}>{title}</Text>
                   {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
                 </View>

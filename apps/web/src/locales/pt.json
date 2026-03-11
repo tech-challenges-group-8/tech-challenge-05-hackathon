@@ -43,6 +43,11 @@
       "title": "Modo Foco",
       "body": "Configuração simulada de sessão de foco. Você poderá definir temporizadores, sons ambientes e ajustes de foco personalizados.",
       "customizeTimer": "Configurações do Modo Foco",
+<<<<<<< HEAD
+=======
+      "openFocusApp": "Abrir Modo Foco",
+      "settingsTitle": "Configurações",
+>>>>>>> 6022489e7174664b5db61d44421d43d8d45fdcfa
       "settingsTabTimer": "Tempos",
       "settingsTabAudio": "Áudio e Player",
       "settingsTitle": "Configurações",
@@ -64,6 +69,11 @@
       "focusMusic": "Música do Foco (URL Customizada do Youtube)",
       "musicPlayer": "Áudio do Foco",
       "volume": "Volume",
+      "addCustomAudio": "Adicionar Áudio Personalizado",
+      "audioName": "Nome do Áudio",
+      "audioUrl": "URL do YouTube",
+      "addAudio": "Adicionar Áudio",
+      "myCustomAudios": "Meus Áudios Personalizados",
       "pomodorosCompleted": "Pomodoros Concluídos",
       "tasks": "Tarefas em Foco",
       "addTask": "Adicione uma tarefa para focar...",
@@ -313,6 +323,14 @@
   "common": {
     "add": "Adicionar",
     "cancel": "Cancelar",
-    "delete": "Excluir"
+    "delete": "Excluir",
+    "close": "Fechar",
+    "next": "Próximo",
+    "loading": "Carregando...",
+    "reset": "Redefinir",
+    "pause": "Pausar",
+    "start": "Iniciar",
+    "skip": "Pular",
+    "save": "Salvar"
   }
 }

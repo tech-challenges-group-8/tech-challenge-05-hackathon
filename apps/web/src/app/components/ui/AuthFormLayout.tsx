@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '../../../theme';
-import { rem } from '../../../utils';
+import { rem, fontWeight } from '../../../utils';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { Card } from './Card';
 
@@ -30,7 +30,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     title: {
       fontSize: rem(fontSizes['3xl']),
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       marginBottom: rem(space[2]),
       textAlign: 'center',
@@ -46,7 +46,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     switchModeText: {
       color: themeColors.primary.DEFAULT,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       fontSize: rem(fontSizes.sm),
       textAlign: 'center',
     },

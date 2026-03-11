@@ -5,7 +5,7 @@ import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import type { FocusTask } from '../../services/focus-settings/types';
 import { useFocusTimer } from '../context/FocusTimerContext';
-import { rem, extractPixels } from '../../utils';
+import { rem, extractPixels, fontWeight } from '../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -23,7 +23,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     title: {
       fontSize: rem(fontSizes.lg),
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       marginBottom: rem(space[4]),
       textAlign: 'center',
@@ -51,7 +51,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     addButtonText: {
       color: themeColors.primary.foreground,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
     },
     taskList: {
       flex: 1,
@@ -89,14 +89,17 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       fontSize: rem(fontSizes.sm),
       color: themeColors.muted.foreground,
       marginRight: rem(space[3]),
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
     },
     deleteButton: {
       padding: rem(space[1]),
     },
     deleteButtonText: {
       color: themeColors.accent.foreground,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
+    },
+    loadingIndicator: {
+      marginTop: 20,
     },
   });
 
@@ -137,30 +140,33 @@ export function FocusTaskList() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('pages.focus.tasks', 'Focus Tasks')}</Text>
+      <Text style={styles.title}>{t('pages.focus.tasks')}</Text>
       
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={newTaskText}
           onChangeText={setNewTaskText}
-          placeholder={t('pages.focus.addTask', 'Add a task to focus on...')}
+          placeholder={t('pages.focus.addTask')}
           onSubmitEditing={addTask}
         />
-        <TouchableOpacity style={styles.addButton} onPress={addTask}>
+        <TouchableOpacity style={styles.addButton} onPress={addTask} accessibilityLabel={t('common.add')}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.taskList}>
         {!settings ? (
-          <ActivityIndicator size="small" color={theme.colors.primary.DEFAULT} style={{ marginTop: 20 }} />
+          <ActivityIndicator size="small" color={theme.colors.primary.DEFAULT} style={styles.loadingIndicator} />
         ) : (
           tasks.map(task => (
             <View key={task.id} style={styles.taskItem}>
               <TouchableOpacity 
                 style={[styles.checkbox, task.completed && styles.checkboxChecked]} 
                 onPress={() => toggleTask(task.id)}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: task.completed }}
+                accessibilityLabel={task.title}
               />
               <Text style={[styles.taskText, task.completed && styles.taskTextCompleted]}>
                 {task.title}
@@ -168,7 +174,7 @@ export function FocusTaskList() {
               <Text style={styles.pomodoroCount}>
                 🍅 {task.pomodoros || 0}
               </Text>
-              <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTask(task.id)}>
+              <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTask(task.id)} accessibilityLabel={t('common.delete')}>
                 <Text style={styles.deleteButtonText}>×</Text>
               </TouchableOpacity>
             </View>

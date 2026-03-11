@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { taskCheckListService } from '../../services/task-checklist';
 import type { ResponseTaskCheckListDto } from '../../services/task-checklist/types';
+import { logger } from '../../utils';
 
 interface TaskItem {
   id: string;
@@ -50,7 +51,7 @@ export function useTaskList() {
       }));
       setTasks(mappedTasks);
     } catch (err) {
-      console.error('Error fetching tasks:', err);
+      logger.error('Error fetching tasks:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch tasks');
     } finally {
       setIsLoading(false);
@@ -80,7 +81,7 @@ export function useTaskList() {
 
         setTasks([newTask, ...tasks]);
       } catch (err) {
-        console.error('Error adding task:', err);
+        logger.error('Error adding task:', err);
         setError(err instanceof Error ? err.message : 'Failed to add task');
       } finally {
         setIsLoading(false);
@@ -115,7 +116,7 @@ export function useTaskList() {
           isDone: newStatus,
         });
       } catch (err) {
-        console.error('Error toggling task:', err);
+        logger.error('Error toggling task:', err);
         // Revert on error
         setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: !newStatus } : t)));
         setError(err instanceof Error ? err.message : 'Failed to update task');
@@ -136,7 +137,7 @@ export function useTaskList() {
       try {
         await taskCheckListService.deleteTask(id);
       } catch (err) {
-        console.error('Error deleting task:', err);
+        logger.error('Error deleting task:', err);
         // Revert on error
         setTasks(previousTasks);
         setError(err instanceof Error ? err.message : 'Failed to delete task');
@@ -159,7 +160,7 @@ export function useTaskList() {
     try {
       await Promise.all(completedTasks.map((t) => taskCheckListService.deleteTask(t.id)));
     } catch (err) {
-      console.error('Error clearing completed tasks:', err);
+      logger.error('Error clearing completed tasks:', err);
       // Revert on error
       setTasks(previousTasks);
       setError(err instanceof Error ? err.message : 'Failed to clear completed tasks');

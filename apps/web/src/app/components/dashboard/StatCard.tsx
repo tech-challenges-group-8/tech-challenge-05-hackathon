@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 interface StatCardProps {
   readonly label: string;
@@ -41,7 +41,7 @@ const createStyles = (
     },
     value: {
       fontSize: rem(fontSizes['3xl']) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: preferences.hideUrgencyIndicators
         ? themeColors.foreground
         : themeColors.accent.foreground,

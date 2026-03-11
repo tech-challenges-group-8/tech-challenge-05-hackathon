@@ -5,13 +5,13 @@ import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useFocusTimer } from '../../context/FocusTimerContext';
 import { AppButton, ModalSheet } from '../ui';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
     modalTitle: {
       fontSize: rem(fontSizes.xl),
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       textAlign: 'center',
     },
@@ -61,12 +61,12 @@ export function PomodoroTaskModal() {
     <ModalSheet
       isVisible={isFocusCompleteModalOpen}
       onClose={() => submitTaskCompletionTime(null)}
-      title={t('pages.focus.focusCompleteModalTitle', 'Focus Session Completed!')}
+      title={t('pages.focus.focusCompleteModalTitle')}
       type="centered"
     >
       <View>
         <Text style={[styles.inputLabel, styles.description]}>
-          {t('pages.focus.focusCompleteModalDesc', 'Great job! If you were working on a specific task, you can assign this time to it below.')}
+          {t('pages.focus.focusCompleteModalDesc')}
         </Text>
 
         <ScrollView style={styles.tasksList}>
@@ -75,19 +75,21 @@ export function PomodoroTaskModal() {
               key={task.id}
               style={styles.taskModalButton}
               onPress={() => submitTaskCompletionTime(task.id)}
+              accessibilityRole="button"
+              accessibilityLabel={task.title}
             >
               <Text style={styles.taskModalButtonText}>{task.title}</Text>
             </TouchableOpacity>
           ))}
           {(!settings?.tasks || settings.tasks.filter(t => !t.completed).length === 0) && (
             <Text style={styles.emptyText}>
-              {t('pages.focus.noTasksAvailable', 'No active tasks to assign time to.')}
+              {t('pages.focus.noTasksAvailable')}
             </Text>
           )}
         </ScrollView>
 
         <AppButton onPress={() => submitTaskCompletionTime(null)}>
-          {t('common.skip', 'Skip')}
+          {t('common.skip')}
         </AppButton>
       </View>
     </ModalSheet>

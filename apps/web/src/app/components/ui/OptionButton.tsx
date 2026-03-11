@@ -4,16 +4,16 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { fontSizes, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 
 interface OptionButtonProps {
-  value: string;
-  label: string;
-  isActive: boolean;
-  onPress: () => void;
-  icon?: keyof typeof Ionicons.glyphMap;
-  previewColor?: string;
-  description?: string;
+  readonly value: string;
+  readonly label: string;
+  readonly isActive: boolean;
+  readonly onPress: () => void;
+  readonly icon?: keyof typeof Ionicons.glyphMap;
+  readonly previewColor?: string;
+  readonly description?: string;
 }
 
 const createStyles = (
@@ -48,7 +48,7 @@ const createStyles = (
     },
     label: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
-      fontWeight: '600' as any,
+      fontWeight: fontWeight('600'),
       color: themeColors.foreground,
       textAlign: 'center',
       letterSpacing: preferences.letterSpacing,

@@ -7,7 +7,7 @@ import { useTheme } from '../../theme';
 import { useAuth } from '../../auth';
 import { UserProfilePage } from '../pages/UserProfilePage';
 import { useCognitivePreferences } from '../../cognitive';
-import { rem, extractPixels } from '../../utils';
+import { rem, extractPixels, fontWeight } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -26,7 +26,7 @@ const createStyles = (
     },
     headerTitle: {
       fontSize: rem(fontSizes.xl) * preferences.fontScale,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
@@ -34,6 +34,9 @@ const createStyles = (
     headerActions: {
       flexDirection: 'row',
       alignItems: 'center',
+    },
+    profileTriggerContainer: {
+      position: 'relative',
     },
     headerButton: {
       width: rem(space[10]),
@@ -82,9 +85,12 @@ const createStyles = (
     dropdownItemText: {
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+    },
+    dropdownItemMutedText: {
+      color: themeColors.muted.foreground,
     },
     dropdownItemLogout: {
       color: themeColors.primary.DEFAULT,
@@ -95,12 +101,12 @@ const createStyles = (
   });
 
 interface HeaderProps {
-  title: string;
-  onNewTask?: () => void;
-  onProfile?: () => void;
+  readonly title: string;
+  readonly onNewTask?: () => void;
+  readonly onProfile?: () => void;
 }
 
-export function Header({ title, onNewTask, onProfile }: HeaderProps) {
+export function Header({ title }: HeaderProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { logout, currentUser } = useAuth();
@@ -121,14 +127,13 @@ export function Header({ title, onNewTask, onProfile }: HeaderProps) {
 
   const handleProfilePress = () => {
     setShowProfileMenu(!showProfileMenu);
-    onProfile?.();
   };
 
   return (
     <View style={styles.header}>
       <Text style={styles.headerTitle}>{title}</Text>
       <View style={styles.headerActions}>
-        <View style={{ position: 'relative' }}>
+        <View style={styles.profileTriggerContainer}>
           <TouchableOpacity
             style={[styles.headerButton, styles.headerButtonSecondary]}
             onPress={handleProfilePress}
@@ -156,7 +161,7 @@ export function Header({ title, onNewTask, onProfile }: HeaderProps) {
                   {!preferences.simpleInterface && (
                     <View style={styles.dropdownItem}>
                       <Ionicons name="mail" size={rem(fontSizes.md)} color={theme.colors.muted.foreground} />
-                      <Text style={{ ...styles.dropdownItemText, color: theme.colors.muted.foreground }}>
+                      <Text style={[styles.dropdownItemText, styles.dropdownItemMutedText]}>
                         {currentUser?.email}
                       </Text>
                     </View>

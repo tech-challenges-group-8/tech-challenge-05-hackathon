@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
-import { rem } from '../../../utils';
+import { rem, fontWeight } from '../../../utils';
 import { AppButton, AppTextInput, Card } from '../ui';
 
 interface ProfileSectionProps {
@@ -27,7 +27,7 @@ const createStyles = (
     },
     sectionTitle: {
       fontSize: rem(fontSizes.lg) * preferences.fontScale,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
       color: themeColors.foreground,
       marginBottom: rem(space[4]),
       letterSpacing: preferences.letterSpacing,
@@ -44,7 +44,7 @@ const createStyles = (
       fontSize: rem(fontSizes.sm) * preferences.fontScale,
       color: themeColors.foreground,
       marginBottom: rem(space[4]),
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },
@@ -56,7 +56,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     errorText: {
-      color: themeColors.accent.DEFAULT,
+      color: themeColors.destructive.DEFAULT,
     },
     successText: {
       color: themeColors.primary.DEFAULT,

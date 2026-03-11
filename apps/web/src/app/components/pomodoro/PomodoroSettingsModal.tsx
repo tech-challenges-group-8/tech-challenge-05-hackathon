@@ -37,12 +37,15 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     modalTabText: {
       fontSize: rem(fontSizes.sm),
-      fontWeight: fontWeights.medium as any,
+      fontWeight: fontWeight(fontWeights.medium),
       color: themeColors.muted.foreground,
     },
     modalTabTextActive: {
       color: themeColors.primary.DEFAULT,
-      fontWeight: fontWeights.bold as any,
+      fontWeight: fontWeight(fontWeights.bold),
+    },
+    inputGroup: {
+      marginBottom: rem(space[2]),
     },
     inputGroup: {
       marginBottom: rem(space[2]),
@@ -71,10 +74,10 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
   });
 
 interface PomodoroSettingsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  settingsTab: 'timer' | 'audio';
-  setSettingsTab: (tab: 'timer' | 'audio') => void;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly settingsTab: 'timer' | 'audio';
+  readonly setSettingsTab: (tab: 'timer' | 'audio') => void;
 }
 
 export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSettingsTab }: PomodoroSettingsModalProps) {
@@ -116,7 +119,7 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
       await saveTimerDurations(newFocus, newShort, newLong);
       onClose();
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      logger.error('Failed to save settings:', error);
     }
   };
 

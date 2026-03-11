@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { useTheme } from '../../../theme';
-import { rem, extractPixels } from '../../../utils';
+import { rem, extractPixels, fontWeight } from '../../../utils';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
@@ -36,7 +36,7 @@ const createStyles = (
       backgroundColor: themeColors.secondary.DEFAULT,
     },
     dangerButton: {
-      backgroundColor: themeColors.accent.DEFAULT,
+      backgroundColor: themeColors.destructive.DEFAULT,
     },
     ghostButton: {
       backgroundColor: 'transparent',
@@ -47,7 +47,7 @@ const createStyles = (
       opacity: 0.5,
     },
     buttonText: {
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
       fontSize: rem(fontSizes.sm),
     },
     primaryText: {
@@ -57,7 +57,7 @@ const createStyles = (
       color: themeColors.secondary.foreground,
     },
     dangerText: {
-      color: themeColors.accent.foreground,
+      color: themeColors.destructive.foreground,
     },
     ghostText: {
       color: themeColors.foreground,
@@ -102,7 +102,7 @@ export function AppButton({
             variant === 'ghost' || variant === 'secondary'
               ? theme.colors.foreground
               : variant === 'danger'
-                ? theme.colors.accent.foreground
+                ? theme.colors.destructive.foreground
                 : theme.colors.primary.foreground
           }
         />

@@ -8,7 +8,7 @@ import { useCognitiveSettings } from '../../cognitive';
 import { LoginPage, RegisterPage } from '../pages';
 
 interface AuthGateProps {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>

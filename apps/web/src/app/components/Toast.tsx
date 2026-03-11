@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
-import { rem, extractPixels } from '../../utils';
+import { rem, extractPixels, fontWeight } from '../../utils';
 
 type ToastVariant = 'success' | 'error' | 'info';
 
@@ -31,13 +31,13 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     text: {
       fontSize: rem(fontSizes.sm),
       textAlign: 'center',
-      fontWeight: fontWeights.semiBold as any,
+      fontWeight: fontWeight(fontWeights.semiBold),
     },
     success: {
       backgroundColor: themeColors.primary.DEFAULT,
     },
     error: {
-      backgroundColor: themeColors.accent.DEFAULT,
+      backgroundColor: themeColors.destructive.DEFAULT,
     },
     info: {
       backgroundColor: themeColors.secondary.DEFAULT,
@@ -46,7 +46,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       color: themeColors.primary.foreground,
     },
     errorText: {
-      color: themeColors.accent.foreground,
+      color: themeColors.destructive.foreground,
     },
     infoText: {
       color: themeColors.secondary.foreground,
