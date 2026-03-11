@@ -5,7 +5,6 @@ import type {
   FocusTask,
   ResponseFocusSettingsDTO,
 } from '../../services/focus-settings/types';
-import { logger } from '../../utils';
 
 export function useFocusSettings() {
   const [settings, setSettings] = useState<ResponseFocusSettingsDTO | null>(null);
@@ -18,7 +17,7 @@ export function useFocusSettings() {
         const data = await focusSettingsService.getSettings();
         setSettings(data);
       } catch (error) {
-        logger.error('Failed to load focus settings, falling back to defaults', error);
+        console.error('Failed to load focus settings, falling back to defaults', error);
         setSettings(focusSettingsService.getDefaultSettings());
       }
     };
@@ -77,7 +76,7 @@ export function useFocusSettings() {
         const updated = await focusSettingsService.updateTasks(tasks);
         setSettings(updated);
       } catch (error) {
-        logger.error('Failed to sync tasks:', error);
+        console.error('Failed to sync tasks:', error);
       }
     },
     [settings],
@@ -94,7 +93,7 @@ export function useFocusSettings() {
         const updated = await focusSettingsService.updateAudioThemes(updatedThemes);
         setSettings(updated);
       } catch (error) {
-        logger.error('Failed to save audio theme', error);
+        console.error('Failed to save audio theme', error);
       }
     },
     [settings],
@@ -111,7 +110,7 @@ export function useFocusSettings() {
         const updated = await focusSettingsService.updateAudioThemes(updatedThemes);
         setSettings(updated);
       } catch (error) {
-        logger.error('Failed to delete audio theme', error);
+        console.error('Failed to delete audio theme', error);
       }
     },
     [settings],
@@ -140,13 +139,54 @@ export function useFocusSettings() {
         const updated = await focusSettingsService.updateTasks(updatedTasks);
         setSettings(updated);
       } catch (error) {
-        logger.error('Could not save task time assignment', error);
+        console.error('Could not save task time assignment', error);
       }
 
       closeFocusCompleteModal();
     },
     [settings, lastFocusDuration, closeFocusCompleteModal],
   );
+
+  const addTask = useCallback(
+    async (title: string) => {
+      if (!settings) return;
+      const newTask: FocusTask = {
+        id: Date.now().toString(),
+        title,
+        completed: false,
+        timeSpent: 0,
+        pomodoros: 0,
+      };
+      await updateFocusTasks([...settings.tasks, newTask]);
+    },
+    [settings, updateFocusTasks],
+  );
+
+  const toggleTask = useCallback(
+    async (id: string) => {
+      if (!settings) return;
+      const updatedTasks = settings.tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task,
+      );
+      await updateFocusTasks(updatedTasks);
+    },
+    [settings, updateFocusTasks],
+  );
+
+  const deleteTask = useCallback(
+    async (id: string) => {
+      if (!settings) return;
+      const updatedTasks = settings.tasks.filter((task) => task.id !== id);
+      await updateFocusTasks(updatedTasks);
+    },
+    [settings, updateFocusTasks],
+  );
+
+  const clearCompletedTasks = useCallback(async () => {
+    if (!settings) return;
+    const updatedTasks = settings.tasks.filter((task) => !task.completed);
+    await updateFocusTasks(updatedTasks);
+  }, [settings, updateFocusTasks]);
 
   return {
     settings,
@@ -157,6 +197,10 @@ export function useFocusSettings() {
     saveDurations,
     incrementPomodoroCount,
     updateFocusTasks,
+    addTask,
+    toggleTask,
+    deleteTask,
+    clearCompletedTasks,
     addAudioTheme,
     deleteAudioTheme,
     submitTaskCompletionTime,

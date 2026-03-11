@@ -47,7 +47,7 @@ const createStyles = (
     },
     title: {
       fontSize: rem((isWideHeaderLayout ? fontSizes['2xl'] : fontSizes.xl)) * preferences.fontScale,
-      fontWeight: fontWeight(fontWeights.bold),
+      fontWeight: fontWeights.bold as any,
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,

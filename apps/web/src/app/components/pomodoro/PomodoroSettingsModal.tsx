@@ -68,24 +68,6 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       flex: 1,
       marginTop: 0,
     },
-    addAudioButton: {
-      marginBottom: rem(space[4]),
-    },
-    sectionHeading: {
-      fontWeight: '700',
-    },
-    customAudiosSection: {
-      marginTop: rem(space[4]),
-    },
-    customAudioRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: rem(space[2]),
-      borderWidth: 1,
-    },
-    customAudioName: {
-      padding: rem(space[1]),
-    },
   });
 
 interface PomodoroSettingsModalProps {
@@ -166,16 +148,16 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
     <ModalSheet
       isVisible={isOpen}
       onClose={onClose}
-      title={t('pages.focus.settingsTitle')}
+      title={t('pages.focus.settingsTitle', 'Settings')}
       type="centered"
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.modalTabs}>
           <TouchableOpacity onPress={() => setSettingsTab('timer')} style={[styles.modalTab, settingsTab === 'timer' && styles.modalTabActive]}>
-            <Text style={[styles.modalTabText, settingsTab === 'timer' && styles.modalTabTextActive]}>{t('pages.focus.settingsTabTimer')}</Text>
+            <Text style={[styles.modalTabText, settingsTab === 'timer' && styles.modalTabTextActive]}>{t('pages.focus.settingsTabTimer', 'Durations')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setSettingsTab('audio')} style={[styles.modalTab, settingsTab === 'audio' && styles.modalTabActive]}>
-            <Text style={[styles.modalTabText, settingsTab === 'audio' && styles.modalTabTextActive]}>{t('pages.focus.settingsTabAudio')}</Text>
+            <Text style={[styles.modalTabText, settingsTab === 'audio' && styles.modalTabTextActive]}>{t('pages.focus.settingsTabAudio', 'Audio & Player')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -183,7 +165,7 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
           <>
             <View style={styles.inputGroup}>
               <AppTextInput
-                label={t('pages.focus.focusDuration')}
+                label={t('pages.focus.focusDuration', 'Focus Duration (minutes)')}
                 keyboardType="numeric"
                 value={customFocus}
                 onChangeText={setCustomFocus}
@@ -193,7 +175,7 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
 
             <View style={styles.inputGroup}>
               <AppTextInput
-                label={t('pages.focus.shortBreakDuration')}
+                label={t('pages.focus.shortBreakDuration', 'Short Break Duration (minutes)')}
                 keyboardType="numeric"
                 value={customShortBreak}
                 onChangeText={setCustomShortBreak}
@@ -203,7 +185,7 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
 
             <View style={styles.inputGroup}>
               <AppTextInput
-                label={t('pages.focus.longBreakDuration')}
+                label={t('pages.focus.longBreakDuration', 'Long Break Duration (minutes)')}
                 keyboardType="numeric"
                 value={customLongBreak}
                 onChangeText={setCustomLongBreak}
@@ -213,11 +195,11 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
           </>
         ) : (
           <>
-            <Text style={[styles.inputLabel, styles.sectionHeading]}>{t('pages.focus.addCustomAudio')}</Text>
+            <Text style={[styles.inputLabel, { fontWeight: 'bold' }]}>{t('pages.focus.addCustomAudio', 'Add Custom Audio')}</Text>
 
             <View style={styles.inputGroup}>
               <AppTextInput
-                label={t('pages.focus.audioName')}
+                label={t('pages.focus.audioName', 'Audio Name')}
                 value={newAudioName}
                 onChangeText={setNewAudioName}
                 placeholder="e.g. Rock"
@@ -225,7 +207,7 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
             </View>
             <View style={styles.inputGroup}>
               <AppTextInput
-                label={t('pages.focus.audioUrl')}
+                label={t('pages.focus.audioUrl', 'YouTube URL')}
                 value={newAudioUrl}
                 onChangeText={setNewAudioUrl}
                 placeholder="https://www.youtube.com/watch?v=..."
@@ -233,14 +215,14 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
                 autoCorrect={false}
               />
             </View>
-            <AppButton style={styles.addAudioButton} onPress={handleAddAudioTheme}>
-              {t('pages.focus.addAudio')}
+            <AppButton style={{ marginBottom: rem(space[4]) }} onPress={handleAddAudioTheme}>
+              {t('pages.focus.addAudio', 'Add Audio')}
             </AppButton>
 
             {selectedThemeId === 'custom' && (
               <View style={styles.inputGroup}>
                 <AppTextInput
-                  label={t('pages.focus.focusMusic')}
+                  label={t('pages.focus.focusMusic', 'Focus Music (Custom YouTube URL)')}
                   value={youtubeUrl}
                   onChangeText={setCustomYoutubeUrl}
                   placeholder="https://www.youtube.com/watch?v=..."
@@ -253,11 +235,11 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
         )}
 
         {settingsTab === 'audio' && (settings?.audioThemes || []).length > 0 && (
-          <View style={[styles.inputGroup, styles.customAudiosSection]}>
-            <Text style={[styles.inputLabel, styles.sectionHeading]}>{t('pages.focus.myCustomAudios')}</Text>
+          <View style={[styles.inputGroup, { marginTop: rem(space[4]) }]}>
+            <Text style={[styles.inputLabel, { fontWeight: 'bold' }]}>{t('pages.focus.myCustomAudios', 'My Custom Audios')}</Text>
             {(settings?.audioThemes || []).map((audioTheme: AudioTheme) => (
-              <View key={audioTheme.id} style={[styles.themePill, styles.customAudioRow]}>
-                <Text style={[styles.themePillText, styles.customAudioName]}>{audioTheme.name}</Text>
+              <View key={audioTheme.id} style={[styles.themePill, { flexDirection: 'row', justifyContent: 'space-between', marginBottom: rem(space[2]), borderWidth: 1 }]}>
+                <Text style={[styles.themePillText, { padding: rem(space[1]) }]}>{audioTheme.name}</Text>
                 <TouchableOpacity style={styles.themePillDelete} onPress={() => handleDeleteAudioTheme(audioTheme.id)}>
                   <Ionicons name="trash" size={16} color={uiColors.destructive.DEFAULT} />
                 </TouchableOpacity>
@@ -268,10 +250,10 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
 
         <View style={styles.modalActions}>
           <AppButton variant="ghost" style={styles.halfButton} onPress={onClose}>
-            {t('common.cancel')}
+            {t('common.cancel', 'Cancel')}
           </AppButton>
           <AppButton style={styles.halfButton} onPress={handleSaveSettings}>
-            {t('common.save')}
+            {t('common.save', 'Save')}
           </AppButton>
         </View>
       </ScrollView>

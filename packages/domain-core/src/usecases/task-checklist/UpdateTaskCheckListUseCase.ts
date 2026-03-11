@@ -5,6 +5,8 @@ export interface UpdateTaskCheckListInput {
   id: string;
   description?: string;
   isDone?: boolean;
+  pomodoros?: number;
+  timeSpent?: number;
 }
 
 export class UpdateTaskCheckListUseCase {
@@ -25,6 +27,14 @@ export class UpdateTaskCheckListUseCase {
 
     if (input.isDone !== undefined) {
       taskCheckList.setDone(input.isDone);
+    }
+
+    if (input.pomodoros !== undefined) {
+      taskCheckList.pomodoros = input.pomodoros;
+    }
+
+    if (input.timeSpent !== undefined) {
+      taskCheckList.timeSpent = input.timeSpent;
     }
 
     await this.repository.update(taskCheckList);

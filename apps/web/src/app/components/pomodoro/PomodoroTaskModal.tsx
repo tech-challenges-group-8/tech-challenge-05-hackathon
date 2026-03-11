@@ -57,6 +57,8 @@ export function PomodoroTaskModal() {
     submitTaskCompletionTime
   } = useFocusTimer();
 
+  const tasks = settings?.tasks || [];
+
   return (
     <ModalSheet
       isVisible={isFocusCompleteModalOpen}
@@ -70,7 +72,7 @@ export function PomodoroTaskModal() {
         </Text>
 
         <ScrollView style={styles.tasksList}>
-          {settings?.tasks?.filter(t => !t.completed).map(task => (
+          {tasks.filter((t) => !t.completed).map(task => (
             <TouchableOpacity
               key={task.id}
               style={styles.taskModalButton}
@@ -81,7 +83,7 @@ export function PomodoroTaskModal() {
               <Text style={styles.taskModalButtonText}>{task.title}</Text>
             </TouchableOpacity>
           ))}
-          {(!settings?.tasks || settings.tasks.filter(t => !t.completed).length === 0) && (
+          {tasks.filter((t) => !t.completed).length === 0 && (
             <Text style={styles.emptyText}>
               {t('pages.focus.noTasksAvailable')}
             </Text>

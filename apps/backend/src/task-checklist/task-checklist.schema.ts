@@ -17,6 +17,12 @@ export class TaskCheckListModel {
   @Prop({ default: false })
   completed!: boolean;
 
+  @Prop({ default: 0 })
+  pomodoros!: number;
+
+  @Prop({ default: 0 })
+  timeSpent!: number;
+
   @Prop()
   createdAt!: Date;
 
