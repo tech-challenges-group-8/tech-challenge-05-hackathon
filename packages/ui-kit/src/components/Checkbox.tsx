@@ -6,6 +6,7 @@ interface CheckboxProps {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   disabled?: boolean;
+  'aria-describedby'?: string;
   className?: string;
 }
 
@@ -15,6 +16,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   checked = false,
   onChange,
   disabled = false,
+  'aria-describedby': ariaDescribedBy,
   className = '',
 }) => {
   return (
@@ -27,6 +29,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         disabled={disabled}
         className="w-5 h-5 cursor-pointer accent-primary"
         aria-label={label}
+        aria-describedby={ariaDescribedBy}
       />
       {label && (
         <label

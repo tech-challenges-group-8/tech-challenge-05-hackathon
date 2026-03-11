@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Platform } from 'react-native';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { Ionicons } from '@expo/vector-icons';
@@ -114,6 +114,51 @@ export function Header({ title }: HeaderProps) {
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showProfilePage, setShowProfilePage] = useState(false);
+  const profileButtonRef = useRef<any>(null);
+  const firstMenuItemRef = useRef<any>(null);
+  const lastMenuItemRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !showProfileMenu) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setShowProfileMenu(false);
+        profileButtonRef.current?.focus?.();
+        return;
+      }
+
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const first = firstMenuItemRef.current as unknown as HTMLElement | null;
+      const last = lastMenuItemRef.current as unknown as HTMLElement | null;
+      const active = document.activeElement;
+
+      if (!first || !last) {
+        return;
+      }
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    setTimeout(() => firstMenuItemRef.current?.focus?.(), 0);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [showProfileMenu]);
 
   const handleLogout = async () => {
     setShowProfileMenu(false);
@@ -130,14 +175,23 @@ export function Header({ title }: HeaderProps) {
   };
 
   return (
-    <View style={styles.header}>
+    <View style={styles.header} accessibilityRole="summary" accessibilityLabel={t('accessibility.header.pageHeader')}>
       <Text style={styles.headerTitle}>{title}</Text>
       <View style={styles.headerActions}>
         <View style={styles.profileTriggerContainer}>
           <TouchableOpacity
+            ref={profileButtonRef}
             style={[styles.headerButton, styles.headerButtonSecondary]}
             onPress={handleProfilePress}
+            accessibilityRole="button"
+            accessibilityState={{ expanded: showProfileMenu }}
             accessibilityLabel={t('header.profile')}
+            accessibilityHint={t('accessibility.header.openUserMenu')}
+            {...(Platform.OS === 'web'
+              ? ({
+                  'aria-haspopup': 'menu',
+                } as never)
+              : {})}
           >
             <Ionicons
               name="person-circle"
@@ -149,11 +203,23 @@ export function Header({ title }: HeaderProps) {
           {showProfileMenu && Platform.OS === 'web' && (
             <>
               <Modal transparent visible={showProfileMenu} onRequestClose={() => setShowProfileMenu(false)}>
-                <TouchableOpacity style={styles.overlay} onPress={() => setShowProfileMenu(false)} />
-                <View style={styles.dropdown}>
+                <TouchableOpacity
+                  style={styles.overlay}
+                  onPress={() => setShowProfileMenu(false)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('accessibility.header.closeMenu')}
+                />
+                <View
+                  style={styles.dropdown}
+                  accessibilityRole="summary"
+                  accessibilityLabel={t('accessibility.header.userMenu')}
+                >
                   <TouchableOpacity
+                    ref={firstMenuItemRef}
                     style={styles.dropdownItem}
                     onPress={handleOpenProfile}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('accessibility.header.openProfile')}
                   >
                     <Ionicons name="person" size={rem(fontSizes.md)} color={theme.colors.foreground} />
                     <Text style={styles.dropdownItemText}>{currentUser?.name || t('header.profile')}</Text>
@@ -167,8 +233,11 @@ export function Header({ title }: HeaderProps) {
                     </View>
                   )}
                   <TouchableOpacity
+                    ref={lastMenuItemRef}
                     style={[styles.dropdownItem, styles.dropdownItemLast]}
                     onPress={handleLogout}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('header.logout')}
                   >
                     <Ionicons name="log-out" size={rem(fontSizes.md)} color={theme.colors.primary.DEFAULT} />
                     <Text style={[styles.dropdownItemText, styles.dropdownItemLogout]}>

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../cognitive';
 import { useTheme } from '../../theme';
@@ -49,6 +50,7 @@ export function AppLayout({
   floatingElement,
 }: AppLayoutProps) {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const preferences = useCognitivePreferences();
   const styles = useMemo(
     () => createStyles(theme.colors, preferences.simpleInterface),
@@ -60,20 +62,45 @@ export function AppLayout({
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+      {Platform.OS === 'web' && (
+        <TouchableOpacity
+          onPress={() => {
+            const mainContent = document.getElementById('main-content');
+            mainContent?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            mainContent?.focus();
+          }}
+          accessibilityRole="button"
+          accessibilityLabel={t('accessibility.layout.skipToContent')}
+        >
+          <View style={{ position: 'absolute', left: 8, top: 8, zIndex: 1000, padding: 8 }}>
+            <Text>{t('accessibility.layout.skipToContent')}</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+
       {/* Sidebar for desktop */}
       {showSidebar && (
         <Sidebar activeMenu={activeMenu} onMenuChange={onMenuChange} />
       )}
 
       {/* Main content area */}
-      <View style={styles.mainContent}>
+      <View style={styles.mainContent} accessibilityLabel={t('accessibility.layout.applicationMainArea')}>
         {/* Header */}
         <Header 
           title={title}
         />
 
         {/* Page content */}
-        <ScrollView style={styles.content}>
+        <ScrollView
+          style={styles.content}
+          nativeID="main-content"
+          accessibilityLabel={t('accessibility.layout.mainContent')}
+          {...(Platform.OS === 'web' ? ({
+            id: 'main-content',
+            role: 'main',
+            tabIndex: -1,
+          } as never) : {})}
+        >
           {children}
         </ScrollView>
       </View>

@@ -6,8 +6,10 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'destructive' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
+  loading?: boolean;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
+  ariaLabel?: string;
 }
 
 /**
@@ -20,8 +22,10 @@ export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   disabled = false,
+  loading = false,
   type = 'button',
   className = '',
+  ariaLabel,
 }) => {
   const baseStyles = [
     'inline-flex items-center justify-center',
@@ -65,7 +69,10 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      disabled={disabled}
+      disabled={disabled || loading}
+      aria-label={ariaLabel}
+      aria-busy={loading || undefined}
+      aria-disabled={disabled || loading || undefined}
       className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
     >
       {label}

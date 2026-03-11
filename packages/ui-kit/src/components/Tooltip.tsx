@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 
 interface TooltipProps {
   content: string;
@@ -14,6 +14,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   className = '',
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const tooltipId = useId();
 
   const positionStyles = {
     top: 'bottom-full mb-2 left-1/2 -translate-x-1/2',
@@ -27,11 +28,21 @@ export const Tooltip: React.FC<TooltipProps> = ({
       <div
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
+        onFocus={() => setIsVisible(true)}
+        onBlur={() => setIsVisible(false)}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            setIsVisible(false);
+          }
+        }}
+        tabIndex={0}
+        aria-describedby={isVisible ? tooltipId : undefined}
       >
         {children}
       </div>
       {isVisible && (
         <div
+          id={tooltipId}
           className={`absolute ${positionStyles[position]} bg-foreground text-background px-2 py-1 rounded text-xs whitespace-nowrap z-50`}
           role="tooltip"
         >

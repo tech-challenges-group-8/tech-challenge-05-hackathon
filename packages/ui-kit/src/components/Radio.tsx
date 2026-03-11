@@ -11,6 +11,8 @@ interface RadioProps {
   value?: string;
   onChange?: (value: string) => void;
   disabled?: boolean;
+  groupLabel?: string;
+  groupLabelledBy?: string;
   className?: string;
 }
 
@@ -20,10 +22,17 @@ export const Radio: React.FC<RadioProps> = ({
   value,
   onChange,
   disabled = false,
+  groupLabel,
+  groupLabelledBy,
   className = '',
 }) => {
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div
+      className={`space-y-2 ${className}`}
+      role="radiogroup"
+      aria-label={groupLabel}
+      aria-labelledby={groupLabelledBy}
+    >
       {options.map((option) => (
         <div key={option.value} className="flex items-center gap-2">
           <input

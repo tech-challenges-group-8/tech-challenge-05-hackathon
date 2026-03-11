@@ -13,6 +13,10 @@ interface SelectProps {
   onChange?: (value: string) => void;
   disabled?: boolean;
   placeholder?: string;
+  helperText?: string;
+  error?: string;
+  invalid?: boolean;
+  'aria-describedby'?: string;
   className?: string;
 }
 
@@ -24,8 +28,17 @@ export const Select: React.FC<SelectProps> = ({
   onChange,
   disabled = false,
   placeholder = 'Selecione uma opção',
+  helperText,
+  error,
+  invalid = false,
+  'aria-describedby': ariaDescribedBy,
   className = '',
 }) => {
+  const helperId = helperText && id ? `${id}-helper` : undefined;
+  const errorId = error && id ? `${id}-error` : undefined;
+  const describedBy = [ariaDescribedBy, helperId, errorId].filter(Boolean).join(' ') || undefined;
+  const isInvalid = invalid || Boolean(error);
+
   return (
     <div className={className}>
       {label && (
@@ -38,6 +51,8 @@ export const Select: React.FC<SelectProps> = ({
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
+        aria-describedby={describedBy}
+        aria-invalid={isInvalid || undefined}
         className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring disabled:opacity-50"
       >
         <option value="">{placeholder}</option>
@@ -47,6 +62,16 @@ export const Select: React.FC<SelectProps> = ({
           </option>
         ))}
       </select>
+      {helperText && id && (
+        <p id={helperId} className="text-xs text-muted-foreground mt-1">
+          {helperText}
+        </p>
+      )}
+      {error && id && (
+        <p id={errorId} className="text-xs text-[var(--destructive-default)] mt-1">
+          {error}
+        </p>
+      )}
     </div>
   );
 };

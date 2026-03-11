@@ -39,9 +39,12 @@ export const Accordion: React.FC<AccordionProps> = ({
             onClick={() => toggleItem(item.id)}
             className="w-full px-4 py-3 flex justify-between items-center bg-background hover:bg-muted transition-cognitive"
             aria-expanded={expandedIds.includes(item.id)}
+            aria-controls={`accordion-panel-${item.id}`}
+            id={`accordion-trigger-${item.id}`}
           >
             <span className="font-medium">{item.title}</span>
             <span
+              aria-hidden="true"
               className={`transform transition-transform ${
                 expandedIds.includes(item.id) ? 'rotate-180' : ''
               }`}
@@ -50,7 +53,12 @@ export const Accordion: React.FC<AccordionProps> = ({
             </span>
           </button>
           {expandedIds.includes(item.id) && (
-            <div className="px-4 py-3 border-t border-border bg-muted/50">
+            <div
+              id={`accordion-panel-${item.id}`}
+              role="region"
+              aria-labelledby={`accordion-trigger-${item.id}`}
+              className="px-4 py-3 border-t border-border bg-muted/50"
+            >
               {item.content}
             </div>
           )}

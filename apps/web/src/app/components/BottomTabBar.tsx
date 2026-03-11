@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../cognitive';
 import { useTheme } from '../../theme';
@@ -61,13 +62,14 @@ const createStyles = (
   });
 
 export function BottomTabBar({ activeTab, onTabChange }: BottomTabBarProps) {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeArea}>
-      <View style={styles.container}>
+      <View style={styles.container} accessibilityRole="tablist" accessibilityLabel={t('accessibility.navigation.tabBar')}>
         {BOTTOM_TABS.map((tab: BottomTab) => (
           <TouchableOpacity
             key={tab.id}
@@ -75,14 +77,18 @@ export function BottomTabBar({ activeTab, onTabChange }: BottomTabBarProps) {
             onPress={() => onTabChange(tab.id)}
             accessibilityRole="tab"
             accessibilityState={{ selected: activeTab === tab.id }}
-            accessibilityLabel={tab.label || tab.id}
+            accessibilityLabel={t(tab.accessibilityLabelKey)}
           >
-            <Text style={[styles.icon, activeTab === tab.id && styles.iconActive]}>
+            <Text
+              style={[styles.icon, activeTab === tab.id && styles.iconActive]}
+              accessible={false}
+              importantForAccessibility="no"
+            >
               {tab.icon}
             </Text>
-            {tab.label && (
+            {tab.labelKey && (
               <Text style={[styles.label, activeTab === tab.id && styles.labelActive]}>
-                {tab.label}
+                {t(tab.labelKey)}
               </Text>
             )}
           </TouchableOpacity>

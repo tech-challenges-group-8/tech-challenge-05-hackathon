@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
@@ -76,7 +76,14 @@ export function Sidebar({ activeMenu, onMenuChange }: SidebarProps) {
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
   return (
-    <View style={styles.sidebar}>
+    <View
+      style={styles.sidebar}
+      accessibilityRole="menu"
+      accessibilityLabel={t('accessibility.navigation.main')}
+      {...(Platform.OS === 'web'
+        ? ({ role: 'navigation' } as never)
+        : {})}
+    >
       <View style={styles.sidebarHeader}>
         <Text style={styles.logo}>{t('app.name')}</Text>
         {!preferences.simpleInterface && (
@@ -92,10 +99,14 @@ export function Sidebar({ activeMenu, onMenuChange }: SidebarProps) {
             activeMenu === item.id && styles.menuItemActive,
           ]}
           onPress={() => onMenuChange(item.id)}
-          accessibilityRole="button"
+          accessibilityRole="link"
+          accessibilityState={{ selected: activeMenu === item.id }}
           accessibilityLabel={t(item.labelKey)}
+          accessibilityHint={t('accessibility.navigation.openItem', { item: t(item.labelKey) })}
         >
           <Text
+            accessible={false}
+            importantForAccessibility="no"
             style={[
               styles.menuItemText,
               activeMenu === item.id && styles.menuItemTextActive,

@@ -14,6 +14,7 @@ interface AppButtonProps {
   readonly disabled?: boolean;
   readonly icon?: React.ReactNode;
   readonly style?: ViewStyle;
+  readonly accessibilityLabel?: string;
 }
 
 const createStyles = (
@@ -72,6 +73,7 @@ export function AppButton({
   disabled = false,
   icon,
   style,
+  accessibilityLabel,
 }: AppButtonProps) {
   const { theme } = useTheme();
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
@@ -95,6 +97,9 @@ export function AppButton({
       style={[styles.baseButton, variantMap[variant], disabled && styles.disabledButton, style]}
       onPress={onPress}
       disabled={disabled || loading}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ disabled: disabled || loading, busy: loading }}
     >
       {loading ? (
         <ActivityIndicator

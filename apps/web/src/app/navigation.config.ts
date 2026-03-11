@@ -22,13 +22,19 @@ export const MENU_BY_PATH: Record<string, string> = {
 export interface BottomTab {
   id: string;
   icon: string;
-  label?: string;
+  labelKey: string;
+  accessibilityLabelKey: string;
 }
 
 export const BOTTOM_TABS: BottomTab[] = [
-  { id: 'dashboard', icon: '📊' },
-  { id: 'tasks', icon: '✓' },
-  { id: 'kanban', icon: '✓' },
-  { id: 'focus', icon: '🎯' },
-  { id: 'cognitive', icon: '🧠' },
+  { id: 'dashboard', icon: '📊', labelKey: 'menu.dashboard', accessibilityLabelKey: 'accessibility.navigation.dashboard' },
+  { id: 'tasks', icon: '✓', labelKey: 'menu.tasks', accessibilityLabelKey: 'accessibility.navigation.tasks' },
+  { id: 'kanban', icon: '📋', labelKey: 'menu.kanban', accessibilityLabelKey: 'accessibility.navigation.kanban' },
+  { id: 'focus', icon: '🎯', labelKey: 'menu.focus', accessibilityLabelKey: 'accessibility.navigation.focus' },
+  {
+    id: 'cognitive',
+    icon: '🧠',
+    labelKey: 'menu.cognitive',
+    accessibilityLabelKey: 'accessibility.navigation.cognitive',
+  },
 ];

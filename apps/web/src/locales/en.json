@@ -14,6 +14,38 @@
     "profile": "Profile",
     "logout": "Sign out"
   },
+  "accessibility": {
+    "layout": {
+      "skipToContent": "Skip to main content",
+      "applicationMainArea": "Application main area",
+      "mainContent": "Main content"
+    },
+    "navigation": {
+      "main": "Main navigation",
+      "tabBar": "Bottom navigation tabs",
+      "openItem": "Open {{item}}",
+      "dashboard": "Dashboard",
+      "tasks": "Task list",
+      "kanban": "Kanban board",
+      "focus": "Focus timer",
+      "cognitive": "Cognitive settings"
+    },
+    "header": {
+      "pageHeader": "Page header",
+      "openUserMenu": "Open user menu",
+      "closeMenu": "Close menu",
+      "userMenu": "User menu",
+      "openProfile": "Open profile"
+    },
+    "auth": {
+      "switchToRegister": "Switch to registration",
+      "switchToLogin": "Switch to login",
+      "loginForm": "Sign in form",
+      "registerForm": "Registration form",
+      "submitLogin": "Sign in",
+      "submitRegister": "Create account"
+    }
+  },
   "pages": {
     "dashboard": {
       "title": "Welcome to MindEase",
@@ -69,7 +101,7 @@
     "profileClicked": "Profile clicked"
   },
   "login": {
-    "title": "Welcome back",
+    "title": "Welcome",
     "subtitle": "Sign in to continue to MindEase",
     "emailLabel": "Email",
     "emailPlaceholder": "you@example.com",

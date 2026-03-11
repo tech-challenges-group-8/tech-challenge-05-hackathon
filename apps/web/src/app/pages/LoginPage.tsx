@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Platform } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth';
 import { logger, validateLoginForm } from '../../utils';
@@ -18,6 +18,10 @@ export function LoginPage({ onSwitchToRegister }: LoginPageProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const webFormProps: Record<string, unknown> = Platform.OS === 'web' ? { role: 'form' } : {};
+  const webAlertProps: Record<string, unknown> =
+    Platform.OS === 'web' ? { role: 'alert', 'aria-live': 'assertive' } : {};
 
   const handleSubmit = async () => {
     const { valid, errors } = validateLoginForm(email, password);
@@ -52,46 +56,63 @@ export function LoginPage({ onSwitchToRegister }: LoginPageProps) {
       helperText={t('login.helper')}
       switchLabel={t('login.switchToRegister')}
       onSwitchClick={onSwitchToRegister}
+      switchAccessibilityLabel={t('accessibility.auth.switchToRegister')}
     >
-      {serverError && (
-        <AppTextInput error={serverError} editable={false} />
-      )}
-
-      <AppTextInput
-        label={t('login.emailLabel')}
-        placeholder={t('login.emailPlaceholder')}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        autoCorrect={false}
-        value={email}
-        onChangeText={(text) => {
-          setEmail(text);
-          if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: '' });
-        }}
-        textContentType={Platform.OS === 'ios' ? 'username' : 'none'}
-        error={fieldErrors.email}
-      />
-
-      <AppTextInput
-        label={t('login.passwordLabel')}
-        placeholder={t('login.passwordPlaceholder')}
-        secureTextEntry
-        value={password}
-        onChangeText={(text) => {
-          setPassword(text);
-          if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: '' });
-        }}
-        textContentType={Platform.OS === 'ios' ? 'password' : 'none'}
-        error={fieldErrors.password}
-      />
-
-      <AppButton
-        onPress={handleSubmit}
-        loading={isSubmitting}
-        disabled={isSubmitting}
+      <View
+        {...webFormProps}
+        accessibilityLabel={t('accessibility.auth.loginForm')}
       >
-        {t('login.submit')}
-      </AppButton>
+        {serverError && (
+          <View
+            accessibilityRole="alert"
+            accessibilityLiveRegion="assertive"
+            {...webAlertProps}
+            style={{ marginBottom: 12 }}
+          >
+            <Text>{serverError}</Text>
+          </View>
+        )}
+
+        <AppTextInput
+          label={t('login.emailLabel')}
+          placeholder={t('login.emailPlaceholder')}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          autoCorrect={false}
+          value={email}
+          onChangeText={(text) => {
+            setEmail(text);
+            if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: '' });
+          }}
+          textContentType={Platform.OS === 'ios' ? 'username' : 'none'}
+          error={fieldErrors.email}
+          returnKeyType="next"
+        />
+
+        <AppTextInput
+          label={t('login.passwordLabel')}
+          placeholder={t('login.passwordPlaceholder')}
+          secureTextEntry
+          value={password}
+          onChangeText={(text) => {
+            setPassword(text);
+            if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: '' });
+          }}
+          textContentType={Platform.OS === 'ios' ? 'password' : 'none'}
+          error={fieldErrors.password}
+          returnKeyType="done"
+          onSubmitEditing={handleSubmit}
+        />
+
+        <AppButton
+          onPress={handleSubmit}
+          loading={isSubmitting}
+          disabled={isSubmitting}
+          accessibilityLabel={t('accessibility.auth.submitLogin')}
+        >
+          {t('login.submit')}
+        </AppButton>
+      </View>
     </AuthFormLayout>
   );
 }

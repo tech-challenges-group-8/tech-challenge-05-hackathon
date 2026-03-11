@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../../theme';
 import { rem, fontWeight } from '../../../utils';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
@@ -12,6 +12,7 @@ interface AuthFormLayoutProps {
   readonly children: React.ReactNode;
   readonly switchLabel?: string;
   readonly onSwitchClick?: () => void;
+  readonly switchAccessibilityLabel?: string;
 }
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
@@ -25,7 +26,8 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
     },
     scrollContent: {
       width: '100%',
-      maxWidth: 480,
+      maxWidth: 580,
+      minWidth: 400,
       paddingVertical: rem(space[4]),
     },
     title: {
@@ -65,6 +67,7 @@ export function AuthFormLayout({
   children,
   switchLabel,
   onSwitchClick,
+  switchAccessibilityLabel,
 }: AuthFormLayoutProps) {
   const { theme } = useTheme();
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
@@ -73,19 +76,32 @@ export function AuthFormLayout({
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} scrollEnabled={false}>
         <Card>
-          <Text style={styles.title}>{title}</Text>
-          {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+          <Text
+            style={styles.title}
+            accessibilityRole="header"
+          >
+            {title}
+          </Text>
+          {subtitle && (
+            <Text
+              style={styles.subtitle}
+              accessibilityRole="header"
+            >
+              {subtitle}
+            </Text>
+          )}
 
           {children}
 
           {switchLabel && onSwitchClick && (
             <View style={styles.switchModeContainer}>
-              <Text
-                style={styles.switchModeText}
+              <TouchableOpacity
+                accessibilityRole="link"
+                accessibilityLabel={switchAccessibilityLabel ?? switchLabel}
                 onPress={onSwitchClick}
               >
-                {switchLabel}
-              </Text>
+                <Text style={styles.switchModeText}>{switchLabel}</Text>
+              </TouchableOpacity>
             </View>
           )}
 

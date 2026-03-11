@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Platform, View } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../services';
 import { logger, validateRegisterForm } from '../../utils';
@@ -25,6 +25,12 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const webFormProps: Record<string, unknown> = Platform.OS === 'web' ? { role: 'form' } : {};
+  const webSuccessLiveProps: Record<string, unknown> =
+    Platform.OS === 'web' ? { 'aria-live': 'polite' } : {};
+  const webAlertProps: Record<string, unknown> =
+    Platform.OS === 'web' ? { role: 'alert', 'aria-live': 'assertive' } : {};
 
   const handleSubmit = async () => {
     const { valid, errors } = validateRegisterForm(name, email, password, confirmPassword);
@@ -72,74 +78,103 @@ export function RegisterPage({ onSwitchToLogin }: RegisterPageProps) {
         helperText={t('register.helper')}
         switchLabel={t('register.switchToLogin')}
         onSwitchClick={onSwitchToLogin}
+        switchAccessibilityLabel={t('accessibility.auth.switchToLogin')}
       >
-        {serverError && (
-          <AppTextInput error={serverError} editable={false} />
-        )}
+          <View
+            {...webFormProps}
+            accessibilityLabel={t('accessibility.auth.registerForm')}
+          >
+            {success && (
+              <View
+                accessibilityLiveRegion="polite"
+                {...webSuccessLiveProps}
+                style={{ marginBottom: 12 }}
+              >
+                <Text>{t('register.success')}</Text>
+              </View>
+            )}
 
-        <AppTextInput
-          label={t('register.nameLabel')}
-          placeholder={t('register.namePlaceholder')}
-          value={name}
-          onChangeText={(text) => {
-            setName(text);
-            if (fieldErrors.name) setFieldErrors({ ...fieldErrors, name: '' });
-          }}
-          editable={!isSubmitting}
-          error={fieldErrors.name}
-        />
+            {serverError && (
+              <View
+                accessibilityRole="alert"
+                accessibilityLiveRegion="assertive"
+                {...webAlertProps}
+                style={{ marginBottom: 12 }}
+              >
+                <Text>{serverError}</Text>
+              </View>
+            )}
 
-        <AppTextInput
-          label={t('register.emailLabel')}
-          placeholder={t('register.emailPlaceholder')}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          autoCorrect={false}
-          value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-            if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: '' });
-          }}
-          editable={!isSubmitting}
-          textContentType={Platform.OS === 'ios' ? 'username' : 'none'}
-          error={fieldErrors.email}
-        />
+            <AppTextInput
+              label={t('register.nameLabel')}
+              placeholder={t('register.namePlaceholder')}
+              value={name}
+              onChangeText={(text) => {
+                setName(text);
+                if (fieldErrors.name) setFieldErrors({ ...fieldErrors, name: '' });
+              }}
+              editable={!isSubmitting}
+              error={fieldErrors.name}
+              returnKeyType="next"
+            />
 
-        <AppTextInput
-          label={t('register.passwordLabel')}
-          placeholder={t('register.passwordPlaceholder')}
-          secureTextEntry
-          value={password}
-          onChangeText={(text) => {
-            setPassword(text);
-            if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: '' });
-          }}
-          editable={!isSubmitting}
-          textContentType={Platform.OS === 'ios' ? 'newPassword' : 'none'}
-          error={fieldErrors.password}
-        />
+            <AppTextInput
+              label={t('register.emailLabel')}
+              placeholder={t('register.emailPlaceholder')}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              autoCorrect={false}
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: '' });
+              }}
+              editable={!isSubmitting}
+              textContentType={Platform.OS === 'ios' ? 'username' : 'none'}
+              error={fieldErrors.email}
+              returnKeyType="next"
+            />
 
-        <AppTextInput
-          label={t('register.confirmPasswordLabel')}
-          placeholder={t('register.confirmPasswordPlaceholder')}
-          secureTextEntry
-          value={confirmPassword}
-          onChangeText={(text) => {
-            setConfirmPassword(text);
-            if (fieldErrors.confirmPassword) setFieldErrors({ ...fieldErrors, confirmPassword: '' });
-          }}
-          editable={!isSubmitting}
-          textContentType={Platform.OS === 'ios' ? 'newPassword' : 'none'}
-          error={fieldErrors.confirmPassword}
-        />
+            <AppTextInput
+              label={t('register.passwordLabel')}
+              placeholder={t('register.passwordPlaceholder')}
+              secureTextEntry
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: '' });
+              }}
+              editable={!isSubmitting}
+              textContentType={Platform.OS === 'ios' ? 'newPassword' : 'none'}
+              error={fieldErrors.password}
+              returnKeyType="next"
+            />
 
-        <AppButton
-          onPress={handleSubmit}
-          loading={isSubmitting}
-          disabled={isSubmitting}
-        >
-          {t('register.submit')}
-        </AppButton>
+            <AppTextInput
+              label={t('register.confirmPasswordLabel')}
+              placeholder={t('register.confirmPasswordPlaceholder')}
+              secureTextEntry
+              value={confirmPassword}
+              onChangeText={(text) => {
+                setConfirmPassword(text);
+                if (fieldErrors.confirmPassword) setFieldErrors({ ...fieldErrors, confirmPassword: '' });
+              }}
+              editable={!isSubmitting}
+              textContentType={Platform.OS === 'ios' ? 'newPassword' : 'none'}
+              error={fieldErrors.confirmPassword}
+              returnKeyType="done"
+              onSubmitEditing={handleSubmit}
+            />
+
+            <AppButton
+              onPress={handleSubmit}
+              loading={isSubmitting}
+              disabled={isSubmitting}
+              accessibilityLabel={t('accessibility.auth.submitRegister')}
+            >
+              {t('register.submit')}
+            </AppButton>
+          </View>
       </AuthFormLayout>
     </View>
   );

@@ -14,6 +14,38 @@
     "profile": "Perfil",
     "logout": "Sair"
   },
+  "accessibility": {
+    "layout": {
+      "skipToContent": "Ir para o conteúdo principal",
+      "applicationMainArea": "Área principal da aplicação",
+      "mainContent": "Conteúdo principal"
+    },
+    "navigation": {
+      "main": "Navegação principal",
+      "tabBar": "Abas de navegação inferior",
+      "openItem": "Abrir {{item}}",
+      "dashboard": "Painel",
+      "tasks": "Lista de tarefas",
+      "kanban": "Quadro kanban",
+      "focus": "Temporizador de foco",
+      "cognitive": "Configurações cognitivas"
+    },
+    "header": {
+      "pageHeader": "Cabeçalho da página",
+      "openUserMenu": "Abrir menu do usuário",
+      "closeMenu": "Fechar menu",
+      "userMenu": "Menu do usuário",
+      "openProfile": "Abrir perfil"
+    },
+    "auth": {
+      "switchToRegister": "Ir para cadastro",
+      "switchToLogin": "Ir para login",
+      "loginForm": "Formulário de login",
+      "registerForm": "Formulário de cadastro",
+      "submitLogin": "Entrar",
+      "submitRegister": "Criar conta"
+    }
+  },
   "pages": {
     "dashboard": {
       "title": "Bem-vindo ao MindEase",
@@ -73,7 +105,7 @@
     "profileClicked": "Perfil clicado"
   },
   "login": {
-    "title": "Bem-vindo de volta",
+    "title": "Bem-vindo(a)",
     "subtitle": "Entre para continuar no MindEase",
     "emailLabel": "E-mail",
     "emailPlaceholder": "voce@exemplo.com",

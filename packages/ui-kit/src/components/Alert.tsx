@@ -5,6 +5,7 @@ interface AlertProps {
   message: string;
   type?: 'info' | 'success' | 'warning' | 'error';
   onClose?: () => void;
+  closeLabel?: string;
   className?: string;
 }
 
@@ -13,6 +14,7 @@ export const Alert: React.FC<AlertProps> = ({
   message,
   type = 'info',
   onClose,
+  closeLabel = 'Close alert',
   className = '',
 }) => {
   const typeStyles = {
@@ -49,7 +51,7 @@ export const Alert: React.FC<AlertProps> = ({
           <button
             onClick={onClose}
             className="text-current opacity-70 hover:opacity-100 transition-opacity"
-            aria-label="Fechar alerta"
+            aria-label={closeLabel}
           >
             ✕
           </button>
