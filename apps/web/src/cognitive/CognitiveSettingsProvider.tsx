@@ -5,7 +5,6 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import { Platform } from 'react-native';
@@ -136,7 +135,6 @@ export function CognitiveSettingsProvider({ children }: { children: React.ReactN
   const [error, setError] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [hasBootstrapped, setHasBootstrapped] = useState(false);
-  const hasRemoteSettings = useRef(false);
 
   const refresh = useCallback(async () => {
     if (!currentUser?.id) {
@@ -161,12 +159,10 @@ export function CognitiveSettingsProvider({ children }: { children: React.ReactN
     try {
       const remoteSettings = await cognitiveSettingsService.getSettings();
       const normalizedSettings = normalizeCognitiveSettings(remoteSettings, currentUser.id);
-      hasRemoteSettings.current = true;
       setSettings(normalizedSettings);
       await cacheSettings(normalizedSettings);
     } catch (requestError) {
       if (isAxiosLikeError(requestError) && requestError.response?.status === 404) {
-        hasRemoteSettings.current = false;
         if (!cached) {
           const fallbackSettings = normalizeCognitiveSettings(undefined, currentUser.id);
           setSettings(fallbackSettings);
@@ -174,7 +170,6 @@ export function CognitiveSettingsProvider({ children }: { children: React.ReactN
         }
       } else {
         setError(getErrorMessage(requestError));
-        hasRemoteSettings.current = Boolean(cached);
         if (!cached) {
           const fallbackSettings = normalizeCognitiveSettings(undefined, currentUser.id);
           setSettings(fallbackSettings);
@@ -217,12 +212,9 @@ export function CognitiveSettingsProvider({ children }: { children: React.ReactN
       };
 
       try {
-        const savedSettings = hasRemoteSettings.current
-          ? await cognitiveSettingsService.updateSettings(payload)
-          : await cognitiveSettingsService.createSettings(payload);
+        const savedSettings = await cognitiveSettingsService.updateSettings(payload);
 
         const normalizedSettings = normalizeCognitiveSettings(savedSettings, currentUser.id);
-        hasRemoteSettings.current = true;
         setSettings(normalizedSettings);
         await cacheSettings(normalizedSettings);
         setIsDirty(false);

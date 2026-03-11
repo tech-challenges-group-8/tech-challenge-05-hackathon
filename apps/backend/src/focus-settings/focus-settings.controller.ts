@@ -72,12 +72,29 @@ export class FocusSettingsController {
 
     private toResponse(settings: FocusSettings): ResponseFocusSettingsDTO {
         return new ResponseFocusSettingsDTO(
+            settings.idUser,
             settings.foco,
             settings.pausaCurta,
             settings.pausaLonga,
             settings.pomodorosCompleted,
-            settings.tasks,
-            settings.audioThemes
+            settings.tasks.map((task) => ({
+                id: task.id,
+                title: task.title,
+                completed: task.completed,
+                timeSpent: task.timeSpent,
+                pomodoros: task.pomodoros,
+            })),
+            settings.audioThemes.map((theme) => ({
+                id: theme.id,
+                name: theme.name,
+                videoId: theme.videoId,
+            })),
+            settings.sessions.map((session) => ({
+                id: session.id,
+                duration: session.duration,
+                taskId: session.taskId,
+                createdAt: session.createdAt.toISOString(),
+            }))
         );
     }
 }

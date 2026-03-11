@@ -21,6 +21,7 @@ export * from './focus-settings/UpdateFocusSettingsDTO';
 export * from './focus-settings/ResponseFocusSettingsDTO';
 export * from './focus-settings/FocusTaskDTO';
 export * from './focus-settings/AudioThemeDTO';
+export * from './focus-settings/FocusSessionDTO';
 
 // Export TaskKanban DTOs
 export * from './task-kanban/CreateTaskKanbanDTO';

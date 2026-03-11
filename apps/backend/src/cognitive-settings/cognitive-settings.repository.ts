@@ -3,6 +3,25 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CognitiveSettingsDocument, CognitiveSettingsDocumentType } from './cognitive-settings.schema';
 
+const DEFAULT_TYPOGRAPHY = {
+  fontFamily: 'system',
+  lineHeight: 'normal',
+  letterSpacing: 'normal',
+  textSize: 'normal',
+};
+
+const DEFAULT_FOCUS_MODE = {
+  hideSidebar: false,
+  highlightActiveTask: false,
+  animationsEnabled: true,
+  simpleInterface: false,
+};
+
+const DEFAULT_SENSORY = {
+  muteSounds: false,
+  hideUrgencyIndicators: false,
+};
+
 export interface CognitiveSettingsRecord {
   id: string;
   idUser: string;
@@ -62,22 +81,9 @@ export class CognitiveSettingsRepository {
     const doc = await this.cognitiveSettingsModel.create({
       idUser: input.idUser,
       themeMode: input.themeMode || 'light',
-      typography: input.typography || {
-        fontFamily: 'system',
-        lineHeight: 'normal',
-        letterSpacing: 'normal',
-        textSize: 'normal',
-      },
-      focusMode: input.focusMode || {
-        hideSidebar: false,
-        highlightActiveTask: false,
-        animationsEnabled: true,
-        simpleInterface: false,
-      },
-      sensory: input.sensory || {
-        muteSounds: false,
-        hideUrgencyIndicators: false,
-      },
+      typography: input.typography || DEFAULT_TYPOGRAPHY,
+      focusMode: input.focusMode || DEFAULT_FOCUS_MODE,
+      sensory: input.sensory || DEFAULT_SENSORY,
     });
     return this.toRecord(doc);
   }
@@ -91,8 +97,23 @@ export class CognitiveSettingsRepository {
       sensory?: object;
     }
   ): Promise<CognitiveSettingsRecord | null> {
+    const insertDefaults = {
+      idUser,
+      ...(update.themeMode === undefined ? { themeMode: 'light' } : {}),
+      ...(update.typography === undefined ? { typography: DEFAULT_TYPOGRAPHY } : {}),
+      ...(update.focusMode === undefined ? { focusMode: DEFAULT_FOCUS_MODE } : {}),
+      ...(update.sensory === undefined ? { sensory: DEFAULT_SENSORY } : {}),
+    };
+
     const doc = await this.cognitiveSettingsModel
-      .findOneAndUpdate({ idUser }, { $set: update }, { new: true })
+      .findOneAndUpdate(
+        { idUser },
+        {
+          $set: update,
+          $setOnInsert: insertDefaults,
+        },
+        { new: true, upsert: true },
+      )
       .exec();
 
     return doc ? this.toRecord(doc) : null;

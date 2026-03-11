@@ -1,7 +1,6 @@
 import api from '../api';
 import type {
   CognitiveSettings,
-  CreateCognitiveSettingsDTO,
   UpdateCognitiveSettingsDTO,
 } from './types';
 import { normalizeCognitiveSettings } from '../../cognitive/model';
@@ -21,21 +20,6 @@ function mapSettings(response: CognitiveSettingsApiResponse): CognitiveSettings 
 }
 
 class CognitiveSettingsService {
-  /**
-   * Create cognitive settings for authenticated user
-   * @param settings - Settings data
-   * @returns Created settings
-   */
-  async createSettings(
-    settings: CreateCognitiveSettingsDTO
-  ): Promise<CognitiveSettings> {
-    const response = await api.post<CognitiveSettingsApiResponse>(
-      '/cognitive-settings',
-      settings
-    );
-    return mapSettings(response.data);
-  }
-
   /**
    * Get cognitive settings for authenticated user
    * @returns User's cognitive settings

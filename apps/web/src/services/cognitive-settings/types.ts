@@ -35,13 +35,6 @@ export interface CognitiveSettings {
   updatedAt?: string;
 }
 
-export interface CreateCognitiveSettingsDTO {
-  themeMode?: ThemeMode;
-  typography?: Partial<Typography>;
-  focusMode?: Partial<FocusMode>;
-  sensory?: Partial<Sensory>;
-}
-
 export interface UpdateCognitiveSettingsDTO {
   themeMode?: ThemeMode;
   typography?: Partial<Typography>;

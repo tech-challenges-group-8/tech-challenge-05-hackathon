@@ -18,7 +18,6 @@ export type { User, CreateUserDTO, UpdateUserDTO } from './user/types';
 // Cognitive Settings Types
 export type {
   CognitiveSettings,
-  CreateCognitiveSettingsDTO,
   UpdateCognitiveSettingsDTO,
   ThemeMode,
   Typography,
