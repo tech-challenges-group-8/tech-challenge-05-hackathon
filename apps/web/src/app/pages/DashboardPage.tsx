@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
@@ -115,12 +115,20 @@ export function DashboardPage() {
 
   useEffect(() => {
     fetchStats();
+    
+    // Refresh stats when the window is focused (web hydration)
+    if (Platform.OS === 'web') {
+      const handleFocus = () => fetchStats();
+      window.addEventListener('focus', handleFocus);
+      return () => window.removeEventListener('focus', handleFocus);
+    }
   }, [fetchStats]);
 
   const formatFocusTime = (minutes: number) => {
-    if (minutes < 60) return `${minutes}m`;
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
+    const roundedMinutes = Math.round(minutes * 100) / 100;
+    if (roundedMinutes < 60) return `${roundedMinutes}m`;
+    const hours = Math.floor(roundedMinutes / 60);
+    const remainingMinutes = Math.round((roundedMinutes % 60) * 100) / 100;
     return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
   };
 

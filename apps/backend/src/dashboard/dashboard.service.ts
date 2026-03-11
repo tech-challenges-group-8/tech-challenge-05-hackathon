@@ -25,7 +25,7 @@ export class DashboardService {
         }).length;
 
         const totalCompleted = tasks.filter(t => t.completed).length;
-        const totalFocusTime = tasks.reduce((acc, t) => acc + (t.timeSpent || 0), 0);
+        const totalFocusTime = Math.round(tasks.reduce((acc, t) => acc + (t.timeSpent || 0), 0) * 100) / 100;
 
         return new ResponseDashboardStatsDto(
             activeTasks,

@@ -336,8 +336,14 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
       if (settings) {
         try {
+          // Increment pomodoro count in backend
           const updatedSettings = await focusSettingsService.incrementPomodoroCount(settings.pomodorosCompleted);
-          setSettings(updatedSettings);
+          
+          // Update local settings but preserve our global tasks
+          setSettings({
+            ...updatedSettings,
+            tasks: tasks // Keep our synchronized tasks
+          });
           
           const isLongBreak = (updatedSettings.pomodorosCompleted % 4 === 0);
           setMode(isLongBreak ? 'LONG_BREAK' : 'SHORT_BREAK');
@@ -347,7 +353,11 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           const isLongBreak = (localCount % 4 === 0);
           setMode(isLongBreak ? 'LONG_BREAK' : 'SHORT_BREAK');
           setTimeLeft((isLongBreak ? settings.pausaLonga : settings.pausaCurta) * 60);
-          setSettings({...settings, pomodorosCompleted: localCount} as any);
+          setSettings({
+            ...settings, 
+            pomodorosCompleted: localCount,
+            tasks: tasks // Keep our synchronized tasks
+          } as any);
         }
       }
     } else {
@@ -412,6 +422,23 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const skipTimer = () => {
     setTimeLeft(0);
   };
+
+  // Synchronize timer if settings change while idle
+  useEffect(() => {
+    if (!isActive && settings) {
+      switch (mode) {
+        case 'FOCUS':
+          setTimeLeft(settings.foco * 60);
+          break;
+        case 'SHORT_BREAK':
+          setTimeLeft(settings.pausaCurta * 60);
+          break;
+        case 'LONG_BREAK':
+          setTimeLeft(settings.pausaLonga * 60);
+          break;
+      }
+    }
+  }, [settings, mode, isActive]);
 
   const handleModeSelect = (newMode: TimerMode) => {
     setMode(newMode);

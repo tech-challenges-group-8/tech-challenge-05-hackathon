@@ -5,7 +5,7 @@ import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
 import { PomodoroTimer } from '../components/PomodoroTimer';
-import { TaskList } from '../components/TaskList';
+import { TaskList } from '../components/modules/TaskList';
 import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
