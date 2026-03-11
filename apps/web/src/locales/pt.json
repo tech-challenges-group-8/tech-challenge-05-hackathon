@@ -62,6 +62,22 @@
       "closeModal": "Fechar modal",
       "progress": "Progresso de conclusão das tarefas",
       "dismissNotification": "Dispensar notificação"
+    },
+    "modules": {
+      "kanbanBoardColumns": "Colunas do kanban",
+      "newTaskInput": "Título da nova tarefa",
+      "confirmAddTask": "Adicionar tarefa",
+      "cancelAddTask": "Cancelar adição da tarefa",
+      "addTaskToColumn": "Adicionar tarefa em {{column}}",
+      "columnTaskList": "Tarefas em {{column}}",
+      "tasksCount": "{{count}} tarefas",
+      "kanbanTaskLabel": "Tarefa {{title}}. {{status}}. Prioridade: {{priority}}",
+      "taskCompleted": "concluída",
+      "taskNotCompleted": "não concluída",
+      "taskCheckbox": "Caixa de seleção da tarefa: {{title}}",
+      "deleteTask": "Excluir tarefa: {{title}}",
+      "clearCompletedTasks": "Limpar tarefas concluídas",
+      "newTaskButton": "Criar nova tarefa"
     }
   },
   "pages": {

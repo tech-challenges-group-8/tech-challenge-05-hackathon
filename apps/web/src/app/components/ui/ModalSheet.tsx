@@ -1,13 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   Modal,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { fontSizes, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
@@ -20,6 +21,7 @@ interface ModalSheetProps {
   readonly subtitle?: string;
   readonly children: React.ReactNode;
   readonly type?: 'bottom-sheet' | 'centered';
+  readonly closeAccessibilityLabel?: string;
 }
 
 const createStyles = (
@@ -91,10 +93,71 @@ export function ModalSheet({
   subtitle,
   children,
   type = 'bottom-sheet',
+  closeAccessibilityLabel,
 }: ModalSheetProps) {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const modalContainerRef = useRef<any>(null);
+  const closeButtonRef = useRef<any>(null);
+  const previousActiveRef = useRef<HTMLElement | null>(null);
+  const webDialogProps: Record<string, unknown> = Platform.OS === 'web'
+    ? { role: 'dialog', 'aria-modal': true }
+    : {};
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !isVisible) {
+      return;
+    }
+
+    previousActiveRef.current = document.activeElement as HTMLElement;
+    setTimeout(() => closeButtonRef.current?.focus?.(), 0);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const container = modalContainerRef.current as HTMLElement | null;
+      if (!container) {
+        return;
+      }
+
+      const elements = container.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+
+      if (elements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      const active = document.activeElement as HTMLElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      previousActiveRef.current?.focus();
+    };
+  }, [isVisible, onClose]);
 
   return (
     <Modal
@@ -103,38 +166,46 @@ export function ModalSheet({
       animationType={type === 'centered' ? 'fade' : 'slide'}
       onRequestClose={onClose}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
+      <View style={[styles.overlay, type === 'centered' && styles.overlayCenter]}>
+        <TouchableOpacity
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel={closeAccessibilityLabel ?? t('accessibility.components.closeModal')}
+          style={StyleSheet.absoluteFill}
+        />
         <View
-          style={[styles.overlay, type === 'centered' && styles.overlayCenter]}
+          ref={modalContainerRef}
+          style={[
+            styles.container,
+            type === 'centered' && styles.containerCentered,
+          ]}
+          accessibilityViewIsModal
+          accessibilityRole="summary"
+          accessibilityLabel={title}
+          {...webDialogProps}
         >
-          <TouchableWithoutFeedback>
-            <View
-              style={[
-                styles.container,
-                type === 'centered' && styles.containerCentered,
-              ]}
-            >
-              <View style={styles.header}>
-                <View style={styles.headerTextContainer}>
-                  <Text style={styles.title}>{title}</Text>
-                  {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
-                </View>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={onClose}
-                >
-                  <Ionicons
-                    name="close"
-                    size={24}
-                    color={theme.colors.foreground}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.content}>{children}</View>
+          <View style={styles.header}>
+            <View style={styles.headerTextContainer}>
+              <Text style={styles.title}>{title}</Text>
+              {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
             </View>
-          </TouchableWithoutFeedback>
+            <TouchableOpacity
+              ref={closeButtonRef}
+              style={styles.closeButton}
+              onPress={onClose}
+              accessibilityRole="button"
+              accessibilityLabel={closeAccessibilityLabel ?? t('common.close')}
+            >
+              <Ionicons
+                name="close"
+                size={24}
+                color={theme.colors.foreground}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.content}>{children}</View>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     </Modal>
   );
 }

@@ -44,6 +44,27 @@
       "registerForm": "Registration form",
       "submitLogin": "Sign in",
       "submitRegister": "Create account"
+    },
+    "components": {
+      "closeModal": "Close modal",
+      "progress": "Task completion progress",
+      "dismissNotification": "Dismiss notification"
+    },
+    "modules": {
+      "kanbanBoardColumns": "Kanban columns",
+      "newTaskInput": "New task title",
+      "confirmAddTask": "Add task",
+      "cancelAddTask": "Cancel adding task",
+      "addTaskToColumn": "Add task to {{column}}",
+      "columnTaskList": "Tasks in {{column}}",
+      "tasksCount": "{{count}} tasks",
+      "kanbanTaskLabel": "Task {{title}}. {{status}}. Priority: {{priority}}",
+      "taskCompleted": "completed",
+      "taskNotCompleted": "not completed",
+      "taskCheckbox": "Task checkbox: {{title}}",
+      "deleteTask": "Delete task: {{title}}",
+      "clearCompletedTasks": "Clear completed tasks",
+      "newTaskButton": "Create new task"
     }
   },
   "pages": {

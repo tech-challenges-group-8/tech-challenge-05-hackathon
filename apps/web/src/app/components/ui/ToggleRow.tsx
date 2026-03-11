@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { useId, useMemo } from 'react';
+import { Platform, StyleSheet, Switch, Text, View } from 'react-native';
 import { fontSizes, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
@@ -52,18 +52,32 @@ export function ToggleRow({ title, description, value, onValueChange }: ToggleRo
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const reactId = useId();
+  const titleId = `toggle-title-${reactId}`;
+  const descriptionId = `toggle-description-${reactId}`;
+
+  const webSwitchProps: Record<string, unknown> = Platform.OS === 'web'
+    ? {
+      'aria-labelledby': titleId,
+      'aria-describedby': descriptionId,
+    }
+    : {};
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
+        <Text style={styles.title} nativeID={titleId}>{title}</Text>
+        <Text style={styles.description} nativeID={descriptionId}>{description}</Text>
       </View>
       <Switch
         value={value}
         onValueChange={onValueChange}
         trackColor={{ false: theme.colors.muted.DEFAULT, true: theme.colors.primary.DEFAULT }}
         thumbColor={theme.colors.card.DEFAULT}
+        accessibilityLabel={title}
+        accessibilityHint={description}
+        accessibilityRole="switch"
+        {...webSwitchProps}
       />
     </View>
   );

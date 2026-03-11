@@ -15,6 +15,8 @@ interface AppButtonProps {
   readonly icon?: React.ReactNode;
   readonly style?: ViewStyle;
   readonly accessibilityLabel?: string;
+  readonly accessibilityHint?: string;
+  readonly loadingAccessibilityLabel?: string;
 }
 
 const createStyles = (
@@ -74,6 +76,8 @@ export function AppButton({
   icon,
   style,
   accessibilityLabel,
+  accessibilityHint,
+  loadingAccessibilityLabel,
 }: AppButtonProps) {
   const { theme } = useTheme();
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
@@ -98,7 +102,8 @@ export function AppButton({
       onPress={onPress}
       disabled={disabled || loading}
       accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={loading ? loadingAccessibilityLabel ?? accessibilityLabel : accessibilityLabel}
+      accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: disabled || loading, busy: loading }}
     >
       {loading ? (

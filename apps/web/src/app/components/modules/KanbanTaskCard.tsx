@@ -107,6 +107,13 @@ export function KanbanTaskCard({ task, onPress }: KanbanTaskCardProps) {
   };
 
   const priorityStyle = getPriorityStyle(task.priority);
+  const taskLabel = t('accessibility.modules.kanbanTaskLabel', {
+    title: task.title,
+    status: task.completed
+      ? t('accessibility.modules.taskCompleted')
+      : t('accessibility.modules.taskNotCompleted'),
+    priority: t(`priority.${task.priority}`, task.priority ?? 'low'),
+  });
 
   return (
     <TouchableOpacity
@@ -114,7 +121,7 @@ export function KanbanTaskCard({ task, onPress }: KanbanTaskCardProps) {
       onPress={onPress}
       accessible={true}
       accessibilityRole="button"
-      accessibilityLabel={`Task: ${task.title}${task.completed ? ', completed' : ''}`}
+      accessibilityLabel={taskLabel}
     >
       <View style={styles.taskHeader}>
         <Text
@@ -127,6 +134,8 @@ export function KanbanTaskCard({ task, onPress }: KanbanTaskCardProps) {
           name="ellipsis-horizontal"
           size={16}
           color={theme.colors.muted.foreground}
+          accessibilityElementsHidden
+          importantForAccessibility="no"
         />
       </View>
       {task.description && (

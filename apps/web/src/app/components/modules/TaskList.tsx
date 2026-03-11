@@ -16,19 +16,11 @@ import { useCognitivePreferences } from '../../../cognitive';
 import { useFocusTimer } from '../../context/FocusTimerContext';
 import { rem, extractPixels, fontWeight } from '../../../utils';
 import type { FocusTask } from '../../../services/focus-settings/types';
+import { ProgressBar } from '../ui/ProgressBar';
 
 
 // Interface for a task
 type TaskItem = FocusTask;
-
-// Messages for when a task is completed
-const completionMessages = [
-  'Excelente! Você concluiu uma tarefa 🎉',
-  'Muito bem! Continue assim 💪',
-  'Ótimo trabalho! 🌟',
-  'Incrível! Você está progredindo ✨',
-  'Perfeito! Cada passo conta 🚀',
-];
 
 // Styles
 const createStyles = (
@@ -268,15 +260,23 @@ const CustomCheckbox = ({
   onCheckedChange,
   style,
   checkedStyle,
+  accessibilityLabel,
 }: {
   checked: boolean;
   onCheckedChange: () => void;
   style: any;
   checkedStyle: any;
+  accessibilityLabel: string;
 }) => {
   const { theme } = useTheme();
   return (
-    <TouchableOpacity onPress={onCheckedChange} style={[style, checked && checkedStyle]}>
+    <TouchableOpacity
+      onPress={onCheckedChange}
+      style={[style, checked && checkedStyle]}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked }}
+      accessibilityLabel={accessibilityLabel}
+    >
       {checked && <Ionicons name="checkmark" size={16} color={theme.colors.card.DEFAULT} />}
     </TouchableOpacity>
   );
@@ -303,8 +303,17 @@ export function TaskList() {
 
   const tasks = settings?.tasks || [];
 
+  const completionMessages = [
+    t('tasks.list.completionMessage1'),
+    t('tasks.list.completionMessage2'),
+    t('tasks.list.completionMessage3'),
+    t('tasks.list.completionMessage4'),
+    t('tasks.list.completionMessage5'),
+  ];
+
   const completedCount = tasks.filter((t) => t.completed).length;
   const totalCount = tasks.length;
+  const webPoliteLiveProps: Record<string, unknown> = Platform.OS === 'web' ? { 'aria-live': 'polite' } : {};
 
 
   const addTask = async () => {
@@ -345,13 +354,32 @@ export function TaskList() {
             {t('tasks.list.subtitle')}
           </Text>
         </View>
-        <TouchableOpacity style={styles.addButton} onPress={() => setIsAdding(true)}>
-          <Ionicons name="add" size={16} color={theme.colors.primary.foreground} />
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setIsAdding(true)}
+          accessibilityRole="button"
+          accessibilityLabel={t('accessibility.modules.newTaskButton')}
+        >
+          <Ionicons
+            name="add"
+            size={16}
+            color={theme.colors.primary.foreground}
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+          />
           <Text style={styles.addButtonText}>{t('tasks.list.newTask')}</Text>
         </TouchableOpacity>
       </View>
 
-      {completionMessage && <Text style={styles.completionMessage}>{completionMessage}</Text>}
+      {completionMessage && (
+        <Text
+          style={styles.completionMessage}
+          accessibilityLiveRegion="polite"
+          {...webPoliteLiveProps}
+        >
+          {completionMessage}
+        </Text>
+      )}
 
       <View style={styles.progressCard}>
         <View style={styles.progressHeader}>
@@ -360,14 +388,10 @@ export function TaskList() {
             {completedCount} de {totalCount}
           </Text>
         </View>
-        <View style={styles.progressBarContainer}>
-          <View
-            style={[
-              styles.progressBar,
-              { width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` },
-            ]}
-          />
-        </View>
+        <ProgressBar
+          progress={totalCount > 0 ? completedCount / totalCount : 0}
+          accessibilityLabel={t('accessibility.components.progress')}
+        />
       </View>
 
       {isAdding && (
@@ -380,9 +404,15 @@ export function TaskList() {
             onChangeText={setNewTaskTitle}
             onSubmitEditing={addTask}
             autoFocus
+            accessibilityLabel={t('accessibility.modules.newTaskInput')}
           />
           <View style={styles.addButtonsContainer}>
-            <TouchableOpacity style={styles.addButton} onPress={addTask}>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={addTask}
+              accessibilityRole="button"
+              accessibilityLabel={t('accessibility.modules.confirmAddTask')}
+            >
               <Text style={styles.addButtonText}>{t('common.add', 'Adicionar')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -390,6 +420,8 @@ export function TaskList() {
                 setIsAdding(false);
                 setNewTaskTitle('');
               }}
+              accessibilityRole="button"
+              accessibilityLabel={t('accessibility.modules.cancelAddTask')}
             >
               <Text style={styles.cancelButtonText}>
                 {t('common.cancel')}
@@ -403,7 +435,11 @@ export function TaskList() {
         <View style={styles.listHeader}>
           <Text style={styles.listTitle}>{t('tasks.list.tasks')}</Text>
           {completedCount > 0 && (
-            <TouchableOpacity onPress={clearCompleted}>
+            <TouchableOpacity
+              onPress={clearCompleted}
+              accessibilityRole="button"
+              accessibilityLabel={t('accessibility.modules.clearCompletedTasks')}
+            >
               <Text style={styles.clearButtonText}>
                 {t('tasks.list.clearCompleted')}
               </Text>
@@ -418,6 +454,8 @@ export function TaskList() {
                 size={48}
                 color={theme.colors.muted.foreground}
                 style={styles.emptyIcon}
+                accessibilityElementsHidden
+                importantForAccessibility="no"
               />
               <Text style={styles.emptyListText}>
                 {t('tasks.list.noTasks')}
@@ -448,6 +486,7 @@ export function TaskList() {
                     onCheckedChange={() => toggleTask(task.id)}
                     style={styles.checkboxBase}
                     checkedStyle={styles.checkboxChecked}
+                    accessibilityLabel={t('accessibility.modules.taskCheckbox', { title: task.title })}
                   />
                   <Text style={[styles.taskText, task.completed && styles.taskTextCompleted]}>
                     {task.title}
@@ -457,11 +496,18 @@ export function TaskList() {
                       🍅 {task.pomodoros}
                     </Text>
                   )}
-                  <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTask(task.id)}>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => deleteTask(task.id)}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('accessibility.modules.deleteTask', { title: task.title })}
+                  >
                     <Ionicons
                       name="trash-outline"
                       size={20}
                       color={theme.colors.muted.foreground}
+                      accessibilityElementsHidden
+                      importantForAccessibility="no"
                     />
                   </TouchableOpacity>
                 </TouchableOpacity>
@@ -472,7 +518,11 @@ export function TaskList() {
       </View>
 
       {completedCount > 0 && (
-        <Text style={styles.encouragementText}>
+        <Text
+          style={styles.encouragementText}
+          accessibilityLiveRegion="polite"
+          {...webPoliteLiveProps}
+        >
           {completedCount === totalCount && totalCount > 0 ? (
             <Text style={styles.successText}>
               {t('tasks.list.allDone')}

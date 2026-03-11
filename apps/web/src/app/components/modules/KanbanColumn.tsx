@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
@@ -84,6 +85,7 @@ export function KanbanColumn({
   onTaskPress,
   onAddPress,
 }: KanbanColumnProps) {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(
@@ -110,7 +112,12 @@ export function KanbanColumn({
         <View style={styles.columnTitleContainer}>
           <Text style={styles.columnTitle}>{title}</Text>
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>{tasks.length}</Text>
+            <Text
+              style={styles.badgeText}
+              accessibilityLabel={t('accessibility.modules.tasksCount', { count: tasks.length })}
+            >
+              {tasks.length}
+            </Text>
           </View>
         </View>
         <TouchableOpacity
@@ -118,13 +125,24 @@ export function KanbanColumn({
           onPress={() => onAddPress(id)}
           accessible={true}
           accessibilityRole="button"
-          accessibilityLabel={`Add task to ${title}`}
+          accessibilityLabel={t('accessibility.modules.addTaskToColumn', { column: title })}
         >
-          <Ionicons name="add" size={20} color={theme.colors.muted.foreground} />
+          <Ionicons
+            name="add"
+            size={20}
+            color={theme.colors.muted.foreground}
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+          />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.taskList} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.taskList}
+        showsVerticalScrollIndicator={false}
+        accessibilityRole="summary"
+        accessibilityLabel={t('accessibility.modules.columnTaskList', { column: title })}
+      >
         {tasks.map((task) => (
           <KanbanTaskCard
             key={task.id}

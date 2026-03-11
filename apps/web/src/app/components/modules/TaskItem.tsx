@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { fontSizes, radii, space } from '@mindease/ui-kit';
 import { useCognitivePreferences } from '../../../cognitive';
 import { useTheme } from '../../../theme';
@@ -69,6 +70,7 @@ const createStyles = (
  * Handles toggling completion and deletion.
  */
 export function TaskItem({ id, title, completed, onToggle, onDelete }: TaskItemProps) {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
@@ -80,7 +82,7 @@ export function TaskItem({ id, title, completed, onToggle, onDelete }: TaskItemP
         onPress={() => onToggle(id)}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: completed }}
-        accessibilityLabel={title}
+        accessibilityLabel={t('accessibility.modules.taskCheckbox', { title })}
       >
         {completed && (
           <Ionicons name="checkmark" size={16} color={theme.colors.card.DEFAULT} />
@@ -95,7 +97,7 @@ export function TaskItem({ id, title, completed, onToggle, onDelete }: TaskItemP
         style={styles.deleteButton}
         onPress={() => onDelete(id)}
         accessibilityRole="button"
-        accessibilityLabel="Delete task"
+        accessibilityLabel={t('accessibility.modules.deleteTask', { title })}
       >
         <Ionicons name="trash-outline" size={20} color={theme.colors.muted.foreground} />
       </TouchableOpacity>

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
+  Platform,
   View,
   Text,
   StyleSheet,
@@ -128,6 +129,10 @@ export function KanbanBoardRefactored() {
     setAddingToColumn(null);
   };
 
+  const boardWebProps: Record<string, unknown> = Platform.OS === 'web' ? { role: 'list' } : {};
+  const alertWebProps: Record<string, unknown> =
+    Platform.OS === 'web' ? { role: 'alert', 'aria-live': 'assertive' } : {};
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -136,7 +141,16 @@ export function KanbanBoardRefactored() {
         <Text style={styles.statusText}>
           {completedTasks}/{totalTasks} {t('tasks.list.progress')}
         </Text>
-        {error && <Text style={styles.statusText}>{error}</Text>}
+        {error && (
+          <Text
+            style={styles.statusText}
+            accessibilityRole="alert"
+            accessibilityLiveRegion="assertive"
+            {...alertWebProps}
+          >
+            {error}
+          </Text>
+        )}
       </View>
 
       <ScrollView
@@ -145,6 +159,9 @@ export function KanbanBoardRefactored() {
         contentContainerStyle={styles.columnsContainer}
         decelerationRate="fast"
         snapToInterval={columnWidth + 16}
+        accessibilityRole="summary"
+        accessibilityLabel={t('accessibility.modules.kanbanBoardColumns')}
+        {...boardWebProps}
       >
         {columns.map((column) => (
           <React.Fragment key={column.id}>
@@ -158,9 +175,15 @@ export function KanbanBoardRefactored() {
                   onChangeText={setNewTaskTitle}
                   onSubmitEditing={() => handleAddTask(column.id)}
                   autoFocus
+                  accessibilityLabel={t('accessibility.modules.newTaskInput')}
                 />
                 <View style={styles.inputActions}>
-                  <TouchableOpacity style={styles.actionButton} onPress={() => handleAddTask(column.id)}>
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => handleAddTask(column.id)}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('accessibility.modules.confirmAddTask')}
+                  >
                     <Text style={styles.actionButtonText}>{t('common.add')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -169,6 +192,8 @@ export function KanbanBoardRefactored() {
                       setAddingToColumn(null);
                       setNewTaskTitle('');
                     }}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('accessibility.modules.cancelAddTask')}
                   >
                     <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
                   </TouchableOpacity>

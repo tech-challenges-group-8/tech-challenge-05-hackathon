@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { TextInput, Text, View, StyleSheet, TextInputProps } from 'react-native';
+import React, { useId, useMemo } from 'react';
+import { TextInput, Text, View, StyleSheet, TextInputProps, Platform } from 'react-native';
 import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
 import { rem, extractPixels, fontWeight } from '../../../utils';
@@ -68,17 +68,57 @@ export function AppTextInput({
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [theme.colors, preferences]);
+  const reactId = useId();
+
+  const inputNativeId = props.nativeID ?? `app-input-${reactId}`;
+  const labelNativeId = label ? `${inputNativeId}-label` : undefined;
+  const helperNativeId = helperText && !error ? `${inputNativeId}-helper` : undefined;
+  const errorNativeId = error ? `${inputNativeId}-error` : undefined;
+  const describedBy = [helperNativeId, errorNativeId].filter(Boolean).join(' ') || undefined;
+
+  const webInputProps: Record<string, unknown> = Platform.OS === 'web'
+    ? {
+      id: inputNativeId,
+      'aria-describedby': describedBy,
+      'aria-invalid': Boolean(error) || undefined,
+    }
+    : {};
 
   return (
     <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && (
+        <Text style={styles.label} nativeID={labelNativeId}>
+          {label}
+        </Text>
+      )}
       <TextInput
         {...props}
+        {...webInputProps}
+        nativeID={inputNativeId}
         style={[styles.input, error && styles.inputError]}
         placeholderTextColor={theme.colors.muted.foreground}
+        accessibilityLabel={props.accessibilityLabel ?? label}
+        accessibilityHint={props.accessibilityHint ?? helperText}
+        accessibilityLabelledBy={labelNativeId}
+        accessibilityState={{
+          disabled: props.editable === false,
+        }}
       />
-      {error && <Text style={styles.errorText}>{error}</Text>}
-      {!error && helperText && <Text style={styles.helperText}>{helperText}</Text>}
+      {error && (
+        <Text
+          style={styles.errorText}
+          nativeID={errorNativeId}
+          accessibilityRole="alert"
+          accessibilityLiveRegion="polite"
+        >
+          {error}
+        </Text>
+      )}
+      {!error && helperText && (
+        <Text style={styles.helperText} nativeID={helperNativeId}>
+          {helperText}
+        </Text>
+      )}
     </View>
   );
 }

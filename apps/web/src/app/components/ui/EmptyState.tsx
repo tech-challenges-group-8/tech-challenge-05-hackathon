@@ -54,7 +54,13 @@ export function EmptyState({ icon = 'document-outline', iconSize = 48, title, su
   return (
     <View style={styles.container}>
       <View style={styles.icon}>
-        <Ionicons name={icon} size={iconSize} color={theme.colors.muted.foreground} />
+        <Ionicons
+          name={icon}
+          size={iconSize}
+          color={theme.colors.muted.foreground}
+          accessibilityElementsHidden
+          importantForAccessibility="no"
+        />
       </View>
       <Text style={styles.title}>{title}</Text>
       {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}

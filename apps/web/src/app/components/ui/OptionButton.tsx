@@ -14,6 +14,7 @@ interface OptionButtonProps {
   readonly icon?: keyof typeof Ionicons.glyphMap;
   readonly previewColor?: string;
   readonly description?: string;
+  readonly accessibilityLabel?: string;
 }
 
 const createStyles = (
@@ -90,18 +91,29 @@ export function OptionButton({
   icon,
   previewColor,
   description,
+  accessibilityLabel,
 }: OptionButtonProps) {
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
+  const computedLabel = accessibilityLabel ?? [label, description].filter(Boolean).join('. ');
+
   return (
-    <TouchableOpacity style={[styles.button, isActive && styles.buttonActive]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, isActive && styles.buttonActive]}
+      onPress={onPress}
+      accessibilityRole="radio"
+      accessibilityState={{ selected: isActive }}
+      accessibilityLabel={computedLabel}
+    >
       {icon ? (
         <Ionicons
           name={icon}
           size={18}
           color={isActive ? theme.colors.primary.foreground : theme.colors.foreground}
+          accessibilityElementsHidden
+          importantForAccessibility="no"
         />
       ) : null}
       <View style={styles.content}>
@@ -119,6 +131,8 @@ export function OptionButton({
             { backgroundColor: previewColor },
             isActive && styles.previewColorActive,
           ]}
+          accessible={false}
+          importantForAccessibility="no"
         />
       ) : null}
     </TouchableOpacity>

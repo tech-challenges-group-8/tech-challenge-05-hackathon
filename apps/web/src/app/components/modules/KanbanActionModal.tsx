@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import {
   Modal,
+  Platform,
   View,
   Text,
   StyleSheet,
@@ -84,6 +85,60 @@ export function KanbanActionModal({
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const modalRef = useRef<any>(null);
+  const previousActiveRef = useRef<HTMLElement | null>(null);
+
+  const webDialogProps: Record<string, unknown> =
+    Platform.OS === 'web' ? { role: 'dialog', 'aria-modal': true } : {};
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || !visible) {
+      return;
+    }
+
+    previousActiveRef.current = document.activeElement as HTMLElement;
+    setTimeout(() => {
+      const container = modalRef.current as HTMLElement | null;
+      const elements = container?.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      elements?.[0]?.focus();
+    }, 0);
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const container = modalRef.current as HTMLElement | null;
+      const elements = container?.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (!elements || elements.length === 0) {
+        return;
+      }
+
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      const active = document.activeElement as HTMLElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previousActiveRef.current?.focus();
+    };
+  }, [onClose, visible]);
 
   if (!activeTask) return null;
 
@@ -94,12 +149,22 @@ export function KanbanActionModal({
       animationType={preferences.animationsEnabled ? 'fade' : 'none'}
       onRequestClose={onClose}
     >
-      <TouchableOpacity
-        style={styles.modalOverlay}
-        activeOpacity={1}
-        onPress={onClose}
-      >
-        <View style={styles.modalContent}>
+      <View style={styles.modalOverlay}>
+        <TouchableOpacity
+          style={StyleSheet.absoluteFill}
+          activeOpacity={1}
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel={t('accessibility.components.closeModal')}
+        />
+        <View
+          ref={modalRef}
+          style={styles.modalContent}
+          accessibilityViewIsModal
+          accessibilityRole="summary"
+          accessibilityLabel={t('kanban.actions')}
+          {...webDialogProps}
+        >
           <Text style={styles.modalTitle}>{t('kanban.actions')}</Text>
           
           {activeTask.columnId !== 'todo' && (
@@ -160,7 +225,7 @@ export function KanbanActionModal({
             </Text>
           </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 }
