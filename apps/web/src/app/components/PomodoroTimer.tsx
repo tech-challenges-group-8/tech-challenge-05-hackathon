@@ -9,10 +9,7 @@ import { useFocusTimer } from '../context/FocusTimerContext';
 import { PomodoroAudioControls } from './pomodoro/PomodoroAudioControls';
 import { PomodoroSettingsModal } from './pomodoro/PomodoroSettingsModal';
 import { PomodoroTaskModal } from './pomodoro/PomodoroTaskModal';
-
-// Extract pixel values from rem strings
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -39,7 +36,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       elevation: 5,
     },
     timerCircleBreak: {
-      borderColor: themeColors.secondary?.DEFAULT || '#10b981', // green for break
+      borderColor: themeColors.secondary.DEFAULT,
     },
     timeText: {
       fontSize: rem(fontSizes['4xl']),
@@ -65,7 +62,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       borderRadius: extractPixels(radii.full),
     },
     buttonBreak: {
-      backgroundColor: themeColors.secondary?.DEFAULT || '#10b981',
+      backgroundColor: themeColors.secondary.DEFAULT,
     },
     buttonSecondary: {
       backgroundColor: themeColors.muted.DEFAULT,
@@ -110,7 +107,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       backgroundColor: themeColors.primary.DEFAULT,
     },
     modeTabActiveBreak: {
-      backgroundColor: themeColors.secondary?.DEFAULT || '#10b981',
+      backgroundColor: themeColors.secondary.DEFAULT,
     },
     modeTabText: {
       fontSize: rem(fontSizes.sm),

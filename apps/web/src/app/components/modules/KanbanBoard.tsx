@@ -17,6 +17,7 @@ import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { rem, extractPixels } from '../../../utils';
 
 // Types defined locally for simplicity in this conversion
 export type TaskStatus = 'todo' | 'in-progress' | 'done';
@@ -40,8 +41,6 @@ export interface KanbanColumn {
 }
 
 // Helper functions
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
 const API_URL = 'http://localhost:3001/task-kanban';
 
 const initialColumnsState: KanbanColumn[] = [
@@ -231,7 +230,7 @@ const createStyles = (
     // Modal Styles
     modalOverlay: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: `${themeColors.black}80`,
       justifyContent: 'flex-end',
     },
     modalContent: {
@@ -263,7 +262,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     modalDeleteText: {
-      color: '#FF5252',
+      color: themeColors.accent.foreground,
     },
   });
 
@@ -415,22 +414,22 @@ export function KanbanBoard() {
     switch (priority) {
       case 'high':
         return {
-          borderColor: '#FF5252',
-          backgroundColor: 'rgba(255, 82, 82, 0.1)',
-          textColor: '#FF5252',
+          borderColor: theme.colors.accent.foreground,
+          backgroundColor: theme.colors.accent.DEFAULT,
+          textColor: theme.colors.accent.foreground,
         };
       case 'medium':
         return {
-          borderColor: '#FFC107',
-          backgroundColor: 'rgba(255, 193, 7, 0.1)',
-          textColor: '#FFC107',
+          borderColor: theme.colors.secondary.foreground,
+          backgroundColor: theme.colors.secondary.DEFAULT,
+          textColor: theme.colors.secondary.foreground,
         };
       case 'low':
       default:
         return {
-          borderColor: '#4D9973',
-          backgroundColor: 'rgba(77, 153, 115, 0.1)',
-          textColor: '#4D9973',
+          borderColor: theme.colors.primary.DEFAULT,
+          backgroundColor: theme.colors.primary.DEFAULT,
+          textColor: theme.colors.primary.foreground,
         };
     }
   };
@@ -442,7 +441,7 @@ export function KanbanBoard() {
       case 'in-progress':
         return theme.colors.primary.DEFAULT;
       case 'done':
-        return '#4D9973'; // success
+        return theme.colors.primary.DEFAULT;
       default:
         return theme.colors.border;
     }
@@ -617,7 +616,7 @@ export function KanbanBoard() {
               style={[styles.modalOption, { borderBottomWidth: 0 }]}
               onPress={() => deleteTask(activeTask!.columnId, activeTask!.task.id)}
             >
-              <Ionicons name="trash" size={20} color={'#FF5252'} />
+              <Ionicons name="trash" size={20} color={theme.colors.accent.foreground} />
               <Text style={[styles.modalOptionText, styles.modalDeleteText]}>
                 {t('common.delete', 'Excluir')}
               </Text>

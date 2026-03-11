@@ -6,9 +6,7 @@ import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
 import { PomodoroTimer } from '../components/PomodoroTimer';
 import { TaskList } from '../components/TaskList';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],

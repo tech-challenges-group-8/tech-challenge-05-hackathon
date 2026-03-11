@@ -16,9 +16,7 @@ import { useTheme } from '../../theme';
 import { useAuth } from '../../auth';
 import { userService } from '../../services';
 import { useCognitivePreferences } from '../../cognitive';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -122,7 +120,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     successText: {
-      color: '#4D9973',
+      color: themeColors.primary.DEFAULT,
       fontSize: rem(fontSizes.xs) * preferences.fontScale,
       marginBottom: rem(space[3]),
       textAlign: 'center',

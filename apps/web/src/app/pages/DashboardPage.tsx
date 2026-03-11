@@ -9,9 +9,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ResponseDashboardStatsDto } from '@mindease/dtos';
 import { useAuth } from '../../auth';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],

@@ -4,10 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
-
-// Helper to convert rem to pixels (assuming 16px base)
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -62,10 +59,9 @@ const createStyles = (
 const menuItems = [
   { id: 'dashboard', labelKey: 'menu.dashboard', icon: '📊' },
   { id: 'tasks', labelKey: 'menu.tasks', icon: '✓' },
-  { id: 'kanban', labelKey: 'menu.kanban', icon: '✓' },
+  { id: 'kanban', labelKey: 'menu.kanban', icon: '📋' },
   { id: 'focus', labelKey: 'menu.focus', icon: '🎯' },
   { id: 'cognitive', labelKey: 'menu.cognitive', icon: '🧠' },
-  { id: 'settings', labelKey: 'menu.settings', icon: '⚙️' },
 ];
 
 interface SidebarProps {

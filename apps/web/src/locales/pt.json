@@ -8,8 +8,7 @@
     "tasks": "Tarefas",
     "focus": "Modo Foco",
     "cognitive": "Configurações Cognitivas",
-    "settings": "Configurações",
-    "kanban": "kanban"
+    "kanban": "Kanban"
   },
   "header": {
     "newTask": "Nova Tarefa",
@@ -76,10 +75,6 @@
     "cognitive": {
       "title": "Configurações Cognitivas",
       "body": "Painel de configurações simulado. Você poderá ajustar intensidade cognitiva, notificações e preferências de acessibilidade aqui."
-    },
-    "settings": {
-      "title": "Configurações",
-      "body": "Tela de configurações simulada. Você gerenciará preferências da conta, notificações e integrações aqui."
     }
   },
   "actions": {
@@ -116,6 +111,7 @@
     "submit": "Criar conta",
     "helper": "Sua conta será criada e você será conectado automaticamente.",
     "switchToLogin": "Já tem conta? Entre aqui",
+    "success": "Conta criada com sucesso! Redirecionando para login...",
     "errors": {
       "missingFields": "Preencha todos os campos.",
       "passwordMismatch": "As senhas não correspondem.",

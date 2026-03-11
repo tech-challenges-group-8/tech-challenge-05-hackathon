@@ -17,9 +17,7 @@ import {
   type CognitivePreset,
 } from '../../cognitive';
 import { useTheme, themes } from '../../theme';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -276,7 +274,7 @@ export function CognitiveSettingsPage() {
     emotion: false,
   });
 
-  const presetOptions: Array<{ id: CognitivePreset; icon: keyof typeof Ionicons.glyphMap }> = [
+  const presetOptions: { id: CognitivePreset; icon: keyof typeof Ionicons.glyphMap }[] = [
     { id: 'default', icon: 'sparkles-outline' },
     { id: 'reading', icon: 'book-outline' },
     { id: 'focus', icon: 'eye-outline' },

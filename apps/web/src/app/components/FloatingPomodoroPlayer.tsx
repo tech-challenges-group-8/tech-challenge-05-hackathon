@@ -5,9 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useFocusTimer } from '../context/FocusTimerContext';
-
-const rem = (value: string) => Number.parseFloat(value) * 16;
-const extractPixels = (value: string) => Number.parseInt(value, 10);
+import { rem, extractPixels } from '../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -18,7 +16,7 @@ const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors'
       backgroundColor: themeColors.card.DEFAULT,
       borderRadius: extractPixels(radii.lg),
       padding: rem(space[3]),
-      shadowColor: '#000',
+      shadowColor: themeColors.black,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.15,
       shadowRadius: 12,
