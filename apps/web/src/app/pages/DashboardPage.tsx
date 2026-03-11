@@ -4,18 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
-<<<<<<< HEAD
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ResponseDashboardStatsDto } from '@mindease/dtos';
 import { useAuth } from '../../auth';
-import { rem, extractPixels } from '../../utils';
-=======
 import { rem } from '../../utils';
 import { Card } from '../components/ui';
 import { StatCard } from '../components/dashboard/StatCard';
->>>>>>> 5c7a7469d7b51d25ecd2114b6b40b536a48d4615
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
@@ -108,28 +104,10 @@ export function DashboardPage() {
         <Text style={styles.text}>{t('pages.dashboard.body')}</Text>
 
         <View style={styles.statsContainer}>
-<<<<<<< HEAD
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>{t('pages.dashboard.stats.activeTasks')}</Text>
-            <Text style={styles.statValue}>{isLoading ? '...' : stats?.activeTasks ?? 0}</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>{t('pages.dashboard.stats.completedToday')}</Text>
-            <Text style={styles.statValue}>{isLoading ? '...' : stats?.completedToday ?? 0}</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>{t('pages.dashboard.stats.totalCompleted')}</Text>
-            <Text style={styles.statValue}>{isLoading ? '...' : stats?.totalCompleted ?? 0}</Text>
-          </View>
-          <View style={[styles.statCard, styles.statCardLast]}>
-            <Text style={styles.statLabel}>{t('pages.dashboard.stats.focusTime')}</Text>
-            <Text style={styles.statValue}>{isLoading ? '...' : formatFocusTime(stats?.totalFocusTime ?? 0)}</Text>
-          </View>
-=======
-          <StatCard label={t('pages.dashboard.stats.activeTasks')} value="12" />
-          <StatCard label={t('pages.dashboard.stats.completedToday')} value="8" />
-          <StatCard label={t('pages.dashboard.stats.focusTime')} value="4h" isLast />
->>>>>>> 5c7a7469d7b51d25ecd2114b6b40b536a48d4615
+          <StatCard label={t('pages.dashboard.stats.activeTasks')} value={isLoading ? '...' : stats?.activeTasks as any ?? 0} />
+          <StatCard label={t('pages.dashboard.stats.completedToday')} value={isLoading ? '...' : stats?.completedToday as any ?? 0} />
+          <StatCard label={t('pages.dashboard.stats.totalCompleted')} value={isLoading ? '...' : stats?.totalCompleted as any ?? 0} />
+          <StatCard label={t('pages.dashboard.stats.focusTime')} value={isLoading ? '...' : formatFocusTime(stats?.totalFocusTime ?? 0)} isLast />
         </View>
       </Card>
 
