@@ -5,8 +5,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TextInput,
-  TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +21,7 @@ import { KanbanActionModal } from './KanbanActionModal';
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
   preferences: ReturnType<typeof useCognitivePreferences>,
+  isDesktop: boolean,
 ) =>
   StyleSheet.create({
     container: {
@@ -47,54 +46,10 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     columnsContainer: {
+      flexDirection: isDesktop ? 'row' : 'column',
+      gap: rem(space[4]),
+      paddingRight: isDesktop ? rem(space[2]) : 0,
       paddingBottom: rem(space[4]),
-    },
-    inputCard: {
-      backgroundColor: themeColors.card.DEFAULT,
-      borderRadius: extractPixels(radii.lg),
-      padding: rem(space[3]),
-      marginBottom: rem(space[3]),
-      marginRight: rem(space[4]),
-      width: 260,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: themeColors.border,
-      borderRadius: extractPixels(radii.md),
-      paddingHorizontal: rem(space[3]),
-      paddingVertical: rem(space[2]),
-      fontSize: rem(fontSizes.sm) * preferences.fontScale,
-      color: themeColors.foreground,
-      marginBottom: rem(space[2]),
-      letterSpacing: preferences.letterSpacing,
-      fontFamily: preferences.fontFamily,
-    },
-    inputActions: {
-      flexDirection: 'row',
-      gap: rem(space[2]),
-    },
-    actionButton: {
-      paddingHorizontal: rem(space[3]),
-      paddingVertical: rem(space[2]),
-      borderRadius: extractPixels(radii.md),
-      backgroundColor: themeColors.primary.DEFAULT,
-    },
-    actionButtonText: {
-      color: themeColors.primary.foreground,
-      fontSize: rem(fontSizes.xs) * preferences.fontScale,
-      fontWeight: fontWeight(fontWeights.medium),
-      letterSpacing: preferences.letterSpacing,
-      fontFamily: preferences.fontFamily,
-    },
-    cancelButton: {
-      paddingHorizontal: rem(space[3]),
-      paddingVertical: rem(space[2]),
-    },
-    cancelButtonText: {
-      color: themeColors.muted.foreground,
-      fontSize: rem(fontSizes.xs) * preferences.fontScale,
-      letterSpacing: preferences.letterSpacing,
-      fontFamily: preferences.fontFamily,
     },
     statusText: {
       marginTop: rem(space[2]),
@@ -107,11 +62,14 @@ export function KanbanBoardRefactored() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
-  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
   const { width } = useWindowDimensions();
 
   const isDesktop = width >= 768;
-  const columnWidth = isDesktop ? (width - 400) / 3 : width * 0.85;
+  const styles = useMemo(
+    () => createStyles(theme.colors, preferences, isDesktop),
+    [isDesktop, preferences, theme.colors],
+  );
+  const columnWidth = isDesktop ? Math.max((width - 400) / 3, 280) : '100%';
 
   const { columns, isLoading, error, totalTasks, completedTasks, addTask, moveTask, deleteTask } =
     useKanbanBoard();
@@ -154,11 +112,11 @@ export function KanbanBoardRefactored() {
       </View>
 
       <ScrollView
-        horizontal
+        horizontal={isDesktop}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.columnsContainer}
         decelerationRate="fast"
-        snapToInterval={columnWidth + 16}
+        snapToInterval={isDesktop && typeof columnWidth === 'number' ? columnWidth + 16 : undefined}
         accessibilityRole="summary"
         accessibilityLabel={t('accessibility.modules.kanbanBoardColumns')}
         {...boardWebProps}

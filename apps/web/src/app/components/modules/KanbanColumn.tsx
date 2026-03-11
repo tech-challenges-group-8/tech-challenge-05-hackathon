@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
@@ -21,7 +20,7 @@ interface KanbanColumnProps {
   readonly id: TaskKanbanStatus;
   readonly title: string;
   readonly tasks: KanbanTask[];
-  readonly columnWidth: number;
+  readonly columnWidth: number | '100%';
   readonly onTaskPress: (task: KanbanTask, columnId: TaskKanbanStatus) => void;
   readonly onAddPress: (columnId: TaskKanbanStatus) => void;
   readonly isAdding: boolean;
@@ -33,28 +32,34 @@ interface KanbanColumnProps {
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
-  columnWidth: number,
+  columnWidth: number | '100%',
   preferences: ReturnType<typeof useCognitivePreferences>,
+  isCompact: boolean,
 ) =>
   StyleSheet.create({
     column: {
       width: columnWidth,
+      minWidth: 0,
       backgroundColor: themeColors.muted.DEFAULT,
       borderRadius: extractPixels(radii.xl),
       padding: rem(space[4]),
-      marginRight: rem(space[4]),
-      borderTopWidth: 4,
+      marginRight: isCompact ? 0 : rem(space[4]),
+      marginBottom: isCompact ? rem(space[2]) : 0,
+      borderTopWidth: isCompact ? 0 : 4,
     },
     columnHeader: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       marginBottom: rem(space[4]),
+      gap: rem(space[2]),
     },
     columnTitleContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: rem(space[2]),
+      flex: 1,
+      minWidth: 0,
     },
     columnTitle: {
       fontSize: rem(fontSizes.md) * preferences.fontScale,
@@ -62,6 +67,7 @@ const createStyles = (
       color: themeColors.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+      flexShrink: 1,
     },
     badge: {
       backgroundColor: themeColors.background,
@@ -79,7 +85,7 @@ const createStyles = (
       padding: rem(space[2]),
     },
     taskList: {
-      flex: 1,
+      minWidth: 0,
     },
     inputCard: {
       backgroundColor: themeColors.card.DEFAULT,
@@ -88,6 +94,8 @@ const createStyles = (
       marginBottom: rem(space[3]),
     },
     input: {
+      width: '100%',
+      minWidth: 0,
       borderWidth: 1,
       borderColor: themeColors.border,
       borderRadius: extractPixels(radii.md),
@@ -100,7 +108,7 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     inputActions: {
-      flexDirection: 'row',
+      flexDirection: isCompact ? 'column' : 'row',
       gap: rem(space[2]),
     },
     actionButton: {
@@ -108,6 +116,7 @@ const createStyles = (
       paddingVertical: rem(space[2]),
       borderRadius: extractPixels(radii.md),
       backgroundColor: themeColors.primary.DEFAULT,
+      alignItems: 'center',
     },
     actionButtonText: {
       color: themeColors.primary.foreground,
@@ -119,10 +128,17 @@ const createStyles = (
     cancelButton: {
       paddingHorizontal: rem(space[3]),
       paddingVertical: rem(space[2]),
+      alignItems: isCompact ? 'center' : 'flex-start',
     },
     cancelButtonText: {
       color: themeColors.muted.foreground,
       fontSize: rem(fontSizes.xs) * preferences.fontScale,
+      letterSpacing: preferences.letterSpacing,
+      fontFamily: preferences.fontFamily,
+    },
+    emptyColumnText: {
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
+      color: themeColors.muted.foreground,
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
     },
@@ -144,9 +160,10 @@ export function KanbanColumn({
   const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
+  const isCompact = columnWidth === '100%' || columnWidth < 340;
   const styles = useMemo(
-    () => createStyles(theme.colors, columnWidth, preferences),
-    [columnWidth, preferences, theme.colors],
+    () => createStyles(theme.colors, columnWidth, preferences, isCompact),
+    [columnWidth, isCompact, preferences, theme.colors],
   );
 
   const getColumnBorderColor = (status: TaskKanbanStatus) => {
@@ -228,9 +245,8 @@ export function KanbanColumn({
         </View>
       )}
 
-      <ScrollView
+      <View
         style={styles.taskList}
-        showsVerticalScrollIndicator={false}
         accessibilityRole="summary"
         accessibilityLabel={t('accessibility.modules.columnTaskList', { column: title })}
       >
@@ -241,7 +257,10 @@ export function KanbanColumn({
             onPress={() => onTaskPress(task, id)}
           />
         ))}
-      </ScrollView>
+        {tasks.length === 0 && !isAdding ? (
+          <Text style={styles.emptyColumnText}>{t('tasks.list.noTasks')}</Text>
+        ) : null}
+      </View>
     </View>
   );
 }

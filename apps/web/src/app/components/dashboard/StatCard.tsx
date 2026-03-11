@@ -19,6 +19,7 @@ const createStyles = (
   StyleSheet.create({
     card: {
       flex: 1,
+      minWidth: 0,
       backgroundColor: preferences.hideUrgencyIndicators
         ? themeColors.card.DEFAULT
         : themeColors.accent.DEFAULT,
@@ -46,6 +47,7 @@ const createStyles = (
       marginBottom: rem(space[1]),
       letterSpacing: preferences.letterSpacing,
       fontFamily: preferences.fontFamily,
+      flexShrink: 1,
     },
     value: {
       fontSize: rem(fontSizes['3xl']) * preferences.fontScale,

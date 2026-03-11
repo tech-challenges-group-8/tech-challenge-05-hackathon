@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +27,7 @@ type TaskItem = FocusTask;
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
   preferences: ReturnType<typeof useCognitivePreferences>,
+  isCompact: boolean,
 ) =>
   StyleSheet.create({
     container: {
@@ -33,10 +35,15 @@ const createStyles = (
       padding: rem(space[4]),
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: isCompact ? 'column' : 'row',
+      alignItems: isCompact ? 'stretch' : 'center',
       justifyContent: 'space-between',
       marginBottom: rem(space[6]),
+      gap: rem(space[3]),
+    },
+    headerCopy: {
+      flex: 1,
+      minWidth: 0,
     },
     headerTitle: {
       fontSize: rem(fontSizes['2xl']) * preferences.fontScale,
@@ -59,7 +66,10 @@ const createStyles = (
       borderRadius: extractPixels(radii.md),
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
       gap: rem(space[2]),
+      alignSelf: isCompact ? 'stretch' : 'flex-start',
+      maxWidth: isCompact ? '100%' : undefined,
     },
     addButtonText: {
       color: themeColors.primary.foreground,
@@ -135,13 +145,14 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     addButtonsContainer: {
-      flexDirection: 'row',
+      flexDirection: isCompact ? 'column' : 'row',
       gap: rem(space[2]),
       marginTop: rem(space[3]),
     },
     cancelButtonText: {
       color: themeColors.muted.foreground,
       padding: rem(space[3]),
+      textAlign: isCompact ? 'center' : 'left',
     },
     listCard: {
       backgroundColor: themeColors.card.DEFAULT,
@@ -286,7 +297,12 @@ export function TaskList() {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
-  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const { width } = useWindowDimensions();
+  const isCompact = width < 520;
+  const styles = useMemo(
+    () => createStyles(theme.colors, preferences, isCompact),
+    [isCompact, preferences, theme.colors],
+  );
 
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [isAdding, setIsAdding] = useState(false);
@@ -348,7 +364,7 @@ export function TaskList() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerCopy}>
           <Text style={styles.headerTitle}>{t('tasks.list.title')}</Text>
           <Text style={styles.headerSubtitle}>
             {t('tasks.list.subtitle')}

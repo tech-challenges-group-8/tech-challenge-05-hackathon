@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useMemo } from 'react';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
@@ -9,12 +9,13 @@ import { rem, extractPixels, fontWeight } from '../../utils';
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
   preferences: ReturnType<typeof useCognitivePreferences>,
+  isCompact: boolean,
 ) =>
   StyleSheet.create({
     card: {
       backgroundColor: themeColors.card.DEFAULT,
       borderRadius: extractPixels(radii.lg),
-      padding: rem(space[6]),
+      padding: rem(isCompact ? space[4] : space[6]),
       shadowColor: themeColors.black,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: preferences.simpleInterface ? 0 : 0.1,
@@ -37,7 +38,12 @@ const createStyles = (
 export function KanbanPage() {
   const { theme } = useTheme();
   const preferences = useCognitivePreferences();
-  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const { width } = useWindowDimensions();
+  const isCompact = width < 768;
+  const styles = useMemo(
+    () => createStyles(theme.colors, preferences, isCompact),
+    [isCompact, preferences, theme.colors],
+  );
 
   return (
     <View style={styles.card}>

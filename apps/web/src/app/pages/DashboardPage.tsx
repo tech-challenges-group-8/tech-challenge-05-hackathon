@@ -1,20 +1,20 @@
-import { View, Text, StyleSheet, Platform } from 'react-native';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { fontSizes, fontWeights, space, WEB_SIDEBAR_BREAKPOINT } from '@mindease/ui-kit';
-import { useTheme } from '../../theme';
-import { useCognitivePreferences } from '../../cognitive';
-import { useState, useEffect, useCallback } from 'react';
 import { ResponseDashboardStatsDto } from '@mindease/dtos';
+import { fontSizes, fontWeights, space, WEB_SIDEBAR_BREAKPOINT } from '@mindease/ui-kit';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Platform, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useAuth } from '../../auth';
-import { rem, fontWeight } from '../../utils';
-import { Card } from '../components/ui';
-import { StatCard } from '../components/dashboard/StatCard';
+import { useCognitivePreferences } from '../../cognitive';
 import { api } from '../../services';
+import { useTheme } from '../../theme';
+import { fontWeight, rem } from '../../utils';
+import { StatCard } from '../components/dashboard/StatCard';
+import { Card } from '../components/ui';
 
 const createStyles = (
   themeColors: ReturnType<typeof useTheme>['theme']['colors'],
   preferences: ReturnType<typeof useCognitivePreferences>,
+  stackStats: boolean,
 ) =>
   StyleSheet.create({
     cardSpacing: {
@@ -43,8 +43,10 @@ const createStyles = (
       fontFamily: preferences.fontFamily,
     },
     statsContainer: {
-      flexDirection: 'row',
+      flexDirection: stackStats ? 'column' : 'row',
+      flexWrap: stackStats ? 'nowrap' : 'wrap',
       marginTop: rem(space[4]),
+      gap: stackStats ? rem(space[3]) : 0,
     },
   });
 
@@ -53,12 +55,18 @@ export function DashboardPage() {
   const { theme } = useTheme();
   const { currentUser } = useAuth();
   const preferences = useCognitivePreferences();
-  const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+  const { width } = useWindowDimensions();
 
   const [stats, setStats] = useState<ResponseDashboardStatsDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [windowWidth, setWindowWidth] = useState(
     Platform.OS === 'web' ? window.innerWidth : 0,
+  );
+
+  const stackStats = Platform.OS !== 'web' || width < 520;
+  const styles = useMemo(
+    () => createStyles(theme.colors, preferences, stackStats),
+    [preferences, stackStats, theme.colors],
   );
 
   const fetchStats = useCallback(async () => {
@@ -125,23 +133,23 @@ export function DashboardPage() {
           <StatCard
             label={t('pages.dashboard.stats.activeTasks')}
             value={isLoading ? '...' : String(stats?.activeTasks ?? 0)}
-            stacked={isSmallWebResolution}
+            stacked={stackStats || isSmallWebResolution}
           />
           <StatCard
             label={t('pages.dashboard.stats.completedToday')}
             value={isLoading ? '...' : String(stats?.completedToday ?? 0)}
-            stacked={isSmallWebResolution}
+            stacked={stackStats || isSmallWebResolution}
           />
           <StatCard
             label={t('pages.dashboard.stats.totalCompleted')}
             value={isLoading ? '...' : String(stats?.totalCompleted ?? 0)}
-            stacked={isSmallWebResolution}
+            stacked={stackStats || isSmallWebResolution}
           />
           <StatCard
             label={t('pages.dashboard.stats.focusTime')}
             value={isLoading ? '...' : formatFocusTime(stats?.totalFocusTime ?? 0)}
             isLast
-            stacked={isSmallWebResolution}
+            stacked={stackStats || isSmallWebResolution}
           />
         </View>
       </Card>
