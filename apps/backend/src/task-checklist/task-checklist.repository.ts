@@ -18,6 +18,8 @@ export class TaskCheckListRepositoryMongoose implements TaskCheckListRepository 
         idUser: task.idUser,
         description: task.description,
         completed: task.completed,
+        pomodoros: task.pomodoros,
+        timeSpent: task.timeSpent,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
       },
@@ -45,7 +47,15 @@ export class TaskCheckListRepositoryMongoose implements TaskCheckListRepository 
   }
 
   private toEntity(doc: TaskCheckListDocument): TaskCheckList {
-    const task = new TaskCheckList(doc._id, doc.idUser, doc.description, doc.completed, doc.createdAt);
+    const task = new TaskCheckList(
+      doc._id,
+      doc.idUser,
+      doc.description,
+      doc.completed,
+      doc.pomodoros || 0,
+      doc.timeSpent || 0,
+      doc.createdAt
+    );
     // Força a atualização da data de update que pode não estar no construtor da entidade dependendo da versão
     task.updatedAt = doc.updatedAt;
     return task;

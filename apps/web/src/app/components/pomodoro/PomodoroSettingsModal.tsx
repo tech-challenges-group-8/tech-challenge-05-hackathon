@@ -283,7 +283,7 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
                     style={styles.textInput}
                     value={newAudioName}
                     onChangeText={setNewAudioName}
-                    placeholder="e.g. Rock"
+                    placeholder={t('pages.focus.audioNamePlaceholder', 'ex: Rock')}
                   />
                 </View>
                 <View style={styles.inputGroup}>
@@ -336,13 +336,13 @@ export function PomodoroSettingsModal({ isOpen, onClose, settingsTab, setSetting
                 style={[styles.button, styles.buttonSecondary]} 
                 onPress={onClose}
               >
-                <Text style={[styles.buttonText, styles.buttonTextSecondary]}>{t('common.cancel', 'Cancel')}</Text>
+                <Text style={[styles.buttonText, styles.buttonTextSecondary]}>{t('common.cancel', 'Cancelar')}</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={styles.button} 
                 onPress={handleSaveSettings}
               >
-                <Text style={styles.buttonText}>{t('common.save', 'Save')}</Text>
+                <Text style={styles.buttonText}>{t('common.save', 'Salvar')}</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

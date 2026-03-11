@@ -1,9 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Platform, View } from 'react-native';
-// @ts-ignore
 import YoutubePlayer from 'react-native-youtube-iframe';
 import focusSettingsService from '../../services/focus-settings/focusSettingsService';
-import type { ResponseFocusSettingsDTO } from '../../services/focus-settings/types';
+import type { ResponseFocusSettingsDTO, FocusTask } from '../../services/focus-settings/types';
+import { useAuth } from '../../auth';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const TASKS_API_URL = 'http://localhost:3001/task-checklist';
 
 export type TimerMode = 'FOCUS' | 'SHORT_BREAK' | 'LONG_BREAK';
 
@@ -62,11 +66,20 @@ export interface FocusTimerContextData {
   closeFocusCompleteModal: () => void;
   submitTaskCompletionTime: (taskId: string | null) => Promise<void>;
   rewindAudio: () => void;
+  
+  // Task global state and functions
+  tasks: FocusTask[];
+  fetchTasks: () => Promise<void>;
+  addTask: (title: string) => Promise<void>;
+  toggleTask: (id: string) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+  clearCompletedTasks: () => Promise<void>;
 }
 
 const FocusTimerContext = createContext<FocusTimerContextData | undefined>(undefined);
 
 export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { currentUser } = useAuth();
   const [settings, setSettings] = useState<ResponseFocusSettingsDTO | null>(null);
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
@@ -83,6 +96,9 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [isFocusCompleteModalOpen, setIsFocusCompleteModalOpen] = useState(false);
   const [lastFocusDuration, setLastFocusDuration] = useState(25); // the original setting duration
   const [isFloatingPlayerDismissed, setIsFloatingPlayerDismissed] = useState(false);
+  
+  // Tasks State
+  const [tasks, setTasks] = useState<FocusTask[]>([]);
   
   const allThemes = useMemo(() => {
     const userThemes = settings?.audioThemes || [];
@@ -139,9 +155,29 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // Load settings on mount
   useEffect(() => {
     const fetchSettings = async () => {
+      if (!currentUser) {
+        setSettings(null);
+        return;
+      }
+
       try {
         const data = await focusSettingsService.getSettings();
-        setSettings(data);
+        
+        // Fetch global tasks to sync
+        const token = await AsyncStorage.getItem('authToken');
+        const tasksRes = await axios.get(TASKS_API_URL, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        const mappedTasks: FocusTask[] = tasksRes.data.map((t: any) => ({
+          id: t.id,
+          title: t.description,
+          completed: t.completed,
+          pomodoros: t.pomodoros || 0,
+          timeSpent: t.timeSpent || 0
+        }));
+
+        setSettings({ ...data, tasks: mappedTasks });
         setTimeLeft(data.foco * 60);
       } catch (error) {
         console.error('Failed to load focus settings, falling back to defaults', error);
@@ -151,7 +187,136 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       }
     };
     fetchSettings();
-  }, []);
+  }, [currentUser]);
+
+  const fetchTasks = useCallback(async () => {
+    if (!currentUser) {
+      setTasks([]);
+      return;
+    }
+
+    try {
+      const token = await AsyncStorage.getItem('authToken');
+      const response = await axios.get(TASKS_API_URL, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const mappedTasks: FocusTask[] = response.data.map((t: any) => ({
+        id: t.id,
+        title: t.description,
+        completed: t.completed,
+        pomodoros: t.pomodoros || 0,
+        timeSpent: t.timeSpent || 0
+      }));
+      setTasks(mappedTasks);
+    } catch (error) {
+      console.error('Error fetching global tasks:', error);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  const addTask = async (title: string) => {
+    if (!title.trim()) return;
+    try {
+      const token = await AsyncStorage.getItem('authToken');
+      const response = await axios.post(
+        TASKS_API_URL,
+        { description: title },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const newTask: FocusTask = {
+        id: response.data.id,
+        title: response.data.description,
+        completed: response.data.completed,
+        pomodoros: response.data.pomodoros || 0,
+        timeSpent: response.data.timeSpent || 0
+      };
+
+      setTasks(prev => [newTask, ...prev]);
+      
+      // Update settings for backward compatibility
+      setSettings(prev => prev ? { ...prev, tasks: [newTask, ...(prev.tasks || [])] } as ResponseFocusSettingsDTO : null);
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
+
+  const toggleTask = async (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+
+    const newStatus = !task.completed;
+    
+    // Optimistic update
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: newStatus } : t));
+
+    try {
+      const token = await AsyncStorage.getItem('authToken');
+      const response = await axios.patch(
+        `${TASKS_API_URL}/${id}`,
+        { isDone: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Fully hydrate the task with the response
+      const serverTask: FocusTask = {
+        id: response.data.id,
+        title: response.data.description,
+        completed: response.data.completed,
+        pomodoros: response.data.pomodoros || 0,
+        timeSpent: response.data.timeSpent || 0
+      };
+      
+      setTasks(prev => prev.map(t => t.id === id ? serverTask : t));
+      setSettings(prev => prev ? { 
+        ...prev, 
+        tasks: prev.tasks.map(t => t.id === id ? serverTask : t) 
+      } as ResponseFocusSettingsDTO : null);
+    } catch (error) {
+      console.error('Error toggling task:', error);
+      // Revert
+      setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !newStatus } : t));
+    }
+  };
+
+  const deleteTask = async (id: string) => {
+    const previousTasks = [...tasks];
+    setTasks(prev => prev.filter(t => t.id !== id));
+
+    try {
+      const token = await AsyncStorage.getItem('authToken');
+      await axios.delete(`${TASKS_API_URL}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      setTasks(previousTasks);
+    }
+  };
+
+  const clearCompletedTasks = async () => {
+    const completedTasks = tasks.filter(t => t.completed);
+    if (completedTasks.length === 0) return;
+
+    const previousTasks = [...tasks];
+    setTasks(prev => prev.filter(t => !t.completed));
+
+    try {
+      const token = await AsyncStorage.getItem('authToken');
+      await Promise.all(
+        completedTasks.map(t => axios.delete(`${TASKS_API_URL}/${t.id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }))
+      );
+    } catch (error) {
+      console.error('Error clearing completed tasks:', error);
+      setTasks(previousTasks);
+    }
+  };
 
   const handleTimerComplete = useCallback(async () => {
     setIsActive(false);
@@ -265,27 +430,50 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const closeFocusCompleteModal = () => setIsFocusCompleteModalOpen(false);
 
   const submitTaskCompletionTime = async (taskId: string | null) => {
-    if (!taskId || !settings) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) {
       closeFocusCompleteModal();
       return;
     }
 
-    const updatedTasks = settings.tasks.map(t => {
+    const updatedPomodoros = (task.pomodoros || 0) + 1;
+    const updatedTimeSpent = (task.timeSpent || 0) + lastFocusDuration;
+
+    // Optimistic UI update
+    const updatedTasks = tasks.map(t => {
       if (t.id === taskId) {
         return {
           ...t,
-          timeSpent: (t.timeSpent || 0) + lastFocusDuration,
-          pomodoros: (t.pomodoros || 0) + 1
+          timeSpent: updatedTimeSpent,
+          pomodoros: updatedPomodoros
         };
       }
       return t;
     });
 
-    setSettings({ ...settings, tasks: updatedTasks });
+    setTasks(updatedTasks);
+    
     try {
-      await focusSettingsService.updateTasks(updatedTasks);
+      const token = await AsyncStorage.getItem('authToken');
+      const response = await axios.patch(`${TASKS_API_URL}/${taskId}`, {
+        pomodoros: updatedPomodoros,
+        timeSpent: updatedTimeSpent
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Hydrate from server response
+      const serverTask: FocusTask = {
+        id: response.data.id,
+        title: response.data.description,
+        completed: response.data.completed,
+        pomodoros: response.data.pomodoros || 0,
+        timeSpent: response.data.timeSpent || 0
+      };
+
+      setTasks(prev => prev.map(t => t.id === taskId ? serverTask : t));
     } catch(e) {
-      console.error('Could not save task time assignment');
+      console.error('Could not save task time assignment to global task list');
     }
     closeFocusCompleteModal();
   };
@@ -299,7 +487,8 @@ export const FocusTimerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       setActiveVideoId, setIsAudioPlaying, setAudioVolume, setIsFocusCompleteModalOpen,
       setIsFloatingPlayerDismissed,
       toggleTimer, resetTimer, skipTimer, handleModeSelect, toggleAudioPlay, handleTimerComplete,
-      closeFocusCompleteModal, submitTaskCompletionTime, rewindAudio
+      closeFocusCompleteModal, submitTaskCompletionTime, rewindAudio,
+      tasks, fetchTasks, addTask, toggleTask, deleteTask, clearCompletedTasks
     }}>
       {children}
       <View style={{ position: 'absolute', width: 0, height: 0, opacity: 0 }} pointerEvents="none">

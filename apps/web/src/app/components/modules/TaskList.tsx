@@ -15,6 +15,7 @@ import { useTheme } from '../../../theme';
 import { useCognitivePreferences } from '../../../cognitive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { useFocusTimer } from '../../context/FocusTimerContext';
 
 // Helper functions from other files
 const rem = (value: string) => Number.parseFloat(value) * 16;
@@ -28,6 +29,8 @@ interface TaskItem {
   id: string;
   title: string;
   completed: boolean;
+  pomodoros: number;
+  timeSpent: number;
   createdAt: Date;
 }
 
@@ -239,6 +242,12 @@ const createStyles = (
       textDecorationLine: 'line-through',
       color: themeColors.muted.foreground,
     },
+    pomodoroCount: {
+      fontSize: rem(fontSizes.xs) * preferences.fontScale,
+      color: themeColors.muted.foreground,
+      marginRight: rem(space[2]),
+      fontFamily: preferences.fontFamily,
+    },
     deleteButton: {
       width: rem(space[8]),
       height: rem(space[8]),
@@ -285,11 +294,18 @@ export function TaskList() {
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
 
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
   const [completionMessage, setCompletionMessage] = useState<string | null>(null);
+
+  const {
+    tasks,
+    addTask: addTaskToGlobal,
+    toggleTask: toggleTaskInGlobal,
+    deleteTask: deleteTaskFromGlobal,
+    clearCompletedTasks
+  } = useFocusTimer();
 
   const completedCount = tasks.filter((t) => t.completed).length;
   const totalCount = tasks.length;
@@ -303,64 +319,17 @@ export function TaskList() {
     };
   };
 
-  const fetchTasks = async () => {
-    try {
-      const config = await getAuthHeaders();
-      const response = await axios.get(API_URL, config);
-      const mappedTasks = response.data.map((t: any) => ({
-        id: t.id,
-        title: t.description, // Mapping description from backend to title
-        completed: t.completed,
-        createdAt: new Date(t.createdAt),
-      }));
-      setTasks(mappedTasks);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
   const addTask = async () => {
     if (!newTaskTitle.trim()) return;
-
-    try {
-      const config = await getAuthHeaders();
-      const response = await axios.post(
-        API_URL,
-        {
-          description: newTaskTitle,
-        },
-        config
-      );
-
-      const newTask: TaskItem = {
-        id: response.data.id,
-        title: response.data.description,
-        completed: response.data.completed,
-        createdAt: new Date(response.data.createdAt),
-      };
-
-      setTasks([newTask, ...tasks]);
-      setNewTaskTitle('');
-      setIsAdding(false);
-    } catch (error) {
-      console.error('Error adding task:', error);
-    }
+    await addTaskToGlobal(newTaskTitle);
+    setNewTaskTitle('');
   };
 
   const toggleTask = async (id: string) => {
     const task = tasks.find((t) => t.id === id);
     if (!task) return;
 
-    const wasCompleted = task?.completed;
-    const newStatus = !task.completed;
-
-    // Optimistic update
-    setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: newStatus } : t)));
-
+    const wasCompleted = task.completed;
     if (!wasCompleted) {
       const randomMessage =
         completionMessages[Math.floor(Math.random() * completionMessages.length)];
@@ -368,54 +337,15 @@ export function TaskList() {
       setTimeout(() => setCompletionMessage(null), 3000);
     }
 
-    try {
-      const config = await getAuthHeaders();
-      await axios.patch(
-        `${API_URL}/${id}`,
-        {
-          isDone: newStatus,
-        },
-        config
-      );
-    } catch (error) {
-      console.error('Error toggling task:', error);
-      // Revert on error
-      setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: !newStatus } : t)));
-    }
+    await toggleTaskInGlobal(id);
   };
 
   const deleteTask = async (id: string) => {
-    // Optimistic update
-    const previousTasks = [...tasks];
-    setTasks(tasks.filter((t) => t.id !== id));
-
-    try {
-      const config = await getAuthHeaders();
-      await axios.delete(`${API_URL}/${id}`, config);
-    } catch (error) {
-      console.error('Error deleting task:', error);
-      setTasks(previousTasks);
-    }
+    await deleteTaskFromGlobal(id);
   };
 
   const clearCompleted = async () => {
-    const completedTasks = tasks.filter((t) => t.completed);
-    if (completedTasks.length === 0) return;
-
-    // Optimistic update
-    const previousTasks = [...tasks];
-    setTasks(tasks.filter((t) => !t.completed));
-
-    try {
-      const config = await getAuthHeaders();
-      // Delete sequentially or in parallel
-      await Promise.all(
-        completedTasks.map((t) => axios.delete(`${API_URL}/${t.id}`, config))
-      );
-    } catch (error) {
-      console.error('Error clearing completed tasks:', error);
-      setTasks(previousTasks);
-    }
+    await clearCompletedTasks();
   };
 
   return (
@@ -534,6 +464,11 @@ export function TaskList() {
                   <Text style={[styles.taskText, task.completed && styles.taskTextCompleted]}>
                     {task.title}
                   </Text>
+                  {(task.pomodoros ?? 0) > 0 && (
+                    <Text style={styles.pomodoroCount}>
+                      🍅 {task.pomodoros}
+                    </Text>
+                  )}
                   <TouchableOpacity style={styles.deleteButton} onPress={() => deleteTask(task.id)}>
                     <Ionicons
                       name="trash-outline"

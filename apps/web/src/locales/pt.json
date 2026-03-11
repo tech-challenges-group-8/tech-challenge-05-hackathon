@@ -16,17 +16,25 @@
     "profile": "Perfil",
     "logout": "Sair"
   },
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "skip": "Pular",
+    "start": "Iniciar",
+    "reset": "Resetar"
+  },
   "pages": {
     "dashboard": {
       "title": "Bem-vindo ao MindEase",
-      "subtitle": "Seu companheiro de apoio cognitivo",
-      "body": "O MindEase foi criado para ajudar você a gerenciar tarefas, manter o foco e otimizar seu desempenho cognitivo. Use a barra lateral para navegar entre os recursos e personalizar sua experiência.",
+      "subtitle": "Seu gerenciador de foco e tarefas",
+      "body": "Mantenha-se organizado e produtivo com nossas ferramentas. Acompanhe seu progresso abaixo.",
       "quickActionsTitle": "Ações Rápidas",
-      "quickActionsBody": "Comece o dia revisando sua lista de tarefas, configurando uma sessão de foco ou ajustando suas configurações cognitivas conforme suas necessidades.",
+      "quickActionsBody": "Inicie uma sessão de foco ou organize seu quadro para ficar por dentro de seus objetivos.",
       "stats": {
         "activeTasks": "Tarefas Ativas",
-        "completedToday": "Concluídas Hoje",
-        "focusTime": "Tempo de Foco"
+        "focusTime": "Tempo de Foco",
+        "completedToday": "Tarefas concluídas hoje",
+        "totalCompleted": "Tarefas concluídas desde sempre"
       }
     },
     "tasks": {
@@ -37,9 +45,15 @@
       "title": "Modo Foco",
       "body": "Configuração simulada de sessão de foco. Você poderá definir temporizadores, sons ambientes e ajustes de foco personalizados.",
       "customizeTimer": "Configurações do Modo Foco",
-      "settingsTitle": "Configurações",
       "settingsTabTimer": "Tempos",
       "settingsTabAudio": "Áudio e Player",
+      "settingsTitle": "Configurações",
+      "addAudio": "Adicionar Áudio",
+      "addCustomAudio": "Adicionar Áudio Customizado",
+      "audioName": "Nome do Áudio",
+      "audioNamePlaceholder": "ex: Rock",
+      "audioUrl": "URL do YouTube",
+      "myCustomAudios": "Meus Áudios Customizados",
       "focusMode": "Foco",
       "shortBreak": "Pausa Curta",
       "longBreak": "Pausa Longa",

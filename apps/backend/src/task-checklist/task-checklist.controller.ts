@@ -72,13 +72,15 @@ export class TaskCheckListController {
     @Patch(':id')
     @ApiOperation({ summary: 'Update a checklist task' })
     @ApiParam({ name: 'id', type: 'string' })
-    @ApiBody({ schema: { properties: { description: { type: 'string' }, isDone: { type: 'boolean' } } } })
+    @ApiBody({ schema: { properties: { description: { type: 'string' }, isDone: { type: 'boolean' }, pomodoros: { type: 'number' }, timeSpent: { type: 'number' } } } })
     @ApiResponse({ status: 200, description: 'Task updated successfully', type: ResponseTaskCheckListDto })
-    async update(@Param('id') id: string, @Body() body: { description?: string, isDone?: boolean }) {
+    async update(@Param('id') id: string, @Body() body: { description?: string, isDone?: boolean, pomodoros?: number, timeSpent?: number }) {
         const task = await this.updateUseCase.execute({
             id,
             description: body.description,
-            isDone: body.isDone
+            isDone: body.isDone,
+            pomodoros: body.pomodoros,
+            timeSpent: body.timeSpent
         });
         return this.toResponse(task);
     }
@@ -97,6 +99,8 @@ export class TaskCheckListController {
             task.id,
             task.description,
             task.completed,
+            task.pomodoros,
+            task.timeSpent,
             task.createdAt,
             task.updatedAt
         );

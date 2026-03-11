@@ -15,6 +15,10 @@ import { CreateTaskCheckListUseCase, DeleteTaskCheckListUseCase, GetTaskCheckLis
   providers: [
     TaskCheckListRepositoryMongoose,
     {
+      provide: 'TaskCheckListRepository',
+      useClass: TaskCheckListRepositoryMongoose,
+    },
+    {
       provide: CreateTaskCheckListUseCase,
       useFactory: (repo: TaskCheckListRepositoryMongoose) => new CreateTaskCheckListUseCase(repo),
       inject: [TaskCheckListRepositoryMongoose],
@@ -40,6 +44,6 @@ import { CreateTaskCheckListUseCase, DeleteTaskCheckListUseCase, GetTaskCheckLis
       inject: [TaskCheckListRepositoryMongoose],
     },
   ],
-  exports: [],
+  exports: [TaskCheckListRepositoryMongoose, 'TaskCheckListRepository'],
 })
-export class TaskCheckListModule {}
+export class TaskCheckListModule { }

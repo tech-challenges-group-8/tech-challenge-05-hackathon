@@ -77,7 +77,7 @@ export function PomodoroTaskModal() {
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
   
   const {
-    settings,
+    tasks,
     isFocusCompleteModalOpen,
     submitTaskCompletionTime
   } = useFocusTimer();
@@ -92,7 +92,7 @@ export function PomodoroTaskModal() {
           </Text>
 
           <ScrollView style={{ maxHeight: 200, marginBottom: rem(space[4]) }}>
-            {settings?.tasks?.filter(t => !t.completed).map(task => (
+            {tasks.filter(t => !t.completed).map(task => (
               <TouchableOpacity 
                 key={task.id} 
                 style={styles.taskModalButton}
@@ -101,7 +101,7 @@ export function PomodoroTaskModal() {
                 <Text style={styles.taskModalButtonText}>{task.title}</Text>
               </TouchableOpacity>
             ))}
-            {(!settings?.tasks || settings.tasks.filter(t => !t.completed).length === 0) && (
+            {tasks.filter(t => !t.completed).length === 0 && (
               <Text style={{ textAlign: 'center', color: theme.colors.muted.foreground }}>
                 {t('pages.focus.noTasksAvailable', 'No active tasks to assign time to.')}
               </Text>

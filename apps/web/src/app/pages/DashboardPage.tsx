@@ -4,6 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useCognitivePreferences } from '../../cognitive';
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ResponseDashboardStatsDto } from '@mindease/dtos';
+import { useAuth } from '../../auth';
 
 const rem = (value: string) => Number.parseFloat(value) * 16;
 const extractPixels = (value: string) => Number.parseInt(value, 10);
@@ -87,8 +92,39 @@ const createStyles = (
 export function DashboardPage() {
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const { currentUser } = useAuth();
   const preferences = useCognitivePreferences();
   const styles = useMemo(() => createStyles(theme.colors, preferences), [preferences, theme.colors]);
+
+  const [stats, setStats] = useState<ResponseDashboardStatsDto | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchStats = useCallback(async () => {
+    if (!currentUser) return;
+    
+    try {
+      const token = await AsyncStorage.getItem('authToken');
+      const response = await axios.get('http://localhost:3001/dashboard/stats', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setStats(response.data);
+    } catch (error) {
+      console.error('Error fetching dashboard stats:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
+
+  const formatFocusTime = (minutes: number) => {
+    if (minutes < 60) return `${minutes}m`;
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+  };
 
   return (
     <View>
@@ -102,15 +138,19 @@ export function DashboardPage() {
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
             <Text style={styles.statLabel}>{t('pages.dashboard.stats.activeTasks')}</Text>
-            <Text style={styles.statValue}>12</Text>
+            <Text style={styles.statValue}>{isLoading ? '...' : stats?.activeTasks ?? 0}</Text>
           </View>
           <View style={styles.statCard}>
             <Text style={styles.statLabel}>{t('pages.dashboard.stats.completedToday')}</Text>
-            <Text style={styles.statValue}>8</Text>
+            <Text style={styles.statValue}>{isLoading ? '...' : stats?.completedToday ?? 0}</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statLabel}>{t('pages.dashboard.stats.totalCompleted')}</Text>
+            <Text style={styles.statValue}>{isLoading ? '...' : stats?.totalCompleted ?? 0}</Text>
           </View>
           <View style={[styles.statCard, styles.statCardLast]}>
             <Text style={styles.statLabel}>{t('pages.dashboard.stats.focusTime')}</Text>
-            <Text style={styles.statValue}>4h</Text>
+            <Text style={styles.statValue}>{isLoading ? '...' : formatFocusTime(stats?.totalFocusTime ?? 0)}</Text>
           </View>
         </View>
       </View>
