@@ -262,6 +262,17 @@
   },
   "tasks": {
     "list": {
+      "title": "Task List",
+      "subtitle": "Track your tasks for today",
+      "newTask": "New Task",
+      "progress": "Progress",
+      "placeholder": "What do you need to do?",
+      "tasks": "Tasks",
+      "clearCompleted": "Clear completed",
+      "noTasks": "No tasks yet",
+      "addFirst": "Add your first task above",
+      "allDone": "🎉 Congrats! You completed all tasks!",
+      "keepGoing": "Keep going! Every completed task is a win. 💚",
       "completionMessage1": "Excellent! You completed a task 🎉",
       "completionMessage2": "Great job! Keep it up 💪",
       "completionMessage3": "Nice work! 🌟",
@@ -270,8 +281,20 @@
     }
   },
   "kanban": {
+    "title": "Kanban Board",
+    "subtitle": "Organize your tasks visually",
+    "newTaskPlaceholder": "Task title...",
+    "actions": "Actions",
+    "moveToTodo": "Move to To Do",
+    "moveToInProgress": "Move to In Progress",
+    "moveToDone": "Mark as Done",
     "todoTitle": "To Do",
     "inProgressTitle": "In Progress",
     "doneTitle": "Done"
+  },
+  "common": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "delete": "Delete"
   }
 }

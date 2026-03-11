@@ -227,14 +227,14 @@ export function TaskList() {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>{t('tasks.list.title', 'Lista de Tarefas')}</Text>
+          <Text style={styles.headerTitle}>{t('tasks.list.title')}</Text>
           <Text style={styles.headerSubtitle}>
-            {t('tasks.list.subtitle', 'Acompanhe suas tarefas do dia')}
+            {t('tasks.list.subtitle')}
           </Text>
         </View>
         <TouchableOpacity style={styles.addButton} onPress={() => setIsAdding(true)}>
           <Ionicons name="add" size={16} color={theme.colors.primary.foreground} />
-          <Text style={styles.addButtonText}>{t('tasks.list.newTask', 'Nova Tarefa')}</Text>
+          <Text style={styles.addButtonText}>{t('tasks.list.newTask')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -242,7 +242,7 @@ export function TaskList() {
 
       <View style={styles.progressCard}>
         <View style={styles.progressHeader}>
-          <Text style={styles.progressLabel}>{t('tasks.list.progress', 'Progresso')}</Text>
+          <Text style={styles.progressLabel}>{t('tasks.list.progress')}</Text>
           <Text style={styles.progressCount}>
             {completedCount} de {totalCount}
           </Text>
@@ -261,7 +261,7 @@ export function TaskList() {
         <View style={styles.addCard}>
           <TextInput
             style={styles.input}
-            placeholder={t('tasks.list.placeholder', 'O que você precisa fazer?')}
+            placeholder={t('tasks.list.placeholder')}
             placeholderTextColor={theme.colors.muted.foreground}
             value={newTaskTitle}
             onChangeText={setNewTaskTitle}
@@ -270,7 +270,7 @@ export function TaskList() {
           />
           <View style={styles.addButtonsContainer}>
             <TouchableOpacity style={styles.addButton} onPress={handleAddTask}>
-              <Text style={styles.addButtonText}>{t('common.add', 'Adicionar')}</Text>
+              <Text style={styles.addButtonText}>{t('common.add')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -279,7 +279,7 @@ export function TaskList() {
               }}
             >
               <Text style={{ color: theme.colors.muted.foreground, padding: rem(space[3]) }}>
-                {t('common.cancel', 'Cancelar')}
+                {t('common.cancel')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -288,11 +288,11 @@ export function TaskList() {
 
       <View style={styles.listCard}>
         <View style={styles.listHeader}>
-          <Text style={styles.listTitle}>{t('tasks.list.tasks', 'Tarefas')}</Text>
+          <Text style={styles.listTitle}>{t('tasks.list.tasks')}</Text>
           {completedCount > 0 && (
             <TouchableOpacity onPress={clearCompleted}>
               <Text style={styles.clearButtonText}>
-                {t('tasks.list.clearCompleted', 'Limpar concluídas')}
+                {t('tasks.list.clearCompleted')}
               </Text>
             </TouchableOpacity>
           )}
@@ -307,10 +307,10 @@ export function TaskList() {
                 style={{ opacity: 0.3 }}
               />
               <Text style={styles.emptyListText}>
-                {t('tasks.list.noTasks', 'Nenhuma tarefa ainda')}
+                {t('tasks.list.noTasks')}
               </Text>
               <Text style={styles.emptyListSubtext}>
-                {t('tasks.list.addFirst', 'Adicione sua primeira tarefa acima')}
+                {t('tasks.list.addFirst')}
               </Text>
             </View>
           ) : (
@@ -332,11 +332,11 @@ export function TaskList() {
         <Text style={styles.encouragementText}>
           {completedCount === totalCount && totalCount > 0 ? (
             <Text style={styles.successText}>
-              {t('tasks.list.allDone', '🎉 Parabéns! Você completou todas as tarefas!')}
+              {t('tasks.list.allDone')}
             </Text>
           ) : (
             <Text>
-              {t('tasks.list.keepGoing', 'Continue assim! Cada tarefa concluída é uma vitória. 💚')}
+              {t('tasks.list.keepGoing')}
             </Text>
           )}
         </Text>

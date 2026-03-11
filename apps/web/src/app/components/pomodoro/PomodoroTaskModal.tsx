@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { fontSizes, fontWeights, radii, space, colors as uiColors } from '@mindease/ui-kit';
+import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../../theme';
 import { useFocusTimer } from '../../context/FocusTimerContext';
 import { rem, extractPixels } from '../../../utils';
