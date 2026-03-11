@@ -6,3 +6,4 @@ export {
   validateLoginForm,
   validateRegisterForm,
 } from './formValidation';
+export { formatTime } from './time';

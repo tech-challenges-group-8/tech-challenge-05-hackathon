@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
 import { useFocusTimer } from '../context/FocusTimerContext';
-import { rem, extractPixels } from '../../utils';
+import { rem, extractPixels, formatTime } from '../../utils';
 
 const createStyles = (themeColors: ReturnType<typeof useTheme>['theme']['colors']) =>
   StyleSheet.create({
@@ -89,8 +89,8 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
   
   const {
     timeLeft, isActive, mode, allThemes, selectedThemeId,
-    toggleTimer, setSelectedThemeId, isAudioPlaying, toggleAudioPlay,
-    setIsFloatingPlayerDismissed
+    toggleTimer, selectTheme, isAudioPlaying, toggleAudioPlay,
+    dismissFloatingPlayer
   } = useFocusTimer();
 
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -101,16 +101,10 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
       duration: 300,
       useNativeDriver: true,
     }).start(() => {
-      setIsFloatingPlayerDismissed(true);
+      dismissFloatingPlayer();
       // Reset animation value for next time it appears
       fadeAnim.setValue(1);
     });
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const playNextTheme = () => {
@@ -121,11 +115,11 @@ export function FloatingPomodoroPlayer({ onNavigateToFocus }: Props) {
     }
     const nextTheme = allThemes[nextIndex];
     if (nextTheme.id !== 'custom') {
-      setSelectedThemeId(nextTheme.id);
+      selectTheme(nextTheme.id);
     } else {
         // Skip custom if empty? In floating player just skip over custom
         nextIndex = (nextIndex + 1) % allThemes.length;
-        setSelectedThemeId(allThemes[nextIndex].id);
+        selectTheme(allThemes[nextIndex].id);
     }
   };
 

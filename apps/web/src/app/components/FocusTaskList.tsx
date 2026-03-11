@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Activi
 import { useTranslation } from 'react-i18next';
 import { fontSizes, fontWeights, radii, space } from '@mindease/ui-kit';
 import { useTheme } from '../../theme';
-import focusSettingsService from '../../services/focus-settings/focusSettingsService';
 import type { FocusTask } from '../../services/focus-settings/types';
 import { useFocusTimer } from '../context/FocusTimerContext';
 import { rem, extractPixels } from '../../utils';
@@ -107,19 +106,12 @@ export function FocusTaskList() {
   const styles = useMemo(() => createStyles(theme.colors), [theme.colors]);
 
   const [newTaskText, setNewTaskText] = useState('');
-  const { settings, setSettings } = useFocusTimer();
+  const { settings, updateFocusTasks } = useFocusTimer();
 
   const tasks = settings?.tasks || [];
 
   const syncTasks = async (newTasks: FocusTask[]) => {
-    if (settings) {
-      setSettings({ ...settings, tasks: newTasks });
-    }
-    try {
-      await focusSettingsService.updateTasks(newTasks);
-    } catch (error) {
-      console.error('Failed to sync tasks:', error);
-    }
+    await updateFocusTasks(newTasks);
   };
 
   const addTask = () => {
